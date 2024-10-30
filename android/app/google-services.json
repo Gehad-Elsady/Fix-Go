@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "867913429039",
+    "project_id": "road-mate-d732c",
+    "storage_bucket": "road-mate-d732c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:867913429039:android:d7bfceff22ad8f24d856da",
+        "android_client_info": {
+          "package_name": "com.example.road_mate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6tjF49V4fu2rurivcyZUtTn6lHhyEH9k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
