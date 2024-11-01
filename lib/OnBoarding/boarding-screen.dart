@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:road_mate/Auth/login-screen.dart';
 import 'package:road_mate/OnBoarding/OnboardingPage1.dart';
 import 'package:road_mate/OnBoarding/OnboardingPage2.dart';
 import 'package:road_mate/OnBoarding/OnboardingPage3.dart';
+import 'package:road_mate/providers/finish-onboarding.dart';
 import 'package:road_mate/theme/app-colors.dart';
 
 // import 'package:recycling_app/home-screen.dart';
@@ -22,6 +24,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<FinishOnboarding>(context);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -54,6 +57,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               right: 20,
               child: GestureDetector(
                 onTap: () {
+                  provider..completeOnBoarding();
+                  print(
+                      "00000000000000000000000000000000000000000000000000${provider.isOnBoardingCompleted}");
                   Navigator.pushReplacementNamed(context, LoginPage.routeName);
                 },
                 child: Text(
@@ -87,6 +93,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     onTap: () {
                       if (_currentIndex == 2) {
                         // Last page
+                        provider..completeOnBoarding();
+                        print(
+                            "00000000000000000000000000000000000000000000000000${provider.isOnBoardingCompleted}");
                         Navigator.pushReplacementNamed(
                             context, LoginPage.routeName);
                       } else {

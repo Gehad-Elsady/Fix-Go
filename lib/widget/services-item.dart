@@ -59,13 +59,16 @@ class ServicesItem extends StatelessWidget {
               style: TextStyle(fontSize: 15, color: Colors.white),
             ),
           ),
-          Text(
-            service.price.toString() + "  bound",
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: Text(
+              service.price.toString() + "  bound",
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
           Padding(
