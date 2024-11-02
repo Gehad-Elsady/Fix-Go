@@ -1,31 +1,43 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:road_mate/Auth/login-screen.dart';
 import 'package:road_mate/Auth/signup-screen.dart';
-import 'package:road_mate/OnBoarding/boarding-screen.dart';
-import 'package:road_mate/SplashScreen/splash-screen.dart';
-import 'package:road_mate/all-services-screen.dart';
-import 'package:road_mate/cart-screen.dart';
-import 'package:road_mate/contact-screen.dart';
-import 'package:road_mate/firebase_options.dart';
-import 'package:road_mate/home-screen.dart';
-import 'package:road_mate/providers/check-user.dart';
-import 'package:road_mate/providers/finish-onboarding.dart';
-import 'package:road_mate/settings_tab.dart';
-import 'package:road_mate/test.dart';
-import 'package:road_mate/user-profile-screen.dart';
+import 'package:road_mate/screens/SplashScreen/OnBoarding/boarding-screen.dart';
+import 'package:road_mate/screens/SplashScreen/splash-screen.dart';
+import 'package:road_mate/screens/services/all-services-screen.dart';
+import 'package:road_mate/screens/cart/cart-screen.dart';
+import 'package:road_mate/screens/contact/contact-screen.dart';
+import 'package:road_mate/backend/firebase_options.dart';
+import 'package:road_mate/screens/home/home-screen.dart';
+import 'package:road_mate/screens/SplashScreen/provider/check-user.dart';
+import 'package:road_mate/screens/SplashScreen/provider/finish-onboarding.dart';
+import 'package:road_mate/screens/settings/settings_tab.dart';
+import 'package:road_mate/screens/add-services/addservicescreen.dart';
+import 'package:road_mate/screens/profile/user-profile-screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => FinishOnboarding()),
-    ChangeNotifierProvider(create: (_) => CheckUser()),
-  ], child: const MyApp()));
+
+  runApp(EasyLocalization(
+    supportedLocales: [
+      Locale('en'),
+      Locale('ar'),
+    ],
+    path: 'assets/translation',
+    saveLocale: true,
+    startLocale: Locale("ar"),
+    child: MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => FinishOnboarding()),
+      ChangeNotifierProvider(create: (_) => CheckUser()),
+    ], child: const MyApp()),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -34,6 +46,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       debugShowCheckedModeBanner: false,
       initialRoute: SplashScreen.routeName,
       routes: {
@@ -42,7 +57,6 @@ class MyApp extends StatelessWidget {
         OnboardingScreen.routeName: (context) => OnboardingScreen(),
         LoginPage.routeName: (context) => LoginPage(),
         SignUpPage.routeName: (context) => SignUpPage(),
-        // RecycleUser.routeName: (context) => RecycleUser(),
         UserProfile.routeName: (context) => UserProfile(),
         AddServicePage.routeName: (context) => AddServicePage(),
         AllServicesScreen.routeName: (context) => AllServicesScreen(),

@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:road_mate/Auth/login-screen.dart';
-import 'package:road_mate/firebase_functions.dart';
-import 'package:road_mate/home-screen.dart';
-import 'package:road_mate/photos/photos.dart';
+import 'package:road_mate/backend/firebase_functions.dart';
+import 'package:road_mate/screens/home/home-screen.dart';
+import 'package:road_mate/constants/photos/photos.dart';
 import 'package:road_mate/theme/app-colors.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -54,7 +55,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        'Signup',
+                        'signup'.tr(),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 24, color: Colors.white),
                       ),
@@ -62,7 +63,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       TextFormField(
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return "Please enter your name";
+                            return "name-error".tr();
                           }
                           return null;
                         },
@@ -71,7 +72,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          hintText: "Name",
+                          hintText: "name".tr(),
                           hintStyle: Theme.of(context)
                               .textTheme
                               .bodyMedium
@@ -87,10 +88,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       TextFormField(
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return "Please enter your age";
+                            return "age-error".tr();
                           }
                           if (int.parse(value) < 20) {
-                            return "Sorry, age must be at least 20";
+                            return "age-error-s".tr();
                           }
                           return null;
                         },
@@ -100,7 +101,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          hintText: "Age",
+                          hintText: "age".tr(),
                           hintStyle: Theme.of(context)
                               .textTheme
                               .bodyMedium
@@ -116,13 +117,13 @@ class _SignUpPageState extends State<SignUpPage> {
                       TextFormField(
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return "Please enter your email";
+                            return "empty-email-error".tr();
                           }
                           final bool emailValid = RegExp(
                                   r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z]+\.[a-zA-Z]+")
                               .hasMatch(value);
                           if (!emailValid) {
-                            return "Please enter a valid email";
+                            return "email-error".tr();
                           }
                           return null;
                         },
@@ -132,7 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          hintText: "Email",
+                          hintText: "enter-email".tr(),
                           hintStyle: Theme.of(context)
                               .textTheme
                               .bodyMedium
@@ -150,9 +151,9 @@ class _SignUpPageState extends State<SignUpPage> {
                           final RegExp regex = RegExp(
                               r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a password';
+                            return 'empty-pass-error'.tr();
                           } else if (!regex.hasMatch(value)) {
-                            return 'Password must include an uppercase letter, a number, and a special character';
+                            return 'empty-pass-error-s'.tr();
                           }
                           return null;
                         },
@@ -162,7 +163,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          hintText: "Password",
+                          hintText: "enter-password".tr(),
                           hintStyle: Theme.of(context)
                               .textTheme
                               .bodyMedium
@@ -229,7 +230,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           }
                         },
                         child: Text(
-                          "Submit",
+                          "submit".tr(),
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -246,7 +247,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           child: Text.rich(
                             textAlign: TextAlign.center,
                             TextSpan(
-                              text: "have an account?  ",
+                              text: "have-an-account".tr(),
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
@@ -254,7 +255,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: "Login",
+                                  text: "login".tr(),
                                   style: TextStyle(
                                     color: Color(0xffffffff),
                                   ),
