@@ -1,10 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:road_mate/Auth/signup-screen.dart';
-import 'package:road_mate/firebase_functions.dart';
-import 'package:road_mate/home-screen.dart';
-import 'package:road_mate/photos/photos.dart';
+import 'package:road_mate/backend/firebase_functions.dart';
+import 'package:road_mate/screens/home/home-screen.dart';
+import 'package:road_mate/constants/photos/photos.dart';
 import 'package:road_mate/theme/app-colors.dart';
 
 class LoginPage extends StatefulWidget {
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      hintText: "Enter your email",
+                      hintText: 'enter-email'.tr(),
                       hintStyle: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -74,11 +75,11 @@ class _LoginPageState extends State<LoginPage> {
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                        return 'empty-email-error'.tr();
                       }
                       if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
                           .hasMatch(value)) {
-                        return 'Please enter a valid email';
+                        return 'email-error'.tr();
                       }
                       return null;
                     },
@@ -94,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      hintText: "Enter your password",
+                      hintText: "enter-password".tr(),
                       hintStyle: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -111,10 +112,10 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
+                        return 'empty-pass-error'.tr();
                       }
                       if (value.length < 6) {
-                        return 'Password must be at least 6 characters long';
+                        return 'pass-error'.tr();
                       }
                       return null;
                     },
@@ -125,33 +126,32 @@ class _LoginPageState extends State<LoginPage> {
                   // Login Button
                   ElevatedButton(
                     onPressed: () {
-                      // Navigator.pushReplacementNamed(
-                      //     context, HomeScreen.routeName);
-                      FirebaseFunctions.Login(onSuccess: () async {
-                        // user.initUser();
-                        await Future.delayed(Duration(milliseconds: 500));
-                        Navigator.pushReplacementNamed(
-                            context, HomeScreen.routeName);
-                      }, onError: (e) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text("Error"),
-                            content: Text(e.toString()),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }, emailController.text, passwordController.text);
+                      if (_formKey.currentState!.validate()) {
+                        FirebaseFunctions.Login(onSuccess: () async {
+                          await Future.delayed(Duration(milliseconds: 500));
+                          Navigator.pushReplacementNamed(
+                              context, HomeScreen.routeName);
+                        }, onError: (e) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text("Error"),
+                              content: Text(e.toString()),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }, emailController.text, passwordController.text);
+                      }
                     },
-                    child: const Text(
-                      'Login',
+                    child: Text(
+                      'login'.tr(),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -180,14 +180,14 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text.rich(
                       textAlign: TextAlign.center,
                       TextSpan(
-                        text: "Don't have an account? ",
+                        text: "dont-have-an-account".tr(),
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
                             ?.copyWith(fontSize: 15, color: Color(0xffd9ed92)),
-                        children: const [
+                        children: [
                           TextSpan(
-                            text: "Sign up",
+                            text: "signup".tr(),
                             style: TextStyle(
                               color: Color(0xffffffff),
                               fontWeight: FontWeight.bold,

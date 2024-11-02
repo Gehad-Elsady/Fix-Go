@@ -1,6 +1,9 @@
+// ignore_for_file: must_be_immutable
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:road_mate/Models/service-model.dart';
+import 'package:road_mate/screens/add-services/model/service-model.dart';
 
 class ServicesItem extends StatelessWidget {
   ServiceModel service;
@@ -62,7 +65,7 @@ class ServicesItem extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: Text(
-              service.price.toString() + "  bound",
+              service.price.toString() + "  " + "pound".tr(),
               textAlign: TextAlign.right,
               style: TextStyle(
                 fontSize: 18,
