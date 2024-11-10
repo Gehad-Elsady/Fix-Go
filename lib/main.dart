@@ -19,11 +19,22 @@ import 'package:road_mate/screens/profile/user-profile-screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // Initialize EasyLocalization with error handling
+  try {
+    await EasyLocalization.ensureInitialized();
+  } catch (e) {
+    print('Error initializing EasyLocalization: $e');
+  }
+
+  // Initialize Firebase with error handling
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    print('Error initializing Firebase: $e');
+  }
 
   runApp(EasyLocalization(
     supportedLocales: [
@@ -32,11 +43,14 @@ void main() async {
     ],
     path: 'assets/translation',
     saveLocale: true,
-    startLocale: Locale("ar"),
-    child: MultiProvider(providers: [
-      ChangeNotifierProvider(create: (_) => FinishOnboarding()),
-      ChangeNotifierProvider(create: (_) => CheckUser()),
-    ], child: const MyApp()),
+    startLocale: Locale("en"),
+    child: MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => FinishOnboarding()),
+        ChangeNotifierProvider(create: (_) => CheckUser()),
+      ],
+      child: const MyApp(),
+    ),
   ));
 }
 
@@ -62,7 +76,7 @@ class MyApp extends StatelessWidget {
         AllServicesScreen.routeName: (context) => AllServicesScreen(),
         CartScreen.routeName: (context) => CartScreen(),
         ContactScreen.routeName: (context) => ContactScreen(),
-        SettingsTab.routeName: (context) => SettingsTab()
+        SettingsTab.routeName: (context) => SettingsTab(),
       },
     );
   }

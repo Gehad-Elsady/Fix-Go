@@ -63,7 +63,12 @@
   "dark":"Dark",
   "light":"Light",
   "select-language":"Select Language",
-  "select-theme":"Select Theme"
-
-  
+  "select-theme":"Select Theme",
+  "cart-empty":"Your cart is empty",
+  "cart-bar":"Cart",
+  "are-you-sure":"Are you sure?",
+  "yes":"Yes",
+  "no":"No",
+  "please-complete-profile":"Please complete your profile",
+  "ok":"OK"
 }

@@ -1,7 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:road_mate/screens/add-services/model/service-model.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
+import 'package:road_mate/screens/cart/payment-scree.dart';
+import 'package:road_mate/screens/history/model/historymaodel.dart';
 import 'package:road_mate/widget/services-item.dart';
 
 class ServicesPart extends StatelessWidget {
@@ -37,7 +40,16 @@ class ServicesPart extends StatelessWidget {
                     service: service,
                     buttonTitle: "quick-order".tr(),
                     callBack: () {
-                      // Navigator.pushNamed(context, AddServicePage.routeName);
+                      final historymaodel = Historymaodel(
+                        serviceModel: service,
+                        OrderType: "Quick Order",
+                      );
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PaymentScreen(
+                                  totalPrice: int.parse(service.price),
+                                  historymaodel: historymaodel)));
                     },
                   ),
                 ),

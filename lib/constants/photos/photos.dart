@@ -10,6 +10,7 @@ class Photos {
   static const String create = "assets/lotties/created.json";
   static const String fix = "assets/lotties/fix.json";
   static const String login = "assets/images/key.png";
+  static const String emptyCart = "assets/lotties/emptycart.json";
 
   static const List<String> appBar = [
     'assets/images/Car-Brands-and-the-Companies-they-Belong-to.png',

@@ -3,11 +3,13 @@ import 'package:road_mate/screens/add-services/model/service-model.dart';
 class CartModel {
   ServiceModel serviceModel;
   String userId;
-  CartModel({required this.serviceModel, required this.userId});
+  String? itemId;
+  CartModel({required this.serviceModel, required this.userId, this.itemId});
   Map<String, dynamic> toMap() {
     return {
       'serviceModel': serviceModel.toJson(),
       'userId': userId,
+      'itemId': itemId
     };
   }
 
@@ -15,6 +17,7 @@ class CartModel {
     return CartModel(
       serviceModel: ServiceModel.fromJson(map['serviceModel']),
       userId: map['userId'],
+      itemId: map['itemId'],
     );
   }
 }

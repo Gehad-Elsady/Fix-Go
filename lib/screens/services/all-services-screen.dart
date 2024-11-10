@@ -66,13 +66,19 @@ class AllServicesScreen extends StatelessWidget {
                       ServicesItem(
                         service: service,
                         buttonTitle: "add-to-cart".tr(),
-                        callBack: () {
+                        callBack: () async {
                           CartModel model = CartModel(
+                            itemId:
+                                "", // Placeholder, actual itemId will be set in FirebaseFunctions
                             serviceModel: service,
-                            userId: FirebaseAuth.instance.currentUser!.uid
-                                .toString(),
+                            userId: FirebaseAuth.instance.currentUser!.uid,
                           );
-                          FirebaseFunctions.addService(model);
+                          await FirebaseFunctions.addCartService(model);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Service added successfully!'),
+                            ),
+                          );
                         },
                       ),
                     ],

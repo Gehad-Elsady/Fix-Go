@@ -63,6 +63,13 @@
     "dark": "ليلي",
     "light": "نهاري",
     "select-language": "اختر اللغة",
-    "select-theme": "اختر السمة"
+    "select-theme": "اختر السمة",
+    "cart-empty": "عربة التسوق فارغة",
+"cart-bar": "عربة التسوق",
+"are-you-sure": "هل أنت متأكد؟",
+"yes": "نعم",
+"no": "لا",
+"please-complete-profile": "يرجى إتمام ملفك الشخصي",
+"ok": "حسناً"
   }
   

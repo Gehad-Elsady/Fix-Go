@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:road_mate/Auth/login-screen.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
-import 'package:road_mate/screens/home/home-screen.dart';
 import 'package:road_mate/constants/photos/photos.dart';
 import 'package:road_mate/theme/app-colors.dart';
 
@@ -22,11 +21,12 @@ final TextEditingController emailController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
 final TextEditingController phoneController = TextEditingController();
 final TextEditingController nameController = TextEditingController();
-var formKey = GlobalKey<FormState>();
 
 String? role;
 
 class _SignUpPageState extends State<SignUpPage> {
+  final formKey = GlobalKey<FormState>(); // Moved inside _SignUpPageState
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,10 +78,11 @@ class _SignUpPageState extends State<SignUpPage> {
                               .bodyMedium
                               ?.copyWith(fontSize: 15),
                           enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                              )),
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 20),
@@ -107,10 +108,11 @@ class _SignUpPageState extends State<SignUpPage> {
                               .bodyMedium
                               ?.copyWith(fontSize: 15),
                           enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                              )),
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 20),
@@ -120,8 +122,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             return "empty-email-error".tr();
                           }
                           final bool emailValid = RegExp(
-                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z]+\.[a-zA-Z]+")
-                              .hasMatch(value);
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z]+\.[a-zA-Z]+",
+                          ).hasMatch(value);
                           if (!emailValid) {
                             return "email-error".tr();
                           }
@@ -139,17 +141,19 @@ class _SignUpPageState extends State<SignUpPage> {
                               .bodyMedium
                               ?.copyWith(fontSize: 15),
                           enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                              )),
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 20),
                       TextFormField(
                         validator: (value) {
                           final RegExp regex = RegExp(
-                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
+                          );
                           if (value == null || value.isEmpty) {
                             return 'empty-pass-error'.tr();
                           } else if (!regex.hasMatch(value)) {
@@ -169,10 +173,11 @@ class _SignUpPageState extends State<SignUpPage> {
                               .bodyMedium
                               ?.copyWith(fontSize: 15),
                           enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                              )),
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 30),
@@ -197,15 +202,28 @@ class _SignUpPageState extends State<SignUpPage> {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return Lottie.asset(
-                                        "assets/lottie/created.json");
+                                    return AlertDialog(
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Lottie.asset(Photos.create),
+                                          SizedBox(height: 16),
+                                          Text(
+                                            "Please Verify Your Email Address to Login",
+                                            style: TextStyle(fontSize: 20),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
+                                      ),
+                                    );
                                   },
                                 );
+
                                 Timer(
                                   Duration(seconds: 3),
                                   () {
                                     Navigator.pushNamed(
-                                        context, HomeScreen.routeName);
+                                        context, LoginPage.routeName);
                                   },
                                 );
                               },
@@ -227,6 +245,10 @@ class _SignUpPageState extends State<SignUpPage> {
                                 );
                               },
                             );
+                            nameController.clear();
+                            emailController.clear();
+                            passwordController.clear();
+                            ageController.clear();
                           }
                         },
                         child: Text(
@@ -240,29 +262,30 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       SizedBox(height: 20),
                       InkWell(
-                          onTap: () {
-                            Navigator.pushReplacementNamed(
-                                context, LoginPage.routeName);
-                          },
-                          child: Text.rich(
-                            textAlign: TextAlign.center,
-                            TextSpan(
-                              text: "have-an-account".tr(),
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xffffffff),
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: "login".tr(),
-                                  style: TextStyle(
-                                    color: Color(0xffffffff),
-                                  ),
-                                ),
-                              ],
+                        onTap: () {
+                          Navigator.pushReplacementNamed(
+                              context, LoginPage.routeName);
+                        },
+                        child: Text.rich(
+                          textAlign: TextAlign.center,
+                          TextSpan(
+                            text: "have-an-account".tr(),
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xffffffff),
                             ),
-                          ))
+                            children: [
+                              TextSpan(
+                                text: "login".tr(),
+                                style: TextStyle(
+                                  color: Color(0xffffffff),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

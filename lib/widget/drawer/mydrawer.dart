@@ -64,12 +64,11 @@ class MyDrawer extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Color(0xFF2e6f95),
                     ),
-                    child: Center(
-                      child: Text(
-                        "Unable to load profile",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                    child: CircleAvatar(
+                        radius: 40,
+                        backgroundImage: NetworkImage(
+                          'https://via.placeholder.com/150',
+                        )),
                   );
                 }
               }),
