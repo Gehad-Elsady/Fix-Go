@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,7 +24,6 @@ class _AddServicePageState extends State<AddServicePage> {
   final ImagePicker _picker = ImagePicker();
   bool _isUploading = false;
 
-  // Pick an image
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -31,7 +33,6 @@ class _AddServicePageState extends State<AddServicePage> {
     }
   }
 
-  // Upload image to Firebase Storage and get URL
   Future<String?> _uploadImage(File image) async {
     try {
       final storageRef = FirebaseStorage.instance
@@ -45,7 +46,6 @@ class _AddServicePageState extends State<AddServicePage> {
     }
   }
 
-  // Save service data to Firestore
   Future<void> _saveService() async {
     if (_formKey.currentState!.validate() && _image != null) {
       setState(() => _isUploading = true);
@@ -58,13 +58,22 @@ class _AddServicePageState extends State<AddServicePage> {
           'price': _priceController.text.trim(),
           'image': imageUrl,
           'createdAt': Timestamp.now(),
+          'id': FirebaseAuth.instance.currentUser!.uid
         });
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Service added successfully')));
+          SnackBar(
+            content: Text('Service added successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
         Navigator.pop(context); // Go back after saving
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Failed to upload image')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to upload image'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
       setState(() => _isUploading = false);
     }
@@ -73,51 +82,134 @@ class _AddServicePageState extends State<AddServicePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Add Service')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Service Name'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter a name' : null,
-                ),
-                TextFormField(
-                  controller: _descriptionController,
-                  decoration: InputDecoration(labelText: 'Description'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter a description' : null,
-                ),
-                TextFormField(
-                  controller: _priceController,
-                  decoration: InputDecoration(labelText: 'Price'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter a price' : null,
-                ),
-                SizedBox(height: 20),
-                _image == null
-                    ? Text('No image selected')
-                    : Image.file(_image!, height: 150),
-                ElevatedButton(
-                  onPressed: _pickImage,
-                  child: Text('Pick Image'),
-                ),
-                SizedBox(height: 20),
-                _isUploading
-                    ? CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: _saveService,
-                        child: Text('Add Service'),
-                      ),
-              ],
-            ),
+      appBar: AppBar(
+        title: Text(
+          'add-service'.tr(),
+          style: GoogleFonts.domine(
+            fontSize: 30,
+            color: Colors.blue,
+            fontWeight: FontWeight.bold,
           ),
+        ),
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              elevation: 3,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'servec-details'.tr(),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      TextFormField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          labelText: 'add-service-name'.tr(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        validator: (value) =>
+                            value!.isEmpty ? 'Please enter a name' : null,
+                      ),
+                      SizedBox(height: 16),
+                      TextFormField(
+                        controller: _descriptionController,
+                        decoration: InputDecoration(
+                          labelText: 'add-service-description'.tr(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        maxLines: 3,
+                        validator: (value) => value!.isEmpty
+                            ? 'Please enter a description'
+                            : null,
+                      ),
+                      SizedBox(height: 16),
+                      TextFormField(
+                        controller: _priceController,
+                        decoration: InputDecoration(
+                          labelText: 'add-service-price'.tr(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (value) =>
+                            value!.isEmpty ? 'Please enter a price' : null,
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        'image'.tr(),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      _image == null
+                          ? Text(
+                              'image-error'.tr(),
+                              style: TextStyle(color: Colors.grey),
+                              textAlign: TextAlign.center,
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.file(_image!, height: 150),
+                            ),
+                      SizedBox(height: 10),
+                      OutlinedButton.icon(
+                        onPressed: _pickImage,
+                        icon: Icon(Icons.image),
+                        label: Text('pick-image'.tr()),
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 30),
+            _isUploading
+                ? Center(child: CircularProgressIndicator())
+                : ElevatedButton(
+                    onPressed: _saveService,
+                    child: Text('add-service'.tr(),
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      textStyle: TextStyle(fontSize: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                  ),
+          ],
         ),
       ),
     );

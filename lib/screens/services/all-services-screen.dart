@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/screens/cart/model/cart-model.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
-import 'package:road_mate/theme/app-colors.dart';
 import 'package:road_mate/widget/drawer/mydrawer.dart';
 import 'package:road_mate/widget/services-item.dart';
 
@@ -20,24 +19,17 @@ class AllServicesScreen extends StatelessWidget {
           'all-services'.tr(),
           style: GoogleFonts.domine(
             fontSize: 30,
-            color: Colors.white,
+            color: Colors.blue,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF0091ad),
+        // backgroundColor: Color(0xFF0091ad),
         centerTitle: true,
       ),
       drawer: MyDrawer(),
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: AppColors.backGround,
-          ),
-        ),
         child: StreamBuilder(
           stream: FirebaseFunctions.getServicesStream(),
           builder: (context, snapshot) {

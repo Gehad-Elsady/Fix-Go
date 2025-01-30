@@ -2,18 +2,18 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:road_mate/constants/photos/photos.dart';
-import 'package:road_mate/theme/app-colors.dart';
 
 class OnboardingPage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: AppColors.backGround,
-        ),
+        // gradient: LinearGradient(
+        //   begin: Alignment.topLeft,
+        //   end: Alignment.bottomRight,
+        //   colors: AppColors.backGround,
+        // ),
+        color: Colors.white,
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),

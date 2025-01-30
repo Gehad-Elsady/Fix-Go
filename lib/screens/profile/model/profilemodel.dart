@@ -3,8 +3,6 @@ class ProfileModel {
   String lastName;
   String address;
   String phoneNumber;
-  String city;
-  String state;
   String email;
   String id;
   String profileImage;
@@ -15,8 +13,6 @@ class ProfileModel {
     required this.lastName,
     required this.address,
     required this.phoneNumber,
-    required this.city,
-    required this.state,
     required this.email,
     required this.id,
     required this.profileImage,
@@ -30,8 +26,8 @@ class ProfileModel {
       'lastName': lastName,
       'address': address,
       'phoneNumber': phoneNumber,
-      'city': city,
-      'state': state,
+      // 'city': city,
+      // 'state': state,
       'email': email,
       'profileImage': profileImage
     };
@@ -45,8 +41,8 @@ class ProfileModel {
       email: json['email'],
       address: json['address'],
       phoneNumber: json['phoneNumber'],
-      city: json['city'],
-      state: json['state'],
+      // city: json['city'],
+      // state: json['state'],
       id: json['id'],
       profileImage: json['profileImage'],
     );

@@ -5,14 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/constants/photos/photos.dart';
-import 'package:road_mate/paymob/paymob_manager.dart';
-import 'package:road_mate/screens/cart/payment-scree.dart';
+import 'package:road_mate/location/location.dart';
 import 'package:road_mate/screens/cart/widget/cartitem.dart';
 import 'package:road_mate/screens/history/model/historymaodel.dart';
-import 'package:road_mate/screens/profile/user-profile-screen.dart';
-import 'package:road_mate/theme/app-colors.dart';
+import 'package:road_mate/screens/profile/model/profilemodel.dart';
 import 'package:road_mate/widget/drawer/mydrawer.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class CartScreen extends StatelessWidget {
   static const String routeName = 'cart';
@@ -26,12 +23,12 @@ class CartScreen extends StatelessWidget {
           'cart'.tr(),
           style: GoogleFonts.domine(
             fontSize: 30,
-            color: Colors.white,
+            color: Colors.blue,
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Color(0xFF0091ad),
+        // backgroundColor: Color(0xFF0091ad),
         actions: [
           IconButton(
               onPressed: () {
@@ -66,13 +63,6 @@ class CartScreen extends StatelessWidget {
       ),
       drawer: MyDrawer(),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: AppColors.backGround,
-          ),
-        ),
         child: StreamBuilder(
           stream: FirebaseFunctions.getCardStream(),
           builder: (context, snapshot) {
@@ -124,7 +114,7 @@ class CartScreen extends StatelessWidget {
                 ),
                 // Total price at the bottom of the page
                 Divider(
-                  color: Colors.white,
+                  color: Colors.black,
                   thickness: 2,
                 ),
                 Padding(
@@ -137,14 +127,14 @@ class CartScreen extends StatelessWidget {
                         style: GoogleFonts.domine(
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                            color: Colors.black),
                       ),
                       Text(
                         '\$${totalPrice.toStringAsFixed(2)}',
                         style: GoogleFonts.domine(
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                            color: Colors.black),
                       ),
                     ],
                   ),
@@ -153,7 +143,7 @@ class CartScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(12.0),
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
+                        backgroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
@@ -163,39 +153,63 @@ class CartScreen extends StatelessWidget {
                         style: GoogleFonts.domine(
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black),
+                            color: Colors.blue),
                       ),
-                      onPressed: () {
-                        Historymaodel historymaodel = Historymaodel(
-                          userId: FirebaseAuth.instance.currentUser!.uid,
-                          items: snapshot.data!,
-                          OrderType: "Cart",
-                        );
-                        FirebaseFunctions.checkOut(totalPrice, () {
-                          Navigator.push(
+                      onPressed: () async {
+                        try {
+                          // Fetch the user profile
+                          ProfileModel? profileModel =
+                              await FirebaseFunctions.getUserProfile(
+                                      FirebaseAuth.instance.currentUser!.uid)
+                                  .first;
+
+                          if (profileModel == null) {
+                            // Show an alert dialog if the profile is null
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('no-profile'.tr()),
+                                  content: Text('profile-error'.tr()),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('ok'.tr()),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            // Log the user's name for debugging
+                            print(
+                                '--------------Name is ${profileModel.firstName}');
+                            HistoryModel historymaodel = HistoryModel(
+                              userId: FirebaseAuth.instance.currentUser!.uid,
+                              items: snapshot.data!,
+                              orderType: "Cart",
+                            );
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PaymentScreen(
-                                        totalPrice: totalPrice,
-                                        historymaodel: historymaodel,
-                                      )));
-                        }, () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text("please-complete-profile".tr()),
-                              actions: [
-                                TextButton(
-                                  child: Text("ok".tr()),
-                                  onPressed: () {
-                                    Navigator.popAndPushNamed(
-                                        context, UserProfile.routeName);
-                                  },
+                                builder: (context) => Gps(
+                                  historymaodel: historymaodel,
+                                  totalPrice: totalPrice,
                                 ),
-                              ],
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          // Handle exceptions and display an error message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error: ${e.toString()}'),
+                              backgroundColor: Colors.red,
                             ),
                           );
-                        });
+                        }
                       }),
                 ),
               ],

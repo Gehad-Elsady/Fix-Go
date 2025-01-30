@@ -12,7 +12,7 @@ class MyDivider extends StatelessWidget {
       children: [
         Expanded(
           child: Divider(
-            color: Color(0xffffffff),
+            color: Colors.black,
             thickness: 3,
           ),
         ),
@@ -20,12 +20,12 @@ class MyDivider extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(text,
                 style: GoogleFonts.domine(
-                  color: Color(0xffffffff),
+                  color: Colors.blue,
                   fontSize: 30,
                 ))),
         Expanded(
           child: Divider(
-            color: Color(0xffffffff),
+            color: Colors.black,
             thickness: 3,
           ),
         ),

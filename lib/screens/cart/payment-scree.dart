@@ -6,6 +6,7 @@ import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/paymob/paymob_manager.dart';
 import 'package:road_mate/screens/add-services/model/service-model.dart';
 import 'package:road_mate/screens/cart/cart-screen.dart';
+import 'package:road_mate/screens/history/historyscreen.dart';
 import 'package:road_mate/screens/history/model/historymaodel.dart';
 
 class PaymentScreen extends StatelessWidget {
@@ -13,7 +14,7 @@ class PaymentScreen extends StatelessWidget {
       {super.key, required this.totalPrice, required this.historymaodel});
   InAppWebViewController? _webViewController;
   final int totalPrice;
-  Historymaodel? historymaodel;
+  HistoryModel? historymaodel;
   ServiceModel? serviceModel;
 
   @override
@@ -52,7 +53,7 @@ class PaymentScreen extends StatelessWidget {
                       TextButton(
                         child: Text("OK"),
                         onPressed: () {
-                          Navigator.pushNamed(context, CartScreen.routeName);
+                          Navigator.pushNamed(context, HistoryScreen.routeName);
                         },
                       ),
                     ],

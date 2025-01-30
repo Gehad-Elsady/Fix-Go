@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -30,9 +31,6 @@ class _UserProfileState extends State<UserProfile> {
   TextEditingController email = TextEditingController();
   TextEditingController address = TextEditingController();
   TextEditingController contactNumber = TextEditingController();
-  TextEditingController city = TextEditingController();
-  TextEditingController state = TextEditingController();
-  TextEditingController points = TextEditingController();
 
   @override
   void dispose() {
@@ -41,9 +39,6 @@ class _UserProfileState extends State<UserProfile> {
     email.dispose();
     address.dispose();
     contactNumber.dispose();
-    city.dispose();
-    state.dispose();
-    points.dispose();
     super.dispose();
   }
 
@@ -81,21 +76,13 @@ class _UserProfileState extends State<UserProfile> {
         centerTitle: true,
         title: Text('profile'.tr(),
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.blue,
               fontSize: 35,
               fontWeight: FontWeight.bold,
             )),
-        backgroundColor: const Color(0xFF0091ad),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: AppColors.backGround,
-          ),
-        ),
         child: StreamBuilder(
           stream: FirebaseFunctions.getUserProfile(
               FirebaseAuth.instance.currentUser!.uid),
@@ -112,8 +99,6 @@ class _UserProfileState extends State<UserProfile> {
             email.text = userProfile.email ?? "";
             address.text = userProfile.address ?? "";
             contactNumber.text = userProfile.phoneNumber ?? "";
-            city.text = userProfile.city ?? "";
-            state.text = userProfile.state ?? '';
             _downloadURL = userProfile.profileImage ?? "";
 
             return _buildForm();
@@ -136,27 +121,33 @@ class _UserProfileState extends State<UserProfile> {
                 child: CircleAvatar(
                   radius: 100,
                   backgroundImage: _imageFile != null
-                      ? FileImage(_imageFile!)
+                      ? FileImage(_imageFile!) as ImageProvider
                       : _downloadURL != null && _downloadURL!.isNotEmpty
-                          ? NetworkImage(_downloadURL!)
+                          ? CachedNetworkImageProvider(_downloadURL!)
                           : const NetworkImage(
-                              'https://via.placeholder.com/150',
-                            ) as ImageProvider,
+                              'https://static.vecteezy.com/system/resources/thumbnails/005/720/408/small_2x/crossed-image-icon-picture-not-available-delete-picture-symbol-free-vector.jpg',
+                            ),
+                  child: _downloadURL == null && _imageFile == null
+                      ? Center(child: CircularProgressIndicator())
+                      : null, // Optionally show a loading indicator if no image is present
                 ),
               ),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 30),
             Row(
               children: [
                 Expanded(
                   child: TextFormField(
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                     controller: firstName,
                     decoration: InputDecoration(
                         labelText: 'first-name'.tr(),
                         labelStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
+                          color: Colors.blue,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                         )),
                     validator: (value) =>
@@ -166,13 +157,16 @@ class _UserProfileState extends State<UserProfile> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextFormField(
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                     controller: lastName,
                     decoration: InputDecoration(
                         labelText: 'last-name'.tr(),
                         labelStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
+                          color: Colors.blue,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                         )),
                     validator: (value) =>
@@ -183,26 +177,32 @@ class _UserProfileState extends State<UserProfile> {
             ),
             const SizedBox(height: 30),
             TextFormField(
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
               controller: email,
               decoration: InputDecoration(
                   labelText: 'email'.tr(),
                   labelStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+                    color: Colors.blue,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
                   )),
               validator: Validation.validateEmail(email.text),
             ),
             const SizedBox(height: 30),
             TextFormField(
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
               controller: address,
               decoration: InputDecoration(
                   labelText: 'address'.tr(),
                   labelStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+                    color: Colors.blue,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
                   )),
               validator: (value) =>
@@ -210,13 +210,16 @@ class _UserProfileState extends State<UserProfile> {
             ),
             const SizedBox(height: 30),
             TextFormField(
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
               controller: contactNumber,
               decoration: InputDecoration(
                   labelText: 'phone-number'.tr(),
                   labelStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+                    color: Colors.blue,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
                   )),
               validator: (value) =>
@@ -224,74 +227,8 @@ class _UserProfileState extends State<UserProfile> {
             ),
             const SizedBox(height: 30),
             Row(
-              children: [
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    style: const TextStyle(color: Colors.black),
-                    value: city.text.isEmpty ? null : city.text,
-                    items: ['Mehrab', 'City 2', 'City 3']
-                        .map((city) =>
-                            DropdownMenuItem(value: city, child: Text(city)))
-                        .toList(),
-                    onChanged: (value) => setState(() => city.text = value!),
-                    decoration: InputDecoration(
-                        labelText: 'city'.tr(),
-                        labelStyle: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    validator: (value) =>
-                        value == null ? 'city-error'.tr() : null,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    style: const TextStyle(color: Colors.black),
-                    value: state.text.isEmpty ? null : state.text,
-                    items: ['Bozorgi', 'State 2', 'State 3']
-                        .map((state) =>
-                            DropdownMenuItem(value: state, child: Text(state)))
-                        .toList(),
-                    onChanged: (value) => setState(() => state.text = value!),
-                    decoration: InputDecoration(
-                        labelText: 'state'.tr(),
-                        labelStyle: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    validator: (value) =>
-                        value == null ? 'state-error'.tr() : null,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    backgroundColor: Colors.red,
-                    shape: const StadiumBorder(),
-                    side: const BorderSide(
-                      color: Colors.red,
-                      width: 2,
-                    ),
-                  ),
-                  child: Text('cancel'.tr(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      )),
-                ),
                 ElevatedButton(
                   onPressed: () async {
                     await _uploadImage(); // Upload the image before saving
@@ -301,8 +238,7 @@ class _UserProfileState extends State<UserProfile> {
                         lastName: lastName.text,
                         address: address.text,
                         phoneNumber: contactNumber.text,
-                        city: city.text,
-                        state: state.text,
+
                         email: email.text,
                         profileImage: _downloadURL ??
                             "", // Use existing URL if no image selected
@@ -313,8 +249,7 @@ class _UserProfileState extends State<UserProfile> {
                       lastName.clear();
                       address.clear();
                       contactNumber.clear();
-                      city.clear();
-                      state.clear();
+
                       email.clear();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('profile-saved'.tr())),
@@ -323,16 +258,16 @@ class _UserProfileState extends State<UserProfile> {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.black,
                     shape: const StadiumBorder(),
                     side: const BorderSide(
-                      color: Colors.green,
+                      color: Colors.black,
                       width: 2,
                     ),
                   ),
                   child: Text('save'.tr(),
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: Colors.blue,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       )),

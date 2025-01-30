@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/Auth/login-screen.dart';
+import 'package:road_mate/screens/engineers/engineera_screen.dart';
+import 'package:road_mate/screens/history/historyscreen.dart';
 import 'package:road_mate/screens/services/all-services-screen.dart';
 import 'package:road_mate/screens/cart/cart-screen.dart';
 import 'package:road_mate/screens/contact/contact-screen.dart';
@@ -10,6 +12,8 @@ import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/screens/home/home-screen.dart';
 import 'package:road_mate/screens/settings/settings_tab.dart';
 import 'package:road_mate/screens/profile/user-profile-screen.dart';
+import 'package:road_mate/screens/user%20home/main_hame.dart';
+import 'package:road_mate/screens/user%20home/user_home.dart';
 import 'package:road_mate/widget/drawer/social-media-icons.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -28,7 +32,7 @@ class MyDrawer extends StatelessWidget {
                 if (snapshot.hasData && snapshot.data != null) {
                   return DrawerHeader(
                     decoration: const BoxDecoration(
-                      color: Color(0xFF2e6f95),
+                      color: Colors.blue,
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -41,6 +45,8 @@ class MyDrawer extends StatelessWidget {
                         ),
                         Text(
                           snapshot.data!.email,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.domine(
                             fontSize: 20,
                             color: Colors.white,
@@ -67,7 +73,7 @@ class MyDrawer extends StatelessWidget {
                     child: CircleAvatar(
                         radius: 40,
                         backgroundImage: NetworkImage(
-                          'https://via.placeholder.com/150',
+                          'https://static.vecteezy.com/system/resources/thumbnails/005/720/408/small_2x/crossed-image-icon-picture-not-available-delete-picture-symbol-free-vector.jpg',
                         )),
                   );
                 }
@@ -80,16 +86,15 @@ class MyDrawer extends StatelessWidget {
                     'home'.tr(),
                     style: GoogleFonts.domine(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: Colors.blue,
                     ),
                   ),
                   leading: const Icon(
                     Icons.home,
-                    color: Color(0xFF723c70),
+                    color: Colors.black,
                   ),
                   onTap: () {
-                    Navigator.pushReplacementNamed(
-                        context, HomeScreen.routeName);
+                    Navigator.pushNamed(context, HomeScreen.routeName);
                   },
                 ),
                 ListTile(
@@ -97,12 +102,12 @@ class MyDrawer extends StatelessWidget {
                     'services'.tr(),
                     style: GoogleFonts.domine(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: Colors.blue,
                     ),
                   ),
                   leading: const Icon(
                     Icons.miscellaneous_services_outlined,
-                    color: Color(0xFF723c70),
+                    color: Colors.black,
                   ),
                   onTap: () {
                     Navigator.pushReplacementNamed(
@@ -111,15 +116,32 @@ class MyDrawer extends StatelessWidget {
                 ),
                 ListTile(
                   title: Text(
+                    'engineers'.tr(),
+                    style: GoogleFonts.domine(
+                      fontSize: 20,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  leading: const Icon(
+                    Icons.engineering_rounded,
+                    color: Colors.black,
+                  ),
+                  onTap: () {
+                    Navigator.pushReplacementNamed(
+                        context, EngineersScreen.routeName);
+                  },
+                ),
+                ListTile(
+                  title: Text(
                     'cart'.tr(),
                     style: GoogleFonts.domine(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: Colors.blue,
                     ),
                   ),
                   leading: const Icon(
                     Icons.shopping_cart_rounded,
-                    color: Color(0xFF723c70),
+                    color: Colors.black,
                   ),
                   onTap: () {
                     Navigator.pushNamed(context, CartScreen.routeName);
@@ -130,12 +152,12 @@ class MyDrawer extends StatelessWidget {
                     'contact'.tr(),
                     style: GoogleFonts.domine(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: Colors.blue,
                     ),
                   ),
                   leading: const Icon(
                     Icons.contact_page,
-                    color: Color(0xFF723c70),
+                    color: Colors.black,
                   ),
                   onTap: () {
                     Navigator.pushNamed(context, ContactScreen.routeName);
@@ -145,13 +167,13 @@ class MyDrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(
                     Icons.account_circle,
-                    color: Color(0xFF723c70),
+                    color: Colors.black,
                   ),
                   title: Text(
                     'profile'.tr(),
                     style: GoogleFonts.domine(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: Colors.blue,
                     ),
                   ),
                   onTap: () {
@@ -162,14 +184,32 @@ class MyDrawer extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(
+                    Icons.history,
+                    color: Colors.black,
+                  ),
+                  title: Text(
+                    'history'.tr(),
+                    style: GoogleFonts.domine(
+                      fontSize: 20,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, HistoryScreen.routeName);
+                    print(FirebaseAuth.instance.currentUser?.uid);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(
                     Icons.settings,
-                    color: Color(0xFF723c70),
+                    color: Colors.black,
                   ),
                   title: Text(
                     'settings'.tr(),
                     style: GoogleFonts.domine(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: Colors.blue,
                     ),
                   ),
                   onTap: () {
@@ -180,13 +220,13 @@ class MyDrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(
                     Icons.logout,
-                    color: Color(0xFF723c70),
+                    color: Colors.black,
                   ),
                   title: Text(
                     'logout'.tr(),
                     style: GoogleFonts.domine(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: Colors.blue,
                     ),
                   ),
                   onTap: () {

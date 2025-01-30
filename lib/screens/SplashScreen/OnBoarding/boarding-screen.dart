@@ -6,7 +6,6 @@ import 'package:road_mate/screens/SplashScreen/OnBoarding/OnboardingPage1.dart';
 import 'package:road_mate/screens/SplashScreen/OnBoarding/OnboardingPage2.dart';
 import 'package:road_mate/screens/SplashScreen/OnBoarding/OnboardingPage3.dart';
 import 'package:road_mate/screens/SplashScreen/provider/finish-onboarding.dart';
-import 'package:road_mate/theme/app-colors.dart';
 
 // import 'package:recycling_app/home-screen.dart';
 
@@ -29,11 +28,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: AppColors.backGround,
-          ),
+          // gradient: LinearGradient(
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.bottomRight,
+          //   colors: AppColors.backGround,
+          // ),
+          color: Colors.white,
         ),
         child: Stack(
           children: [
@@ -109,7 +109,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: Text(
                       _currentIndex == 2 ? 'get-started'.tr() : 'next'.tr(),
                       style: TextStyle(
-                        color: Color(0xfff4e285),
+                        color: Colors.blue,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -132,7 +132,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       height: 8,
       width: isActive ? 10 : 8,
       decoration: BoxDecoration(
-        color: isActive ? Colors.green : Colors.grey,
+        color: isActive ? Colors.blue : Colors.blue[900],
         borderRadius: BorderRadius.circular(8),
       ),
     );

@@ -1,7 +1,10 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, unnecessary_cast
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:road_mate/location/model/locationmodel.dart';
+import 'package:road_mate/notifications/model/notification_model.dart';
+import 'package:road_mate/screens/Admin/model/eng_model.dart';
 import 'package:road_mate/screens/cart/model/cart-model.dart';
 import 'package:road_mate/screens/contact/model/contact-model.dart';
 import 'package:road_mate/screens/history/model/historymaodel.dart';
@@ -15,6 +18,7 @@ class FirebaseFunctions {
       {required Function onSuccess,
       required Function onError,
       required String userName,
+      required String role,
       required int age}) async {
     try {
       final credential =
@@ -25,6 +29,7 @@ class FirebaseFunctions {
 
       credential.user?.sendEmailVerification();
       UserModel userModel = UserModel(
+        role: role,
         age: age,
         email: emailAddress,
         name: userName,
@@ -147,6 +152,7 @@ class FirebaseFunctions {
           image: data['image'] ?? 'default_image.png', // Adjust if needed
           description: data['description'] ?? 'No Description',
           price: data['price'] ?? 'No Price',
+          createdAt: data['createdAt'] ?? 'No Date',
         );
       }).toList();
     });
@@ -168,6 +174,27 @@ class FirebaseFunctions {
       print('Service added successfully!');
     } catch (e) {
       print('Error adding service: $e');
+    }
+  }
+
+  static Future<void> deleteService(String id, Timestamp createdAt) async {
+    try {
+      // Query to find the service with matching `id` and `createdAt`
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('services')
+          .where('id', isEqualTo: id)
+          .where('createdAt', isEqualTo: createdAt)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // If a matching document is found, delete it
+        await querySnapshot.docs.first.reference.delete();
+        print('Service deleted successfully!');
+      } else {
+        print('Service not found for the given id and createdAt');
+      }
+    } catch (e) {
+      print('Error deleting service: $e');
     }
   }
 
@@ -295,47 +322,330 @@ class FirebaseFunctions {
     });
   }
 
-  static Future<void> orderHistory(
-    Historymaodel order,
-  ) async {
+  static Future<void> orderHistory(HistoryModel order) async {
     try {
-      // Get the highest existing orderId and increment it
+      // Reference to the 'History' collection
       final historyCollection =
           FirebaseFirestore.instance.collection('History');
+
+      // Debug log: Check collection size
+      print('Fetching the highest existing order ID...');
+
+      // Get the highest existing order ID
       final snapshot = await historyCollection
           .orderBy('id', descending: true)
           .limit(1)
           .get();
 
-      int newId = 1; // Default to 1 if no orders are in the collection
+      int newId = 1; // Default to 1 if no orders exist
       if (snapshot.docs.isNotEmpty) {
-        final lastId = snapshot.docs.first['id']; // Use 'id' to compare
-        if (lastId != null) {
-          newId = int.tryParse(lastId) ?? 1; // Parse as int, fallback to 1
-          newId += 1; // Increment the orderId
-        }
+        final lastId = snapshot.docs.first.data()['id'];
+
+        // Debug log: Output the last ID
+        print('Last order ID retrieved: $lastId');
+
+        // Parse last ID safely and increment
+        newId = (int.tryParse(lastId?.toString() ?? '0') ?? 0) + 1;
+
+        // Debug log: Output the new ID
+        print('New order ID to be used: $newId');
       }
 
-      // Manually include additional fields from order.toJson()
-      final newOrder = Historymaodel(
-          id: newId.toString(),
-          userId: FirebaseAuth.instance.currentUser!
-              .uid, // Include additional fields explicitly
-          items: order.items,
-          OrderType: order.OrderType,
-          serviceModel: order.serviceModel);
+      // Fetch user profile asynchronously
+      final userProfile =
+          await getUserProfile(FirebaseAuth.instance.currentUser!.uid).first;
 
-      // Add the new order to the 'History' collection with the generated orderId
-      await historyCollection
-          .doc() // Firestore automatically generates the document ID
-          .set(newOrder.toJson()); // Use toJson() to save the data
+      if (userProfile == null) {
+        print('User profile not found!');
+        return;
+      }
 
-      // Clear the cart for the current user
-      clearCart(FirebaseAuth.instance.currentUser!.uid);
+      // Debug log: Output user profile
+      print('User profile retrieved: ${userProfile.firstName}');
+
+      // Create a new order
+      final newOrder = HistoryModel(
+        id: newId.toString(),
+        userId: FirebaseAuth.instance.currentUser!.uid,
+        items: order.items,
+        orderType: order.orderType,
+        serviceModel: order.serviceModel,
+        locationModel: order.locationModel,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+        orderStatus: "Pending",
+        orderOwnerName: userProfile.firstName,
+        orderOwnerPhone: userProfile.phoneNumber,
+      );
+
+      // Add the new order to Firestore
+      await historyCollection.add(newOrder.toJson());
+
+      // Clear the user's cart
+      await clearCart(FirebaseAuth.instance.currentUser!.uid);
+
+      print('Order added successfully with ID: $newId');
     } catch (e) {
       print('Error adding order: $e');
     }
   }
 
-  //---------------------------------------------------------------------------
+  static Stream<List<HistoryModel>> getHistoryStream() {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    final String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+    return _firestore
+        .collection('History')
+        .where('userId', isEqualTo: uid) // Filter by current user's ID
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return HistoryModel(
+          timestamp: data['timestamp'] ?? 0,
+          userId: data['userId'] ?? "no id",
+          serviceModel: data['serviceModel'] != null
+              ? ServiceModel.fromJson(data['serviceModel'])
+              : null,
+          locationModel: data['locationModel'] != null
+              ? LocationModel.fromMap(data['locationModel'])
+              : null,
+          items: data['items'] != null
+              ? (data['items'] as List<dynamic>)
+                  .map((item) => CartModel.fromMap(item))
+                  .toList()
+              : [],
+          orderType: data['OrderType'] ?? "No Order Type",
+          id: data['id'] ?? "No Id",
+          orderStatus: data['orderStatus'] ?? "No Status",
+          orderOwnerName: data['orderOwnerName'] ?? "No Name",
+          orderOwnerPhone: data['orderOwnerPhone'] ?? "No Phone",
+        );
+      }).toList();
+    });
+  }
+
+  static Future<void> deleteHistoryOrder(int timestamp) async {
+    final String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+    if (uid.isEmpty) {
+      print('User is not authenticated.');
+      return;
+    }
+
+    try {
+      // Get the document(s) that match the userId and itemId
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('History')
+          .where('timestamp', isEqualTo: timestamp)
+          .where('userId',
+              isEqualTo: uid) // Ensure the item belongs to the current user
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        print('No items found to delete.');
+        return;
+      }
+
+      // Delete each document found
+      for (var doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+
+      print('Service deleted successfully!');
+    } catch (e) {
+      print('Error deleting service: $e');
+    }
+  }
+
+  //----------------------------------Admin Functions-----------------------------------------
+  static Stream<List<HistoryModel>> getAdminRequestStream() {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+    return _firestore.collection('History').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return HistoryModel(
+          timestamp: data['timestamp'] ?? 0,
+          userId: data['userId'] ?? "no id",
+          serviceModel: data['serviceModel'] != null
+              ? ServiceModel.fromJson(data['serviceModel'])
+              : null,
+          locationModel: data['locationModel'] != null
+              ? LocationModel.fromMap(data['locationModel'])
+              : null,
+          items: data['items'] != null
+              ? (data['items'] as List<dynamic>)
+                  .map((item) => CartModel.fromMap(item))
+                  .toList()
+              : [],
+          orderType: data['OrderType'] ?? "No Order Type",
+          id: data['id'] ?? "No Id",
+          orderStatus: data['orderStatus'] ?? "No Status",
+          orderOwnerName: data['orderOwnerName'] ?? "No Name",
+          orderOwnerPhone: data['orderOwnerPhone'] ?? "No Phone",
+        );
+      }).toList();
+    });
+  }
+
+  // static Stream<List<HistoryModel>> getAcceptedStream(String userId) {
+  //   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  //   return _firestore
+  //       .collection('History')
+  //       .where('userId', isEqualTo: userId) // Filter by userId
+  //       .snapshots()
+  //       .map((snapshot) {
+  //     snapshot.docs.forEach((doc) {
+  //       final data = doc.data();
+  //       String orderStatus = data['orderStatus'] ?? "No Status";
+
+  //       // If the orderStatus is "pending", update it to "accepted"
+  //       if (orderStatus == "Pending") {
+  //         _firestore.collection('History').doc(doc.id).update({
+  //           'orderStatus': 'Accepted',
+  //         });
+  //       }
+  //     });
+
+  //     // Return the list of HistoryModel after the potential updates
+  //     return snapshot.docs.map((doc) {
+  //       final data = doc.data();
+  //       return HistoryModel(
+  //         timestamp: data['timestamp'] ?? 0,
+  //         userId: data['userId'] ?? "no id",
+  //         serviceModel: data['serviceModel'] != null
+  //             ? ServiceModel.fromJson(data['serviceModel'])
+  //             : null,
+  //         locationModel: data['locationModel'] != null
+  //             ? LocationModel.fromMap(data['locationModel'])
+  //             : null,
+  //         items: data['items'] != null
+  //             ? (data['items'] as List<dynamic>)
+  //                 .map((item) => CartModel.fromMap(item))
+  //                 .toList()
+  //             : [],
+  //         orderType: data['OrderType'] ?? "No Order Type",
+  //         id: data['id'] ?? "No Id",
+  //         orderStatus: data['orderStatus'] ?? "No Status",
+  //         orderOwnerName: data['orderOwnerName'] ?? "No Name",
+  //         orderOwnerPhone: data['orderOwnerPhone'] ?? "No Phone",
+  //       );
+  //     }).toList();
+  //   });
+  // }
+
+  static Future<void> acceptedOrder(String id, int timestamp) async {
+    // Query to find the document based on `id` and `createdAt`
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('History')
+        .where('userId', isEqualTo: id)
+        .where('timestamp', isEqualTo: timestamp)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // If the document exists, update it
+      final docId = querySnapshot.docs.first.id;
+      await FirebaseFirestore.instance.collection('History').doc(docId).update({
+        'orderStatus': 'Accepted',
+      });
+      print('Service updated successfully!');
+    }
+  }
+
+  static Future<void> cancelOrder(String id, int timestamp) async {
+    // Query to find the document based on `id` and `createdAt`
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('History')
+        .where('userId', isEqualTo: id)
+        .where('timestamp', isEqualTo: timestamp)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // If the document exists, update it
+      final docId = querySnapshot.docs.first.id;
+      await FirebaseFirestore.instance.collection('History').doc(docId).update({
+        'orderStatus': 'Pending',
+      });
+      print('Service updated successfully!');
+    }
+  }
+
+  //-----------------------------Engineer Functions-----------------------------------
+  static Stream<List<EngModel>> getSEngineerStream() {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    return _firestore.collection('engineers').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return EngModel(
+          userId: data['userId'] ?? "no id",
+          name: data['name'] ?? 'No Name',
+          image: data['image'] ?? 'default_image.png', // Adjust if needed
+          bio: data['bio'] ?? 'No Description',
+          price: data['price'] ?? 'No Price',
+          createdAt: data['createdAt'] ?? 'No Date',
+          phone: data['phone'] ?? 'No Phone',
+          address: data['address'] ?? 'No Address',
+        );
+      }).toList();
+    });
+  }
+
+  static Future<void> deleteEngineer(String id, Timestamp createdAt) async {
+    try {
+      // Query to find the service with matching `id` and `createdAt`
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('engineers')
+          .where('id', isEqualTo: id)
+          .where('createdAt', isEqualTo: createdAt)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // If a matching document is found, delete it
+        await querySnapshot.docs.first.reference.delete();
+        print('Engineer deleted successfully!');
+      } else {
+        print('Engineer not found for the given id and createdAt');
+      }
+    } catch (e) {
+      print('Error deleting engineer: $e');
+    }
+  }
+
+  //--------------------------Notifications--------------------------
+
+  static Future<void> addDeviceTokens(NotificationModel token) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('UserTokens')
+          .doc(token.id)
+          .withConverter<NotificationModel>(
+        fromFirestore: (snapshot, options) {
+          return NotificationModel.fromJson(snapshot.data()!);
+        },
+        toFirestore: (value, options) {
+          return value.toJson();
+        },
+      ).set(token);
+      print('token added successfully!');
+    } catch (e) {
+      print('Error adding token: $e');
+    }
+  }
+
+  static Stream<String?> getUserDeviceTokenStream(String userId) {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    return _firestore
+        .collection('UserTokens')
+        .doc(
+            userId) // Directly reference the document with the userId as the document ID.
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.exists) {
+        final data = snapshot.data() as Map<String, dynamic>;
+        return data['deviceToken'] as String?; // Return the deviceToken field.
+      }
+      return null; // Return null if the document does not exist.
+    });
+  }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/screens/home/widget/appbar.dart';
 import 'package:road_mate/constants/photos/photos.dart';
-import 'package:road_mate/theme/app-colors.dart';
+import 'package:road_mate/screens/home/widget/partners-part.dart';
 import 'package:road_mate/widget/devider/mydevider.dart';
 import 'package:road_mate/widget/drawer/mydrawer.dart';
 import 'package:road_mate/screens/home/widget/services-part.dart';
@@ -31,24 +31,24 @@ class HomeScreen extends StatelessWidget {
               'fix-and-go'.tr(),
               style: GoogleFonts.domine(
                 fontSize: 30,
-                color: Colors.white,
+                color: Colors.blue,
                 fontWeight: FontWeight.bold,
               ), // Applying Domine font to the title
             ),
           ],
         ),
-        backgroundColor: Color(0xFF0091ad),
+        // backgroundColor: Color(0xFF0091ad),
       ),
       body: SingleChildScrollView(
         child: Container(
           // height: MediaQuery.of(context).size.height,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: AppColors.backGround,
-            ),
-          ),
+          // decoration: const BoxDecoration(
+          //   gradient: LinearGradient(
+          //     begin: Alignment.topCenter,
+          //     end: Alignment.bottomCenter,
+          //     colors: AppColors.backGround,
+          //   ),
+          // ),
           child: Column(
             children: [
               // Carousel Slider
@@ -63,10 +63,7 @@ class HomeScreen extends StatelessWidget {
               ServicesPart(),
               MyDivider(text: "partners".tr()),
               // Fixed height for GridView
-              Container(
-                height: 400, // Set fixed height for GridView
-                padding: EdgeInsets.all(10),
-              ),
+              PartnersPart(),
             ],
           ),
         ),

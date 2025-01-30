@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,7 +21,7 @@ class ServicesItem extends StatelessWidget {
     return Container(
       height: 300,
       decoration: BoxDecoration(
-        color: Color(0xFF2e6f95),
+        color: Colors.blue,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
@@ -35,17 +36,19 @@ class ServicesItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-            ),
-            child: Image.network(
-              height: 150,
-              width: double.infinity,
-              service.image,
-              fit: BoxFit.cover,
-            ),
-          ),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              child: CachedNetworkImage(
+                imageUrl: service.image,
+                height: 150,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                placeholder: (context, url) =>
+                    Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              )),
           Text(
             service.name,
             textAlign: TextAlign.center,
@@ -78,7 +81,7 @@ class ServicesItem extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8.0, left: 8),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
+                backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
               ),
@@ -90,7 +93,7 @@ class ServicesItem extends StatelessWidget {
                 style: GoogleFonts.montserrat(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Colors.blue,
                 ),
               ),
             ),

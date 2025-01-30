@@ -6,7 +6,6 @@ import 'package:lottie/lottie.dart';
 import 'package:road_mate/Auth/login-screen.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/constants/photos/photos.dart';
-import 'package:road_mate/theme/app-colors.dart';
 
 class SignUpPage extends StatefulWidget {
   static const String routeName = "sign up";
@@ -16,16 +15,26 @@ class SignUpPage extends StatefulWidget {
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
-final TextEditingController ageController = TextEditingController();
-final TextEditingController emailController = TextEditingController();
-final TextEditingController passwordController = TextEditingController();
-final TextEditingController phoneController = TextEditingController();
-final TextEditingController nameController = TextEditingController();
-
 String? role;
 
 class _SignUpPageState extends State<SignUpPage> {
   final formKey = GlobalKey<FormState>(); // Moved inside _SignUpPageState
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+// final TextEditingController phoneController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+
+  void dispose() {
+    ageController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    nameController.dispose();
+
+    role = null;
+    // Reset form on page dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: AppColors.backGround,
-          ),
+          color: Colors.white,
         ),
         child: SingleChildScrollView(
           child: Padding(
@@ -47,7 +52,7 @@ class _SignUpPageState extends State<SignUpPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 SizedBox(height: 50),
-                Lottie.asset(Photos.signUp, height: 200),
+                Image.asset(Photos.signUp, height: 200),
                 SizedBox(height: 20),
                 Form(
                   key: formKey,
@@ -57,7 +62,84 @@ class _SignUpPageState extends State<SignUpPage> {
                       Text(
                         'signup'.tr(),
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 24, color: Colors.white),
+                        style: TextStyle(
+                            fontSize: 30,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: role == "Provider"
+                                  ? MaterialStateProperty.all(Colors.blue)
+                                  : MaterialStateProperty.all(Colors.black),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                role = "Provider";
+                              });
+                            },
+                            child: Container(
+                              height: 100,
+                              width: 100,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ImageIcon(
+                                    AssetImage(
+                                      "assets/images/provider.png",
+                                    ),
+                                    size: 50,
+                                    color: Colors.white,
+                                  ),
+                                  Text(
+                                    "provider".tr(),
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: role == "User"
+                                  ? MaterialStateProperty.all(Colors.blue)
+                                  : MaterialStateProperty.all(Colors.black),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                role = "User";
+                              });
+                            },
+                            child: Container(
+                              height: 100,
+                              width: 100,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(
+                                    Icons.person_2_rounded,
+                                    size: 50,
+                                    color: Colors.white,
+                                  ),
+                                  Text(
+                                    "user".tr(),
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 20),
                       TextFormField(
@@ -80,7 +162,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -110,7 +192,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -143,7 +225,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -175,7 +257,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -185,15 +267,17 @@ class _SignUpPageState extends State<SignUpPage> {
                         style: ElevatedButton.styleFrom(
                           elevation: 15,
                           shadowColor: Color(0xff212529),
-                          backgroundColor: const Color(0xff0091AD),
+                          backgroundColor: Colors.black,
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
                         onPressed: () {
-                          if (formKey.currentState!.validate()) {
+                          if (formKey.currentState!.validate() &&
+                              role != null) {
                             FirebaseFunctions.SignUp(
+                              role: "User",
                               emailController.text,
                               passwordController.text,
                               age: int.parse(ageController.text),
@@ -254,7 +338,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         child: Text(
                           "submit".tr(),
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -271,21 +355,21 @@ class _SignUpPageState extends State<SignUpPage> {
                           TextSpan(
                             text: "have-an-account".tr(),
                             style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xffffffff),
-                            ),
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue),
                             children: [
                               TextSpan(
                                 text: "login".tr(),
                                 style: TextStyle(
-                                  color: Color(0xffffffff),
+                                  color: Colors.black,
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
+                      SizedBox(height: 20),
                     ],
                   ),
                 ),

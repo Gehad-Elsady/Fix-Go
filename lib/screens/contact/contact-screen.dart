@@ -1,8 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/screens/contact/model/contact-model.dart';
-import 'package:road_mate/theme/app-colors.dart';
 import 'package:road_mate/widget/drawer/mydrawer.dart';
 
 class ContactScreen extends StatefulWidget {
@@ -34,25 +34,18 @@ class _ContactScreenState extends State<ContactScreen> {
       drawer: MyDrawer(),
       appBar: AppBar(
         title: Text(
-          'Contact Us',
+          'contact'.tr(),
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.blue,
             fontSize: 30,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: const Color(0xFF0091ad),
+        // backgroundColor: const Color(0xFF0091ad),
         centerTitle: true,
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: AppColors.backGround,
-          ),
-        ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(
@@ -61,22 +54,22 @@ class _ContactScreenState extends State<ContactScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'We would love to hear from you!',
+                  'contact-title'.tr(),
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 16.0),
                 TextFormField(
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.black),
                   controller: _nameController,
                   decoration: InputDecoration(
-                    labelText: 'Your Name',
-                    labelStyle: TextStyle(color: Colors.white, fontSize: 20.0),
+                    labelText: 'name'.tr(),
+                    labelStyle: TextStyle(color: Colors.black, fontSize: 20.0),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                      borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                   ),
@@ -89,13 +82,13 @@ class _ContactScreenState extends State<ContactScreen> {
                 ),
                 SizedBox(height: 16.0),
                 TextFormField(
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.black),
                   controller: _emailController,
                   decoration: InputDecoration(
-                    labelText: 'Email Address',
-                    labelStyle: TextStyle(color: Colors.white, fontSize: 20.0),
+                    labelText: 'enter-email'.tr(),
+                    labelStyle: TextStyle(color: Colors.black, fontSize: 20.0),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                      borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                   ),
@@ -112,13 +105,13 @@ class _ContactScreenState extends State<ContactScreen> {
                 ),
                 SizedBox(height: 16.0),
                 TextFormField(
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.black),
                   controller: _messageController,
                   decoration: InputDecoration(
-                    labelText: 'Message',
-                    labelStyle: TextStyle(color: Colors.white, fontSize: 20.0),
+                    labelText: 'massage'.tr(),
+                    labelStyle: TextStyle(color: Colors.black, fontSize: 20.0),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                      borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                   ),
@@ -135,9 +128,9 @@ class _ContactScreenState extends State<ContactScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
+                      foregroundColor: Colors.black,
                       fixedSize: Size(200, 50),
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.black,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
@@ -164,7 +157,10 @@ class _ContactScreenState extends State<ContactScreen> {
                         _messageController.clear();
                       }
                     },
-                    child: Text('Submit', style: TextStyle(fontSize: 20.0)),
+                    child: Text(
+                      'send'.tr(),
+                      style: TextStyle(fontSize: 25.0, color: Colors.blue),
+                    ),
                   ),
                 ),
               ],

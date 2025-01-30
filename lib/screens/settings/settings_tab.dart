@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:road_mate/screens/settings/bottom_sheets/theme_bottomsheet.dart';
 import 'package:road_mate/screens/settings/bottom_sheets/language_bottomsheet.dart'; // Assuming you have this widget
-import 'package:road_mate/theme/app-colors.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:road_mate/widget/drawer/mydrawer.dart';
 
@@ -34,61 +32,22 @@ class _SettingsTabState extends State<SettingsTab> {
         ),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: AppColors.backGround,
-          ),
-        ),
+        // decoration: const BoxDecoration(
+        //   gradient: LinearGradient(
+        //     begin: Alignment.topCenter,
+        //     end: Alignment.bottomCenter,
+        //     colors: AppColors.backGround,
+        //   ),
+        // ),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                "theme".tr(),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 20),
-              InkWell(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    isDismissible: true,
-                    backgroundColor: Colors.white,
-                    builder: (context) {
-                      return ThemeBottomSheet();
-                    },
-                  );
-                },
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    border: Border.all(color: Colors.white),
-                  ),
-                  child: Text(
-                    // provider.appTheme == ThemeMode.dark ? "dark".tr() :
-                    "light".tr(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 40),
-              Text(
                 "language".tr(),
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.blue,
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
@@ -110,17 +69,40 @@ class _SettingsTabState extends State<SettingsTab> {
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    border: Border.all(color: Colors.white),
+                    border: Border.all(color: Colors.black),
                   ),
                   child: Text(
                     context.locale == Locale("ar")
                         ? "arabic".tr()
                         : "english".tr(),
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.blue,
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
                     ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Text("aap-version".tr(),
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue)),
+              SizedBox(height: 20),
+              Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  border: Border.all(color: Colors.black),
+                ),
+                child: Text(
+                  // provider.appTheme == ThemeMode.dark ? "dark".tr() :
+                  "1.0.0",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

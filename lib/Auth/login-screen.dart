@@ -2,11 +2,12 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:road_mate/Auth/model/usermodel.dart';
 import 'package:road_mate/Auth/signup-screen.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
+import 'package:road_mate/screens/Admin/admin_home.dart';
 import 'package:road_mate/screens/home/home-screen.dart';
 import 'package:road_mate/constants/photos/photos.dart';
-import 'package:road_mate/theme/app-colors.dart';
 
 class LoginPage extends StatefulWidget {
   static const String routeName = 'login page';
@@ -28,11 +29,12 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: AppColors.backGround,
-          ),
+          // gradient: LinearGradient(
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.bottomRight,
+          //   colors: AppColors.backGround,
+          // ),
+          color: Colors.white,
         ),
         child: SingleChildScrollView(
           child: Padding(
@@ -47,6 +49,15 @@ class _LoginPageState extends State<LoginPage> {
                   // Logo or Image at the top
                   Image.asset(Photos.login, height: 200),
 
+                  const SizedBox(height: 10), // Spacing between image and text
+                  Text(
+                    'login'.tr(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 30,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(
                       height: 30), // Spacing between image and text fields
 
@@ -61,15 +72,15 @@ class _LoginPageState extends State<LoginPage> {
                       hintStyle: Theme.of(context)
                           .textTheme
                           .bodyMedium
-                          ?.copyWith(fontSize: 15, color: Colors.white),
+                          ?.copyWith(fontSize: 15, color: Colors.black),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide(
-                            color: Colors.white,
+                            color: Colors.black,
                           )),
                       prefixIcon: Icon(
                         Icons.email,
-                        color: Color(0xff99E2B4),
+                        color: Colors.black,
                       ),
                     ),
                     keyboardType: TextInputType.emailAddress,
@@ -99,15 +110,15 @@ class _LoginPageState extends State<LoginPage> {
                       hintStyle: Theme.of(context)
                           .textTheme
                           .bodyMedium
-                          ?.copyWith(fontSize: 15, color: Colors.white),
+                          ?.copyWith(fontSize: 15, color: Colors.black),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide(
-                            color: Colors.white,
+                            color: Colors.black,
                           )),
                       prefixIcon: Icon(
                         Icons.lock,
-                        color: Color(0xff99E2B4),
+                        color: Colors.black,
                       ),
                     ),
                     validator: (value) {
@@ -128,9 +139,33 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         FirebaseFunctions.Login(onSuccess: () async {
-                          await Future.delayed(Duration(milliseconds: 500));
-                          Navigator.pushReplacementNamed(
-                              context, HomeScreen.routeName);
+                          UserModel? userModel =
+                              await FirebaseFunctions.readUserData();
+                          if (userModel!.role == 'Admin') {
+                            await Future.delayed(Duration(milliseconds: 500));
+                            Navigator.pushReplacementNamed(
+                                context, AdminHome.routeName);
+                          } else if (userModel.role == 'User') {
+                            await Future.delayed(Duration(milliseconds: 500));
+                            Navigator.pushReplacementNamed(
+                                context, HomeScreen.routeName);
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text("Error"),
+                                content: Text("Invalid user role"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
                         }, onError: (e) {
                           showDialog(
                             context: context,
@@ -153,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text(
                       'login'.tr(),
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -161,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: ElevatedButton.styleFrom(
                       elevation: 15,
                       shadowColor: Color(0xff212529),
-                      backgroundColor: const Color(0xff0091AD),
+                      backgroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -184,12 +219,12 @@ class _LoginPageState extends State<LoginPage> {
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
-                            ?.copyWith(fontSize: 15, color: Color(0xffd9ed92)),
+                            ?.copyWith(fontSize: 17, color: Colors.blue),
                         children: [
                           TextSpan(
                             text: "signup".tr(),
                             style: TextStyle(
-                              color: Color(0xffffffff),
+                              color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
