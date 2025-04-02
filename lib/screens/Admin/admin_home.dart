@@ -16,7 +16,7 @@ class AdminHome extends StatelessWidget {
       drawer: AdminDrawer(),
       appBar: AppBar(
         title: Text(
-          'admin-home'.tr(),
+          'provider-home'.tr(),
           style: TextStyle(
             color: Colors.blue,
             fontSize: 30,

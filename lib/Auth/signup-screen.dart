@@ -277,7 +277,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           if (formKey.currentState!.validate() &&
                               role != null) {
                             FirebaseFunctions.SignUp(
-                              role: "User",
+                              role: role!,
                               emailController.text,
                               passwordController.text,
                               age: int.parse(ageController.text),

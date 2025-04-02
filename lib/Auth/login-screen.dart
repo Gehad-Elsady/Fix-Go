@@ -8,6 +8,7 @@ import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/screens/Admin/admin_home.dart';
 import 'package:road_mate/screens/home/home-screen.dart';
 import 'package:road_mate/constants/photos/photos.dart';
+import 'package:road_mate/screens/user%20home/main_hame.dart';
 
 class LoginPage extends StatefulWidget {
   static const String routeName = 'login page';
@@ -141,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                         FirebaseFunctions.Login(onSuccess: () async {
                           UserModel? userModel =
                               await FirebaseFunctions.readUserData();
-                          if (userModel!.role == 'Admin') {
+                          if (userModel!.role == 'Provider') {
                             await Future.delayed(Duration(milliseconds: 500));
                             Navigator.pushReplacementNamed(
                                 context, AdminHome.routeName);

@@ -13,6 +13,7 @@ import 'package:road_mate/screens/home/home-screen.dart';
 import 'package:road_mate/constants/photos/photos.dart';
 import 'package:road_mate/screens/SplashScreen/provider/check-user.dart';
 import 'package:road_mate/screens/SplashScreen/provider/finish-onboarding.dart';
+import 'package:road_mate/screens/user%20home/main_hame.dart';
 // import 'package:road_mate/theme/app-colors.dart';
 // import 'package:recycling_app/home-screen.dart'; // Import HomeScreen
 
@@ -62,8 +63,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
         if (userRole != null) {
           if (userRole.role == "User") {
-            Navigator.pushReplacementNamed(context, HomeScreen.routeName);
-          } else if (userRole.role == "Admin") {
+            Navigator.pushReplacementNamed(context, MainHame.routeName);
+          } else if (userRole.role == "Provider") {
             Navigator.pushReplacementNamed(context, AdminHome.routeName);
           } else {
             print("Error: User role is unknown.");
