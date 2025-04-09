@@ -14,12 +14,13 @@ class AllServicesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           'all-services'.tr(),
-          style: GoogleFonts.domine(
+          style: GoogleFonts.lora(
             fontSize: 30,
-            color: Colors.blue,
+            color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),

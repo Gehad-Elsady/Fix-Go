@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/theme/app-colors.dart';
 
 class LanguageBottomSheet extends StatelessWidget {
@@ -12,11 +13,7 @@ class LanguageBottomSheet extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: AppColors.backGround,
-        ),
+        color: Color(0xffADE1FB),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -28,8 +25,8 @@ class LanguageBottomSheet extends StatelessWidget {
         children: [
           Text(
             "select-language".tr(),
-            style: TextStyle(
-              color: Colors.white,
+            style: GoogleFonts.lora(
+              color: Colors.black,
               fontSize: 35,
               fontWeight: FontWeight.bold,
             ),
@@ -46,8 +43,8 @@ class LanguageBottomSheet extends StatelessWidget {
               children: [
                 Text(
                   "english".tr(),
-                  style: TextStyle(
-                    color: Colors.white,
+                  style: GoogleFonts.lora(
+                    color: Colors.black,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -56,7 +53,7 @@ class LanguageBottomSheet extends StatelessWidget {
                     ? Icon(
                         Icons.done,
                         size: 35,
-                        color: Colors.white,
+                        color: Color(0xff01082D),
                       )
                     : SizedBox()
               ],
@@ -74,8 +71,8 @@ class LanguageBottomSheet extends StatelessWidget {
               children: [
                 Text(
                   "arabic".tr(),
-                  style: TextStyle(
-                    color: Colors.white,
+                  style: GoogleFonts.lora(
+                    color: Colors.black,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -84,7 +81,7 @@ class LanguageBottomSheet extends StatelessWidget {
                     ? Icon(
                         Icons.done,
                         size: 35,
-                        color: Colors.white,
+                        color: Color(0xff01082D),
                       )
                     : SizedBox()
               ],

@@ -1,62 +1,34 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:road_mate/screens/add-services/model/service-model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UpdateServices extends StatefulWidget {
-  static const String routeName = 'update_services';
-  const UpdateServices({super.key});
+class AddServicePage extends StatefulWidget {
+  static const String routeName = 'AddServicePage';
 
   @override
-  State<UpdateServices> createState() => _UpdateServicesState();
+  _AddServicePageState createState() => _AddServicePageState();
 }
 
-class _UpdateServicesState extends State<UpdateServices> {
+class _AddServicePageState extends State<AddServicePage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
-  Timestamp? _createdAt;
 
   File? _image;
-  String? _imageUrl; // To hold network image URL
   final ImagePicker _picker = ImagePicker();
   bool _isUploading = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Retrieve arguments passed to the page
-    final data = ModalRoute.of(context)!.settings.arguments as ServiceModel?;
-
-    // Initialize controllers and image
-    if (data != null) {
-      _nameController.text = data.name ?? '';
-      _descriptionController.text = data.description ?? '';
-      _priceController.text = data.price?.toString() ?? '';
-      _createdAt = data.createdAt;
-      if (data.image != null && data.image!.isNotEmpty) {
-        if (data.image!.startsWith('http')) {
-          _imageUrl = data.image; // If the image URL is already a network image
-        } else {
-          _image = File(data.image!); // Otherwise, assume it's a local path
-        }
-      }
-    }
-  }
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
-        _imageUrl = null; // Reset network image URL
       });
     }
   }
@@ -74,56 +46,27 @@ class _UpdateServicesState extends State<UpdateServices> {
     }
   }
 
-  Future<void> _updateService() async {
-    if (_formKey.currentState!.validate() &&
-        (_image != null || _imageUrl != null)) {
+  Future<void> _saveService() async {
+    if (_formKey.currentState!.validate() && _image != null) {
       setState(() => _isUploading = true);
-      String? imageUrl;
-
-      // If the image is a new file, upload it, otherwise use the network URL
-      if (_image != null) {
-        imageUrl = await _uploadImage(_image!);
-      } else {
-        imageUrl = _imageUrl;
-      }
+      final imageUrl = await _uploadImage(_image!);
 
       if (imageUrl != null) {
-        // Query to find the document based on `id` and `createdAt`
-        final querySnapshot = await FirebaseFirestore.instance
-            .collection('services')
-            .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-            .where('createdAt', isEqualTo: _createdAt)
-            .get();
-
-        if (querySnapshot.docs.isNotEmpty) {
-          // If the document exists, update it
-          final docId = querySnapshot.docs.first.id;
-          await FirebaseFirestore.instance
-              .collection('services')
-              .doc(docId)
-              .update({
-            'name': _nameController.text.trim(),
-            'description': _descriptionController.text.trim(),
-            'price': _priceController.text.trim(),
-            'image': imageUrl,
-            'updatedAt': Timestamp.now(),
-          });
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Service updated successfully'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Service not found or already updated'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-        setState(() => _isUploading = false);
+        await FirebaseFirestore.instance.collection('services').add({
+          'name': _nameController.text.trim(),
+          'description': _descriptionController.text.trim(),
+          'price': _priceController.text.trim(),
+          'image': imageUrl,
+          'createdAt': Timestamp.now(),
+          'id': FirebaseAuth.instance.currentUser!.uid
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Service added successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pop(context); // Go back after saving
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -132,18 +75,21 @@ class _UpdateServicesState extends State<UpdateServices> {
           ),
         );
       }
+      setState(() => _isUploading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text(
-          'update-service'.tr(),
-          style: GoogleFonts.domine(
+          'add-service'.tr(),
+          style: GoogleFonts.lora(
             fontSize: 30,
-            color: Colors.blue,
+            color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -222,25 +168,16 @@ class _UpdateServicesState extends State<UpdateServices> {
                         ),
                       ),
                       SizedBox(height: 16),
-                      _image == null && _imageUrl == null
+                      _image == null
                           ? Text(
                               'image-error'.tr(),
                               style: TextStyle(color: Colors.grey),
                               textAlign: TextAlign.center,
                             )
-                          : _imageUrl != null
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.network(
-                                    _imageUrl!,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                              : ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.file(_image!, height: 150),
-                                ),
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.file(_image!, height: 150),
+                            ),
                       SizedBox(height: 10),
                       OutlinedButton.icon(
                         onPressed: _pickImage,
@@ -259,14 +196,14 @@ class _UpdateServicesState extends State<UpdateServices> {
             _isUploading
                 ? Center(child: CircularProgressIndicator())
                 : ElevatedButton(
-                    onPressed: _updateService,
-                    child: Text('update-service'.tr(),
-                        style: TextStyle(
-                            color: Colors.blue,
+                    onPressed: _saveService,
+                    child: Text('add-service'.tr(),
+                        style: GoogleFonts.lora(
+                            color: Colors.black,
                             fontSize: 20,
                             fontWeight: FontWeight.bold)),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
+                      backgroundColor: Color(0xffADE1FB),
                       padding: EdgeInsets.symmetric(vertical: 16),
                       textStyle: TextStyle(fontSize: 16),
                       shape: RoundedRectangleBorder(

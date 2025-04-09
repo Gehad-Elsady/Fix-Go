@@ -4,11 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:road_mate/Auth/login-screen.dart';
 import 'package:road_mate/Auth/model/usermodel.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
-import 'package:road_mate/screens/Admin/admin_home.dart';
+import 'package:road_mate/screens/Provider/home/provider_home.dart';
+import 'package:road_mate/screens/Provider/home/taps/provider_home_tap.dart';
 
 import 'dart:async';
 
 import 'package:road_mate/screens/SplashScreen/OnBoarding/boarding-screen.dart';
+import 'package:road_mate/screens/home/customer_home_screen.dart';
 import 'package:road_mate/screens/home/home-screen.dart';
 import 'package:road_mate/constants/photos/photos.dart';
 import 'package:road_mate/screens/SplashScreen/provider/check-user.dart';
@@ -54,33 +56,38 @@ class _SplashScreenState extends State<SplashScreen> {
     var provider = Provider.of<FinishOnboarding>(context, listen: false);
     var user = Provider.of<CheckUser>(context, listen: false);
 
-    Timer(const Duration(seconds: 10), () async {
-      print("Onboarding completed: ${provider.isOnBoardingCompleted}");
+    // Fetch user data first
+    UserModel? userRole;
+    if (user.firebaseUser != null) {
+      userRole = await getUserData();
+    }
 
-      if (user.firebaseUser != null) {
-        // Fetch user data
-        UserModel? userRole = await getUserData();
+    // Delay for 10 seconds
+    await Future.delayed(const Duration(seconds: 10));
 
-        if (userRole != null) {
-          if (userRole.role == "User") {
-            Navigator.pushReplacementNamed(context, MainHame.routeName);
-          } else if (userRole.role == "Provider") {
-            Navigator.pushReplacementNamed(context, AdminHome.routeName);
-          } else {
-            print("Error: User role is unknown.");
-          }
-        } else {
-          print("Error: User data is null.");
-        }
+    // Ensure widget is still mounted before navigating
+    if (!mounted) return;
+
+    print("Onboarding completed: ${provider.isOnBoardingCompleted}");
+
+    if (userRole != null) {
+      if (userRole.role == "User") {
+        Navigator.pushReplacementNamed(context, MainHome.routeName);
+      } else if (userRole.role == "Provider") {
+        Navigator.pushReplacementNamed(context, ProviderHome.routeName);
       } else {
-        Navigator.pushReplacementNamed(
-          context,
-          provider.isOnBoardingCompleted
-              ? LoginPage.routeName
-              : OnboardingScreen.routeName,
-        );
+        print("Error: User role is unknown.");
       }
-    });
+    } else if (user.firebaseUser == null) {
+      Navigator.pushReplacementNamed(
+        context,
+        provider.isOnBoardingCompleted
+            ? LoginPage.routeName
+            : OnboardingScreen.routeName,
+      );
+    } else {
+      print("Error: User data is null.");
+    }
   }
 
   @override
@@ -91,11 +98,6 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          // gradient: LinearGradient(
-          //   begin: Alignment.topLeft,
-          //   end: Alignment.bottomRight,
-          //   colors: AppColors.backGround,
-          // ),
           color: Colors.white,
         ),
         child: Stack(

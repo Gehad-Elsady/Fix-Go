@@ -1,22 +1,25 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:road_mate/Auth/login-screen.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/constants/photos/photos.dart';
 
-class SignUpPage extends StatefulWidget {
-  static const String routeName = "sign up";
-  const SignUpPage({super.key});
+class SignupProvider extends StatefulWidget {
+  static const String routeName = 'signup-provider-screen';
+  const SignupProvider({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SignupProvider> createState() => _SignupProviderState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignupProviderState extends State<SignupProvider> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -25,6 +28,32 @@ class _SignUpPageState extends State<SignUpPage> {
       TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
+
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+  bool _isUploading = false;
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<String?> _uploadImage(File image) async {
+    try {
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('license_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      final uploadTask = await storageRef.putFile(image);
+      return await uploadTask.ref.getDownloadURL();
+    } catch (e) {
+      print("Error uploading image: $e");
+      return null;
+    }
+  }
 
   @override
   void dispose() {
@@ -54,7 +83,7 @@ class _SignUpPageState extends State<SignUpPage> {
               children: [
                 const SizedBox(height: 80),
                 Text(
-                  "Sign up as a customer",
+                  "Sign up as a provider",
                   style: GoogleFonts.lora(
                     fontSize: 34,
                     fontWeight: FontWeight.w800,
@@ -200,6 +229,55 @@ class _SignUpPageState extends State<SignUpPage> {
                           hintText: "Re-enter your password",
                         ),
                       ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 200,
+                            child: Text(
+                              _image == null
+                                  ? "Upload your working license"
+                                  : _image!.path,
+                              style: TextStyle(
+                                color: Colors.blue,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 15,
+                              backgroundColor: const Color(0xff041D56),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 16.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: _pickImage,
+                            child: Text('Upload',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                )),
+                          )
+                          // ElevatedButton(
+                          // onPressed: _pickImage,
+                          // child: Text('Upload',
+                          //     style: TextStyle(
+                          //       color: Colors.white,
+                          //       fontSize: 16,
+                          //     )),
+                          //   style: ElevatedButton.styleFrom(
+                          //     backgroundColor: Color(0xff041D56),
+                          //     padding: EdgeInsets.symmetric(
+                          //         vertical: 16, horizontal: 20),
+                          //   ),
+                          // ),
+                        ],
+                      ),
                       const SizedBox(height: 30),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -210,16 +288,20 @@ class _SignUpPageState extends State<SignUpPage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
+                        onPressed: () async {
+                          if (formKey.currentState!.validate() &&
+                              _image != null) {
+                            setState(() => _isUploading = true);
+                            final imageUrl = await _uploadImage(_image!);
                             FirebaseFunctions.SignUp(
-                              role: "User",
+                              role: "Provider",
                               emailAddress: emailController.text,
                               password: passwordController.text,
                               phoneNumber:
                                   int.parse(phoneNumberController.text),
                               firstName: nameController.text,
                               lastName: lastNameController.text,
+                              imageUrl: imageUrl!,
                               onSuccess: () {
                                 showDialog(
                                   context: context,

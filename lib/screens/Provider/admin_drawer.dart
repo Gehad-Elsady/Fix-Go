@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/Auth/login-screen.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
-import 'package:road_mate/screens/Admin/add_eng.dart';
-import 'package:road_mate/screens/Admin/admin_srttings.dart';
-import 'package:road_mate/screens/Admin/manege_services.dart';
-import 'package:road_mate/screens/Admin/manegeeng.dart';
-import 'package:road_mate/screens/add-services/addservicescreen.dart';
+import 'package:road_mate/screens/Provider/engneers/add_eng.dart';
+import 'package:road_mate/screens/Provider/settings/provider_srttings.dart';
+import 'package:road_mate/screens/Provider/services/manege_services.dart';
+import 'package:road_mate/screens/Provider/engneers/manegeeng.dart';
+import 'package:road_mate/screens/Provider/add-services/addservicescreen.dart';
+import 'package:road_mate/screens/profile/user-profile-screen.dart';
 import 'package:road_mate/screens/settings/settings_tab.dart';
 
 class AdminDrawer extends StatelessWidget {
@@ -47,6 +48,24 @@ class AdminDrawer extends StatelessWidget {
           Expanded(
             child: ListView(
               children: [
+                ListTile(
+                  leading: const Icon(
+                    Icons.account_circle,
+                    color: Colors.black,
+                  ),
+                  title: Text(
+                    'profile'.tr(),
+                    style: GoogleFonts.domine(
+                      fontSize: 20,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushReplacementNamed(
+                        context, UserProfile.routeName);
+                  },
+                ),
                 ListTile(
                   title: Text(
                     'add-service'.tr(),
@@ -133,7 +152,7 @@ class AdminDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.pop(context);
 
-                    Navigator.pushNamed(context, AdminSettingsTab.routeName);
+                    Navigator.pushNamed(context, ProviderSettings.routeName);
                   },
                 ),
                 ListTile(

@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:road_mate/screens/Admin/model/eng_model.dart';
+import 'package:road_mate/screens/Provider/engneers/model/eng_model.dart';
 
 class UpdateEng extends StatefulWidget {
   static const String routeName = 'update_eng';

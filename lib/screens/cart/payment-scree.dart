@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/paymob/paymob_manager.dart';
-import 'package:road_mate/screens/add-services/model/service-model.dart';
+import 'package:road_mate/screens/Provider/add-services/model/service-model.dart';
 import 'package:road_mate/screens/cart/cart-screen.dart';
 import 'package:road_mate/screens/history/historyscreen.dart';
 import 'package:road_mate/screens/history/model/historymaodel.dart';

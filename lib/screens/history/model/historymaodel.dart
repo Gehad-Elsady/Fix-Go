@@ -1,5 +1,5 @@
 import 'package:road_mate/location/model/locationmodel.dart';
-import 'package:road_mate/screens/add-services/model/service-model.dart';
+import 'package:road_mate/screens/Provider/add-services/model/service-model.dart';
 import 'package:road_mate/screens/cart/model/cart-model.dart';
 
 class HistoryModel {

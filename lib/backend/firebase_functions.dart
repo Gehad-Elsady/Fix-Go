@@ -4,22 +4,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:road_mate/location/model/locationmodel.dart';
 import 'package:road_mate/notifications/model/notification_model.dart';
-import 'package:road_mate/screens/Admin/model/eng_model.dart';
+import 'package:road_mate/screens/Provider/engneers/model/eng_model.dart';
 import 'package:road_mate/screens/cart/model/cart-model.dart';
 import 'package:road_mate/screens/contact/model/contact-model.dart';
 import 'package:road_mate/screens/history/model/historymaodel.dart';
 import 'package:road_mate/screens/profile/model/profilemodel.dart';
-import 'package:road_mate/screens/add-services/model/service-model.dart';
+import 'package:road_mate/screens/Provider/add-services/model/service-model.dart';
 import 'package:road_mate/Auth/model/usermodel.dart';
 
 class FirebaseFunctions {
   //-----------------------Login and SignUp--------------------------
-  static SignUp(String emailAddress, String password,
+  static SignUp(
       {required Function onSuccess,
       required Function onError,
-      required String userName,
+      required String firstName,
+      required String lastName,
       required String role,
-      required int age}) async {
+      required String emailAddress,
+      String imageUrl = "",
+      required String password,
+      required int phoneNumber}) async {
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -30,10 +34,12 @@ class FirebaseFunctions {
       credential.user?.sendEmailVerification();
       UserModel userModel = UserModel(
         role: role,
-        age: age,
+        phoneNumber: phoneNumber,
         email: emailAddress,
-        name: userName,
+        firstName: firstName,
+        lastName: lastName,
         id: credential.user!.uid,
+        imageUrl: imageUrl,
       );
       addUser(userModel);
 

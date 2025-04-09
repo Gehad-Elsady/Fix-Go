@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_cast
 
 import 'package:hive/hive.dart';
-import 'package:road_mate/screens/add-services/model/service-model.dart';
+import 'package:road_mate/screens/Provider/add-services/model/service-model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ServiceRepository {

@@ -1,28 +1,42 @@
 class UserModel {
-  String name;
+  String firstName;
+  String lastName;
   String email;
-  int age;
+  int phoneNumber;
   String id;
   String role;
+  String? imageUrl;
 
   UserModel(
-      {required this.name,
+      {required this.firstName,
+      required this.lastName,
       required this.email,
-      required this.age,
+      required this.phoneNumber,
       required this.role,
+      this.imageUrl,
       this.id = ""});
 
   UserModel.fromJason(Map<String, dynamic> jason)
       : this(
-          name: jason["name"],
+          firstName: jason["name"],
+          lastName: jason["lastName"],
           email: jason["email"],
           id: jason["id"],
-          age: jason["age"],
+          phoneNumber: jason["phoneNumber"],
           role: jason[
               "role"], // default role to 'user' if not provided in JSON data.
+          imageUrl: jason["imageUrl"],
         );
 
   Map<String, dynamic> toJason() {
-    return {"name": name, "email": email, "id": id, "age": age, "role": role};
+    return {
+      "name": firstName,
+      "lastName": lastName,
+      "email": email,
+      "id": id,
+      "phoneNumber": phoneNumber,
+      "role": role,
+      "imageUrl": imageUrl,
+    };
   }
 }

@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
-import 'package:road_mate/screens/add-services/model/service-model.dart';
+import 'package:road_mate/screens/Provider/add-services/model/service-model.dart';
 
 class CartItem extends StatelessWidget {
   const CartItem({

@@ -1,20 +1,23 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
+import 'package:road_mate/screens/Provider/home/taps/provider_home_tap.dart';
+import 'package:road_mate/screens/Provider/home/taps/provider_profile_tap.dart';
+import 'package:road_mate/screens/Provider/home/taps/test.dart';
 import 'package:road_mate/screens/history/historyscreen.dart';
 import 'package:road_mate/screens/home/customer_home_screen.dart';
 import 'package:road_mate/screens/profile/user-profile-screen.dart';
 import 'package:road_mate/screens/user%20home/user_home.dart';
 
-class MainHome extends StatefulWidget {
-  static const String routeName = 'main-hame';
-  const MainHome({super.key});
+class ProviderHome extends StatefulWidget {
+  static const String routeName = 'provider-hame';
+  const ProviderHome({super.key});
 
   @override
-  State<MainHome> createState() => _MainHameState();
+  State<ProviderHome> createState() => _MainHameState();
 }
 
-class _MainHameState extends State<MainHome>
+class _MainHameState extends State<ProviderHome>
     with SingleTickerProviderStateMixin {
   late int currentPage;
   late TabController tabController;
@@ -75,8 +78,8 @@ class _MainHameState extends State<MainHome>
           ),
           tabs: [
             _buildTabIcon(Icons.home, 0),
-            _buildTabIcon(Icons.search, 1),
-            _buildTabIcon(Icons.add, 2),
+            _buildTabIcon(Icons.person, 1),
+            _buildTabIcon(Icons.search, 2),
           ],
         ),
         fit: StackFit.expand,
@@ -115,9 +118,9 @@ class _MainHameState extends State<MainHome>
           dragStartBehavior: DragStartBehavior.down,
           physics: const BouncingScrollPhysics(),
           children: [
-            CustomerHomeScreen(), // Screen 1
-            HistoryScreen(), // Screen 2
-            UserProfile(), // Screen 3
+            ProviderHomeTap(), // Screen 1
+            ProviderProfileTap(), // Screen 2
+            Test(), // Screen 3
           ],
         ),
       ),

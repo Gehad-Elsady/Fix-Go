@@ -7,21 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
+import 'package:road_mate/Auth/auth_page.dart';
 import 'package:road_mate/Auth/login-screen.dart';
 import 'package:road_mate/Auth/signup-screen.dart';
+import 'package:road_mate/Auth/signup_provider_screen.dart';
 import 'package:road_mate/backend/bloc/observer.dart';
 import 'package:road_mate/notifications/notification.dart';
-import 'package:road_mate/screens/Admin/add_eng.dart';
-import 'package:road_mate/screens/Admin/admin_home.dart';
-import 'package:road_mate/screens/Admin/admin_srttings.dart';
-import 'package:road_mate/screens/Admin/manege_services.dart';
-import 'package:road_mate/screens/Admin/manegeeng.dart';
-import 'package:road_mate/screens/Admin/update_eng.dart';
-import 'package:road_mate/screens/Admin/update_services.dart';
+import 'package:road_mate/screens/Provider/engneers/add_eng.dart';
+import 'package:road_mate/screens/Provider/home/provider_home.dart';
+import 'package:road_mate/screens/Provider/home/taps/provider_home_tap.dart';
+import 'package:road_mate/screens/Provider/settings/provider_srttings.dart';
+import 'package:road_mate/screens/Provider/services/manege_services.dart';
+import 'package:road_mate/screens/Provider/engneers/manegeeng.dart';
+import 'package:road_mate/screens/Provider/profile/provider_profile.dart';
+import 'package:road_mate/screens/Provider/engneers/update_eng.dart';
+import 'package:road_mate/screens/Provider/services/update_services.dart';
 import 'package:road_mate/screens/SplashScreen/OnBoarding/boarding-screen.dart';
 import 'package:road_mate/screens/SplashScreen/splash-screen.dart';
 import 'package:road_mate/screens/engineers/engineera_screen.dart';
 import 'package:road_mate/screens/history/historyscreen.dart';
+import 'package:road_mate/screens/home/customer_home_screen.dart';
 import 'package:road_mate/screens/services/all-services-screen.dart';
 import 'package:road_mate/screens/cart/cart-screen.dart';
 import 'package:road_mate/screens/contact/contact-screen.dart';
@@ -30,7 +35,7 @@ import 'package:road_mate/screens/home/home-screen.dart';
 import 'package:road_mate/screens/SplashScreen/provider/check-user.dart';
 import 'package:road_mate/screens/SplashScreen/provider/finish-onboarding.dart';
 import 'package:road_mate/screens/settings/settings_tab.dart';
-import 'package:road_mate/screens/add-services/addservicescreen.dart';
+import 'package:road_mate/screens/Provider/add-services/addservicescreen.dart';
 import 'package:road_mate/screens/profile/user-profile-screen.dart';
 import 'package:road_mate/screens/user%20home/main_hame.dart';
 import 'package:road_mate/screens/user%20home/user_home.dart';
@@ -114,16 +119,21 @@ class MyApp extends StatelessWidget {
         ContactScreen.routeName: (context) => ContactScreen(),
         SettingsTab.routeName: (context) => SettingsTab(),
         HistoryScreen.routeName: (context) => HistoryScreen(),
-        AdminHome.routeName: (context) => AdminHome(),
+        ProviderHomeTap.routeName: (context) => ProviderHomeTap(),
         AddEng.routeName: (context) => AddEng(),
         ManegeServices.routeName: (context) => ManegeServices(),
         UpdateServices.routeName: (context) => UpdateServices(),
         Manegeeng.routeName: (context) => Manegeeng(),
         UpdateEng.routeName: (context) => UpdateEng(),
         EngineersScreen.routeName: (context) => EngineersScreen(),
-        AdminSettingsTab.routeName: (context) => AdminSettingsTab(),
+        ProviderSettings.routeName: (context) => ProviderSettings(),
         UserHome.routeName: (context) => UserHome(),
-        MainHame.routeName: (context) => MainHame(),
+        MainHome.routeName: (context) => MainHome(),
+        AuthPage.routeName: (context) => AuthPage(),
+        SignupProvider.routeName: (context) => SignupProvider(),
+        CustomerHomeScreen.routeName: (context) => CustomerHomeScreen(),
+        ProviderHome.routeName: (context) => ProviderHome(),
+        ProviderProfile.routeName: (context) => ProviderProfile()
       },
     );
   }

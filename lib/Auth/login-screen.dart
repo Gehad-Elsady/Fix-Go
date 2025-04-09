@@ -2,10 +2,12 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:road_mate/Auth/auth_page.dart';
 import 'package:road_mate/Auth/model/usermodel.dart';
 import 'package:road_mate/Auth/signup-screen.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
-import 'package:road_mate/screens/Admin/admin_home.dart';
+import 'package:road_mate/screens/Provider/home/taps/provider_home_tap.dart';
+import 'package:road_mate/screens/home/customer_home_screen.dart';
 import 'package:road_mate/screens/home/home-screen.dart';
 import 'package:road_mate/constants/photos/photos.dart';
 import 'package:road_mate/screens/user%20home/main_hame.dart';
@@ -145,11 +147,11 @@ class _LoginPageState extends State<LoginPage> {
                           if (userModel!.role == 'Provider') {
                             await Future.delayed(Duration(milliseconds: 500));
                             Navigator.pushReplacementNamed(
-                                context, AdminHome.routeName);
+                                context, ProviderHomeTap.routeName);
                           } else if (userModel.role == 'User') {
                             await Future.delayed(Duration(milliseconds: 500));
                             Navigator.pushReplacementNamed(
-                                context, HomeScreen.routeName);
+                                context, MainHome.routeName);
                           } else {
                             showDialog(
                               context: context,
@@ -211,7 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                   InkWell(
                     onTap: () {
                       Navigator.pushReplacementNamed(
-                          context, SignUpPage.routeName);
+                          context, AuthPage.routeName);
                     },
                     child: Text.rich(
                       textAlign: TextAlign.center,

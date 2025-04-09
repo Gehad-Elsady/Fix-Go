@@ -4,23 +4,33 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
-import 'package:road_mate/screens/Admin/update_eng.dart';
+import 'package:road_mate/screens/Provider/services/update_services.dart';
 
-class Manegeeng extends StatelessWidget {
-  static const String routeName = 'manege-eng';
-  const Manegeeng({super.key});
+class ManegeServices extends StatelessWidget {
+  static const String routeName = 'manege-services';
+  const ManegeServices({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('manage-engineers'.tr()),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: Text(
+          'all-services'.tr(),
+          style: GoogleFonts.lora(
+            fontSize: 30,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Container(
         height: double.infinity,
         width: double.infinity,
         child: StreamBuilder(
-          stream: FirebaseFunctions.getSEngineerStream(),
+          stream: FirebaseFunctions.getServicesStream(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -54,9 +64,9 @@ class Manegeeng extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Container(
-                        height: 350,
+                        height: 300,
                         decoration: BoxDecoration(
-                          color: Colors.blue,
+                          color: Color(0xff01082D),
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
@@ -79,7 +89,7 @@ class Manegeeng extends StatelessWidget {
                                 imageUrl: service.image,
                                 height: 150,
                                 width: double.infinity,
-                                fit: BoxFit.contain,
+                                fit: BoxFit.cover,
                                 placeholder: (context, url) =>
                                     Center(child: CircularProgressIndicator()),
                                 errorWidget: (context, url, error) =>
@@ -87,7 +97,7 @@ class Manegeeng extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              "Engineer Name: ${service.name}",
+                              service.name,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -99,34 +109,10 @@ class Manegeeng extends StatelessWidget {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8.0),
                               child: Text(
-                                "Bio: ${service.bio}",
+                                service.description,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.white),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                "Address: ${service.address}",
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.white),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                "Phone Number: ${service.phone}",
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 15, color: Colors.white),
                               ),
@@ -164,8 +150,8 @@ class Manegeeng extends StatelessWidget {
                                         builder: (BuildContext context) {
                                           return AlertDialog(
                                             title: Text('com-delete'.tr()),
-                                            content:
-                                                Text('confirm-delete'.tr()),
+                                            content: Text(
+                                                'confirm-delete-service'.tr()),
                                             actions: <Widget>[
                                               TextButton(
                                                 onPressed: () {
@@ -178,7 +164,7 @@ class Manegeeng extends StatelessWidget {
                                                 onPressed: () async {
                                                   // Call deleteService when confirmed
                                                   await FirebaseFunctions
-                                                      .deleteEngineer(
+                                                      .deleteService(
                                                           FirebaseAuth.instance
                                                               .currentUser!.uid,
                                                           service.createdAt);
@@ -219,7 +205,7 @@ class Manegeeng extends StatelessWidget {
                                     onPressed: () {
                                       Navigator.pushNamed(
                                         context,
-                                        UpdateEng.routeName,
+                                        UpdateServices.routeName,
                                         arguments: service,
                                       );
                                     },

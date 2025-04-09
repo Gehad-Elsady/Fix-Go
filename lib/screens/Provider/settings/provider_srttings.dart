@@ -3,28 +3,29 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/screens/settings/bottom_sheets/language_bottomsheet.dart'; // Assuming you have this widget
 import 'package:easy_localization/easy_localization.dart';
 
-class AdminSettingsTab extends StatefulWidget {
-  static const String routeName = "admin-settings";
-  AdminSettingsTab({Key? key}) : super(key: key);
+class ProviderSettings extends StatefulWidget {
+  static const String routeName = "provider-settings";
+  ProviderSettings({Key? key}) : super(key: key);
 
   @override
-  State<AdminSettingsTab> createState() => _AdminSettingsTabState();
+  State<ProviderSettings> createState() => _ProviderSettingsState();
 }
 
-class _AdminSettingsTabState extends State<AdminSettingsTab> {
+class _ProviderSettingsState extends State<ProviderSettings> {
   @override
   Widget build(BuildContext context) {
     // var provider = Provider.of<MyProvider>(context); // Ensure MyProvider is available
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Color(0xFF0091ad),
+        backgroundColor: Colors.white,
         title: Text(
           "settings".tr(),
-          style: GoogleFonts.domine(
+          style: GoogleFonts.lora(
             fontSize: 30,
-            color: Colors.white,
+            color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -37,8 +38,8 @@ class _AdminSettingsTabState extends State<AdminSettingsTab> {
             children: [
               Text(
                 "language".tr(),
-                style: TextStyle(
-                  color: Colors.blue,
+                style: GoogleFonts.lora(
+                  color: Colors.black,
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
@@ -66,8 +67,8 @@ class _AdminSettingsTabState extends State<AdminSettingsTab> {
                     context.locale == Locale("ar")
                         ? "arabic".tr()
                         : "english".tr(),
-                    style: TextStyle(
-                      color: Colors.blue,
+                    style: GoogleFonts.lora(
+                      color: Colors.black,
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
                     ),
@@ -76,10 +77,10 @@ class _AdminSettingsTabState extends State<AdminSettingsTab> {
               ),
               SizedBox(height: 20),
               Text("aap-version".tr(),
-                  style: TextStyle(
+                  style: GoogleFonts.lora(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue)),
+                      color: Colors.black)),
               SizedBox(height: 20),
               Container(
                 padding: EdgeInsets.all(10),
@@ -90,8 +91,8 @@ class _AdminSettingsTabState extends State<AdminSettingsTab> {
                 child: Text(
                   // provider.appTheme == ThemeMode.dark ? "dark".tr() :
                   "1.0.0",
-                  style: TextStyle(
-                    color: Colors.blue,
+                  style: GoogleFonts.lora(
+                    color: Colors.black,
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
