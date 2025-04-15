@@ -66,7 +66,7 @@ class ManegeServices extends StatelessWidget {
                       Container(
                         height: 300,
                         decoration: BoxDecoration(
-                          color: Color(0xff01082D),
+                          color: Color(0xffADE1FB),
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
@@ -85,15 +85,11 @@ class ManegeServices extends StatelessWidget {
                                 topLeft: Radius.circular(10),
                                 topRight: Radius.circular(10),
                               ),
-                              child: CachedNetworkImage(
-                                imageUrl: service.image,
+                              child: Image.asset(
+                                "assets/images/services/${service.name}.png",
                                 height: 150,
                                 width: double.infinity,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) =>
-                                    Center(child: CircularProgressIndicator()),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
+                                fit: BoxFit.contain,
                               ),
                             ),
                             Text(
@@ -103,18 +99,6 @@ class ManegeServices extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                                 fontSize: 20,
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                service.description,
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.white),
                               ),
                             ),
                             Padding(

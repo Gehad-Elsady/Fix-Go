@@ -16,65 +16,71 @@ class AddServicePage extends StatefulWidget {
 
 class _AddServicePageState extends State<AddServicePage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  // final TextEditingController _nameController = TextEditingController();
+  // final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
 
-  File? _image;
-  final ImagePicker _picker = ImagePicker();
+  String? _selectedServiceName;
+
+  final List<String> _serviceNames = [
+    'Over heating',
+    'Steering repair',
+    'Tyre change',
+    'Oil change',
+    'Car tow',
+    'Batteries',
+  ];
+  // File? _image;
+  // final ImagePicker _picker = ImagePicker();
   bool _isUploading = false;
 
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-  }
+  // Future<void> _pickImage() async {
+  //   final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image = File(pickedFile.path);
+  //     });
+  //   }
+  // }
 
-  Future<String?> _uploadImage(File image) async {
-    try {
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('service_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
-      final uploadTask = await storageRef.putFile(image);
-      return await uploadTask.ref.getDownloadURL();
-    } catch (e) {
-      print("Error uploading image: $e");
-      return null;
-    }
-  }
+  // Future<String?> _uploadImage(File image) async {
+  //   try {
+  //     final storageRef = FirebaseStorage.instance
+  //         .ref()
+  //         .child('service_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+  //     final uploadTask = await storageRef.putFile(image);
+  //     return await uploadTask.ref.getDownloadURL();
+  //   } catch (e) {
+  //     print("Error uploading image: $e");
+  //     return null;
+  //   }
+  // }
 
   Future<void> _saveService() async {
-    if (_formKey.currentState!.validate() && _image != null) {
+    if (_formKey.currentState!.validate()) {
       setState(() => _isUploading = true);
-      final imageUrl = await _uploadImage(_image!);
 
-      if (imageUrl != null) {
-        await FirebaseFirestore.instance.collection('services').add({
-          'name': _nameController.text.trim(),
-          'description': _descriptionController.text.trim(),
-          'price': _priceController.text.trim(),
-          'image': imageUrl,
-          'createdAt': Timestamp.now(),
-          'id': FirebaseAuth.instance.currentUser!.uid
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Service added successfully'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.pop(context); // Go back after saving
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to upload image'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      await FirebaseFirestore.instance.collection('services').add({
+        'name': _selectedServiceName,
+        'price': _priceController.text.trim(),
+        'createdAt': Timestamp.now(),
+        'userId': FirebaseAuth.instance.currentUser!.uid
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Service added successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.pop(context); // Go back after saving
+      // } else {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       content: Text('Failed to upload image'),
+      //       backgroundColor: Colors.red,
+      //     ),
+      //   );
+      // }
       setState(() => _isUploading = false);
     }
   }
@@ -121,31 +127,26 @@ class _AddServicePageState extends State<AddServicePage> {
                         ),
                       ),
                       SizedBox(height: 16),
-                      TextFormField(
-                        controller: _nameController,
-                        decoration: InputDecoration(
-                          labelText: 'add-service-name'.tr(),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                        validator: (value) =>
-                            value!.isEmpty ? 'Please enter a name' : null,
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: _descriptionController,
-                        decoration: InputDecoration(
-                          labelText: 'add-service-description'.tr(),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                        maxLines: 3,
-                        validator: (value) => value!.isEmpty
-                            ? 'Please enter a description'
-                            : null,
-                      ),
+                      _buildDropdownField(
+                          'Service Name',
+                          _serviceNames,
+                          _selectedServiceName,
+                          (value) =>
+                              setState(() => _selectedServiceName = value)),
+                      // SizedBox(height: 16),
+                      // TextFormField(
+                      //   controller: _descriptionController,
+                      //   decoration: InputDecoration(
+                      //     labelText: 'add-service-description'.tr(),
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8.0),
+                      //     ),
+                      //   ),
+                      //   maxLines: 3,
+                      //   validator: (value) => value!.isEmpty
+                      //       ? 'Please enter a description'
+                      //       : null,
+                      // ),
                       SizedBox(height: 16),
                       TextFormField(
                         controller: _priceController,
@@ -160,33 +161,33 @@ class _AddServicePageState extends State<AddServicePage> {
                             value!.isEmpty ? 'Please enter a price' : null,
                       ),
                       SizedBox(height: 20),
-                      Text(
-                        'image'.tr(),
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      _image == null
-                          ? Text(
-                              'image-error'.tr(),
-                              style: TextStyle(color: Colors.grey),
-                              textAlign: TextAlign.center,
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: Image.file(_image!, height: 150),
-                            ),
+                      // Text(
+                      //   'image'.tr(),
+                      //   style: TextStyle(
+                      //     fontSize: 18,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
+                      // SizedBox(height: 16),
+                      // _image == null
+                      //     ? Text(
+                      //         'image-error'.tr(),
+                      //         style: TextStyle(color: Colors.grey),
+                      //         textAlign: TextAlign.center,
+                      //       )
+                      //     : ClipRRect(
+                      //         borderRadius: BorderRadius.circular(8.0),
+                      //         child: Image.file(_image!, height: 150),
+                      //       ),
                       SizedBox(height: 10),
-                      OutlinedButton.icon(
-                        onPressed: _pickImage,
-                        icon: Icon(Icons.image),
-                        label: Text('pick-image'.tr()),
-                        style: OutlinedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                        ),
-                      ),
+                      // OutlinedButton.icon(
+                      //   onPressed: _pickImage,
+                      //   icon: Icon(Icons.image),
+                      //   label: Text('pick-image'.tr()),
+                      //   style: OutlinedButton.styleFrom(
+                      //     padding: EdgeInsets.symmetric(vertical: 16),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -199,11 +200,11 @@ class _AddServicePageState extends State<AddServicePage> {
                     onPressed: _saveService,
                     child: Text('add-service'.tr(),
                         style: GoogleFonts.lora(
-                            color: Colors.black,
+                            color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold)),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xffADE1FB),
+                      backgroundColor: Color(0xff01082D),
                       padding: EdgeInsets.symmetric(vertical: 16),
                       textStyle: TextStyle(fontSize: 16),
                       shape: RoundedRectangleBorder(
@@ -216,4 +217,51 @@ class _AddServicePageState extends State<AddServicePage> {
       ),
     );
   }
+}
+
+Widget _buildDropdownField(String label, List<String> items,
+    String? selectedValue, ValueChanged<String?> onChanged) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16),
+    child: DropdownButtonFormField<String>(
+      style: TextStyle(color: Colors.black, fontSize: 16),
+      dropdownColor: Color(0xffADE1FB),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+        // Define the border
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0), // Rounded corners
+          borderSide: const BorderSide(
+            color: Colors.black, // Border color
+            width: 2.0, // Border width
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(
+            color: Colors.black, // Border color when enabled
+            width: 2.0, // Border width
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(
+            color: Colors.black, // Border color when focused
+            width: 2.0, // w width
+          ),
+        ),
+      ),
+      value: selectedValue,
+      items: items
+          .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+          .toList(),
+      onChanged: onChanged,
+      validator: (value) => value == null ? 'Please select $label' : null,
+    ),
+  );
 }

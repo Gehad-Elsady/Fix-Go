@@ -19,9 +19,9 @@ import 'package:road_mate/screens/Provider/home/taps/provider_home_tap.dart';
 import 'package:road_mate/screens/Provider/settings/provider_srttings.dart';
 import 'package:road_mate/screens/Provider/services/manege_services.dart';
 import 'package:road_mate/screens/Provider/engneers/manegeeng.dart';
-import 'package:road_mate/screens/Provider/profile/provider_profile.dart';
 import 'package:road_mate/screens/Provider/engneers/update_eng.dart';
 import 'package:road_mate/screens/Provider/services/update_services.dart';
+import 'package:road_mate/screens/Search/search_screen.dart';
 import 'package:road_mate/screens/SplashScreen/OnBoarding/boarding-screen.dart';
 import 'package:road_mate/screens/SplashScreen/splash-screen.dart';
 import 'package:road_mate/screens/engineers/engineera_screen.dart';
@@ -133,7 +133,7 @@ class MyApp extends StatelessWidget {
         SignupProvider.routeName: (context) => SignupProvider(),
         CustomerHomeScreen.routeName: (context) => CustomerHomeScreen(),
         ProviderHome.routeName: (context) => ProviderHome(),
-        ProviderProfile.routeName: (context) => ProviderProfile()
+        ServicesSearchPage.routeName: (context) => ServicesSearchPage(),
       },
     );
   }

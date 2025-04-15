@@ -22,8 +22,6 @@ class ServiceRepository {
         return ServiceModel(
           userId: data['userId'] ?? "no id",
           name: data['name'] ?? 'No Name',
-          image: data['image'] ?? 'default_image.png',
-          description: data['description'] ?? 'No Description',
           price: data['price'] ?? 'No Price',
           createdAt: data['createdAt'] ?? 'No Date',
         );

@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
-import 'package:road_mate/screens/Provider/profile/provider_profile.dart';
 import 'package:road_mate/screens/profile/model/profilemodel.dart';
 import 'package:road_mate/screens/profile/user-profile-screen.dart';
 
@@ -88,7 +87,7 @@ class ProviderInfo extends StatelessWidget {
                 SizedBox(height: 10),
                 InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, ProviderProfile.routeName);
+                      Navigator.pushNamed(context, UserProfile.routeName);
                     },
                     child: Container(
                         padding: const EdgeInsets.all(10),

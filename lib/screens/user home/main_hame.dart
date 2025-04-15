@@ -1,9 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
+import 'package:road_mate/screens/Search/search_screen.dart';
 import 'package:road_mate/screens/history/historyscreen.dart';
 import 'package:road_mate/screens/home/customer_home_screen.dart';
 import 'package:road_mate/screens/profile/user-profile-screen.dart';
+import 'package:road_mate/screens/user%20home/prfile_tap.dart';
 import 'package:road_mate/screens/user%20home/user_home.dart';
 
 class MainHome extends StatefulWidget {
@@ -75,8 +77,8 @@ class _MainHameState extends State<MainHome>
           ),
           tabs: [
             _buildTabIcon(Icons.home, 0),
-            _buildTabIcon(Icons.search, 1),
-            _buildTabIcon(Icons.add, 2),
+            _buildTabIcon(Icons.person, 1),
+            _buildTabIcon(Icons.search, 2),
           ],
         ),
         fit: StackFit.expand,
@@ -116,8 +118,8 @@ class _MainHameState extends State<MainHome>
           physics: const BouncingScrollPhysics(),
           children: [
             CustomerHomeScreen(), // Screen 1
-            HistoryScreen(), // Screen 2
-            UserProfile(), // Screen 3
+            ProfileTap(), // Screen 2
+            ServicesSearchPage(), // Screen 3
           ],
         ),
       ),

@@ -72,8 +72,8 @@ class CartItem extends StatelessWidget {
             ),
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                service.image,
+              child: Image.asset(
+                "assets/images/services/${service.name}.png",
                 height: 100,
                 width: 100,
                 fit: BoxFit.cover,

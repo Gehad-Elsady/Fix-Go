@@ -1,32 +1,52 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/Auth/login-screen.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/constants/photos/photos.dart';
-import 'package:road_mate/screens/Provider/settings/provider_srttings.dart';
+import 'package:road_mate/screens/Provider/add-services/addservicescreen.dart';
 import 'package:road_mate/screens/Provider/home/widget/provider_info.dart';
 import 'package:road_mate/screens/Provider/services/manege_services.dart';
-import 'package:road_mate/screens/Provider/add-services/addservicescreen.dart';
+import 'package:road_mate/screens/Provider/settings/provider_srttings.dart';
+import 'package:road_mate/screens/cart/cart-screen.dart';
+import 'package:road_mate/screens/contact/contact-screen.dart';
+import 'package:road_mate/screens/engineers/engineera_screen.dart';
+import 'package:road_mate/screens/history/historyscreen.dart';
+import 'package:road_mate/screens/home/home-screen.dart';
+import 'package:road_mate/screens/services/all-services-screen.dart';
+import 'package:road_mate/screens/settings/settings_tab.dart';
 
-class ProviderProfileTap extends StatelessWidget {
-  ProviderProfileTap({super.key});
-
+class ProfileTap extends StatelessWidget {
+  ProfileTap({super.key});
   List<String> cardsName = [
-    "Services",
-    "Add Services",
+    "services".tr(),
+    "cart".tr(),
+    "engineers".tr(),
+    "My Cars",
+    "history".tr(),
+    "contact".tr(),
     'settings'.tr(),
+    "logout".tr(),
   ];
   List<String> cardsImage = [
     "assets/images/Tool.png",
-    "assets/images/wrench (1).png",
+    "assets/images/calendar.png",
+    "assets/images/icons8-mechanic-64.png",
+    "assets/images/icons8-cars-100.png",
+    "assets/images/icons8-history-80.png",
+    "assets/images/icons8-contact-us-80.png",
     "assets/images/settings.png",
+    "assets/images/icons8-logout-64.png"
   ];
   List<String> cardsRoute = [
-    ManegeServices.routeName,
-    AddServicePage.routeName,
-    ProviderSettings.routeName,
+    AllServicesScreen.routeName,
+    CartScreen.routeName,
+    EngineersScreen.routeName,
+    HomeScreen.routeName,
+    HistoryScreen.routeName,
+    ContactScreen.routeName,
+    SettingsTab.routeName,
+    LoginPage.routeName
   ];
 
   @override
@@ -47,8 +67,8 @@ class ProviderProfileTap extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(
-              Icons.access_time_rounded,
+            icon: ImageIcon(
+              AssetImage("assets/images/calendar.png"),
               color: Colors.black,
               size: 30,
             ),
@@ -102,6 +122,14 @@ class ProviderProfileTap extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
+                      if (cardsRoute == LoginPage.routeName) {
+                        FirebaseFunctions.signOut();
+                        Navigator.pushReplacementNamed(
+                          context,
+                          LoginPage.routeName,
+                        );
+                        return; // Prevent further navigation
+                      }
                       Navigator.pushNamed(context, cardsRoute[index]);
                     },
                     child: Container(

@@ -19,7 +19,7 @@ class ProviderHomeTap extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: Image.asset(Photos.logo),
+        leading: Image.asset(Photos.loading),
         centerTitle: true,
         title: Text(
           'fix-and-go'.tr(),

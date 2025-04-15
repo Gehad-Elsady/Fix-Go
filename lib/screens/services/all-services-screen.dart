@@ -27,7 +27,7 @@ class AllServicesScreen extends StatelessWidget {
         // backgroundColor: Color(0xFF0091ad),
         centerTitle: true,
       ),
-      drawer: MyDrawer(),
+      // drawer: MyDrawer(),
       body: Container(
         height: double.infinity,
         width: double.infinity,

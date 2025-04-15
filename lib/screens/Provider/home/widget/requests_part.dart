@@ -98,12 +98,6 @@ class RequestsPart extends StatelessWidget {
                                   style: whiteTextStyle),
                               Text(history.serviceModel!.price + " EGP",
                                   style: whiteTextStyle),
-                              Image.network(
-                                history.serviceModel!.image,
-                                height: 80,
-                                width: 300,
-                                fit: BoxFit.cover,
-                              ),
                             ],
                             if (history.items != null &&
                                 history.items!.isNotEmpty)
@@ -124,12 +118,6 @@ class RequestsPart extends StatelessWidget {
                                                 color: Colors.white,
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold)),
-                                        Image.network(
-                                          item.serviceModel.image,
-                                          height: 80,
-                                          width: double.infinity,
-                                          fit: BoxFit.cover,
-                                        ),
                                       ],
                                     ),
                                   );

@@ -35,35 +35,25 @@ class ServicesItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              ),
-              child: CachedNetworkImage(
-                imageUrl: service.image,
-                height: 150,
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(8)), // Optional: Rounded corners
+              child: Image.asset(
+                "assets/images/services/${service.name}.png",
                 width: double.infinity,
-                fit: BoxFit.cover,
-                placeholder: (context, url) =>
-                    Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-              )),
+                height: double.infinity,
+                fit: BoxFit
+                    .contain, // Ensures the image fills the available space
+                errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+              ),
+            ),
+          ),
           Text(
             service.name,
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              service.description,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15, color: Colors.white),
-            ),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 10.0),

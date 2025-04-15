@@ -6,6 +6,7 @@ import 'package:road_mate/Auth/auth_page.dart';
 import 'package:road_mate/Auth/model/usermodel.dart';
 import 'package:road_mate/Auth/signup-screen.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
+import 'package:road_mate/screens/Provider/home/provider_home.dart';
 import 'package:road_mate/screens/Provider/home/taps/provider_home_tap.dart';
 import 'package:road_mate/screens/home/customer_home_screen.dart';
 import 'package:road_mate/screens/home/home-screen.dart';
@@ -147,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                           if (userModel!.role == 'Provider') {
                             await Future.delayed(Duration(milliseconds: 500));
                             Navigator.pushReplacementNamed(
-                                context, ProviderHomeTap.routeName);
+                                context, ProviderHome.routeName);
                           } else if (userModel.role == 'User') {
                             await Future.delayed(Duration(milliseconds: 500));
                             Navigator.pushReplacementNamed(

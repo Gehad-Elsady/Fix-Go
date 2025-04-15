@@ -19,7 +19,7 @@ class CustomerHomeScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: Image.asset(Photos.logo),
+        leading: Image.asset(Photos.loading),
         centerTitle: true,
         title: Text(
           'fix-and-go'.tr(),
@@ -31,14 +31,12 @@ class CustomerHomeScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              Icons.access_time_rounded,
+            icon: ImageIcon(
+              AssetImage("assets/images/calendar.png"),
               color: Colors.black,
               size: 30,
             ),
             onPressed: () {
-              // Handle notification button press
-              // Navigator.pushNamed(context, MainHome.routeName);
               FirebaseFunctions.signOut();
               Navigator.pushReplacementNamed(
                 context,
@@ -135,18 +133,19 @@ class CustomerHomeScreen extends StatelessWidget {
                         width: 115,
                         height: 156,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Expanded(
                               child: ClipRRect(
                                 borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(
                                         8)), // Optional: Rounded corners
-                                child: Image.network(
-                                  serviceModel[index].image,
+                                child: Image.asset(
+                                  "assets/images/services/${serviceModel[index].name}.png",
                                   width: double.infinity,
                                   height: double.infinity,
                                   fit: BoxFit
-                                      .cover, // Ensures the image fills the available space
+                                      .contain, // Ensures the image fills the available space
                                   errorBuilder: (context, error, stackTrace) =>
                                       Icon(Icons.error),
                                 ),
@@ -154,30 +153,37 @@ class CustomerHomeScreen extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(4.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                              child: Text(
+                                serviceModel[index].name,
+                                style: GoogleFonts.lora(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
                                 children: [
-                                  Text(
-                                    serviceModel[index].name,
-                                    style: GoogleFonts.lora(
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    textAlign: TextAlign.left,
+                                  Icon(
+                                    Icons.star,
+                                    color: Color(0xff303539),
+                                    size: 15,
                                   ),
-                                  SizedBox(height: 4),
                                   Text(
-                                    "\$${serviceModel[index].price}",
+                                    "4.25",
                                     style: GoogleFonts.inter(
-                                      fontSize: 14,
-                                      color: Color(0xff797A7B),
-                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
                                     ),
-                                  ),
+                                  )
                                 ],
                               ),
                             ),
+                            SizedBox(height: 10),
                           ],
                         ),
                       ),
