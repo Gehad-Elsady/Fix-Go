@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:road_mate/location/model/locationmodel.dart';
 import 'package:road_mate/notifications/model/notification_model.dart';
 import 'package:road_mate/screens/Provider/engneers/model/eng_model.dart';
+import 'package:road_mate/screens/Provider/home/model/accepted_model.dart';
 import 'package:road_mate/screens/cart/model/cart-model.dart';
 import 'package:road_mate/screens/contact/model/contact-model.dart';
 import 'package:road_mate/screens/history/model/historymaodel.dart';
@@ -369,6 +370,7 @@ class FirebaseFunctions {
 
       // Create a new order
       final newOrder = HistoryModel(
+        totalPrice: order.totalPrice,
         id: newId.toString(),
         userId: FirebaseAuth.instance.currentUser!.uid,
         items: order.items,
@@ -423,6 +425,9 @@ class FirebaseFunctions {
           orderStatus: data['orderStatus'] ?? "No Status",
           orderOwnerName: data['orderOwnerName'] ?? "No Name",
           orderOwnerPhone: data['orderOwnerPhone'] ?? "No Phone",
+          totalPrice: data['totalPrice'] != null
+              ? double.tryParse(data['totalPrice'].toString())
+              : 0.0,
         );
       }).toList();
     });
@@ -487,57 +492,89 @@ class FirebaseFunctions {
           orderStatus: data['orderStatus'] ?? "No Status",
           orderOwnerName: data['orderOwnerName'] ?? "No Name",
           orderOwnerPhone: data['orderOwnerPhone'] ?? "No Phone",
+          totalPrice: data['totalPrice'] != null
+              ? double.tryParse(data['totalPrice'].toString())
+              : 0.0,
         );
       }).toList();
     });
   }
 
-  // static Stream<List<HistoryModel>> getAcceptedStream(String userId) {
-  //   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static Future<void> addOrderToMyList(AcceptedModel order) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('MyOrders')
+          .withConverter<AcceptedModel>(
+            fromFirestore: (snapshot, _) =>
+                AcceptedModel.fromJson(snapshot.data()!),
+            toFirestore: (order, _) => order.toJson(),
+          )
+          .add(
+              order); // Use .add() instead of .doc().set() unless you need a custom ID
+      print('Order added successfully!');
+    } catch (e) {
+      print('Error adding order: $e');
+    }
+  }
 
-  //   return _firestore
-  //       .collection('History')
-  //       .where('userId', isEqualTo: userId) // Filter by userId
-  //       .snapshots()
-  //       .map((snapshot) {
-  //     snapshot.docs.forEach((doc) {
-  //       final data = doc.data();
-  //       String orderStatus = data['orderStatus'] ?? "No Status";
+  /// Returns a stream of AcceptedModel orders from the "MyOrders" collection
+  static Stream<List<AcceptedModel>> getMyOrderStream() {
+    return FirebaseFirestore.instance
+        .collection('MyOrders')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return AcceptedModel(
+          orderStatus: data['orderStatus'] ?? "no status",
+          userId: data['userId'] ?? "no user",
+          totalPrice: (data['totalPrice'] ?? 0).toDouble(),
+          items: (data['items'] as List<dynamic>? ?? [])
+              .map((item) => CartModel.fromMap(item))
+              .toList(),
+          serviceModel: data['serviceModel'] != null
+              ? ServiceModel.fromJson(data['serviceModel'])
+              : null,
+          orderType: data['orderType'] ?? "No Order Type",
+          orderTime: data['orderTime'] ?? "",
+          historyModel: HistoryModel.fromJson(data['historyModel']),
+        );
+      }).toList();
+    });
+  }
 
-  //       // If the orderStatus is "pending", update it to "accepted"
-  //       if (orderStatus == "Pending") {
-  //         _firestore.collection('History').doc(doc.id).update({
-  //           'orderStatus': 'Accepted',
-  //         });
-  //       }
-  //     });
+  static Future<void> cancelMyOrder(int timestamp) async {
+    final String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
 
-  //     // Return the list of HistoryModel after the potential updates
-  //     return snapshot.docs.map((doc) {
-  //       final data = doc.data();
-  //       return HistoryModel(
-  //         timestamp: data['timestamp'] ?? 0,
-  //         userId: data['userId'] ?? "no id",
-  //         serviceModel: data['serviceModel'] != null
-  //             ? ServiceModel.fromJson(data['serviceModel'])
-  //             : null,
-  //         locationModel: data['locationModel'] != null
-  //             ? LocationModel.fromMap(data['locationModel'])
-  //             : null,
-  //         items: data['items'] != null
-  //             ? (data['items'] as List<dynamic>)
-  //                 .map((item) => CartModel.fromMap(item))
-  //                 .toList()
-  //             : [],
-  //         orderType: data['OrderType'] ?? "No Order Type",
-  //         id: data['id'] ?? "No Id",
-  //         orderStatus: data['orderStatus'] ?? "No Status",
-  //         orderOwnerName: data['orderOwnerName'] ?? "No Name",
-  //         orderOwnerPhone: data['orderOwnerPhone'] ?? "No Phone",
-  //       );
-  //     }).toList();
-  //   });
-  // }
+    if (uid.isEmpty) {
+      print('User is not authenticated.');
+      return;
+    }
+
+    try {
+      // Get the document(s) that match the userId and itemId
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('MyOrders')
+          .where('orderTime', isEqualTo: timestamp)
+          .where('userId',
+              isEqualTo: uid) // Ensure the item belongs to the current user
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        print('No items found to delete.');
+        return;
+      }
+
+      // Delete each document found
+      for (var doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+
+      print('Service deleted successfully!');
+    } catch (e) {
+      print('Error deleting service: $e');
+    }
+  }
 
   static Future<void> acceptedOrder(String id, int timestamp) async {
     // Query to find the document based on `id` and `createdAt`

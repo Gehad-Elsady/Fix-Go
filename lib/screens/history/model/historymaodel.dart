@@ -12,6 +12,7 @@ class HistoryModel {
   String? orderOwnerPhone;
   ServiceModel? serviceModel;
   LocationModel? locationModel;
+  double? totalPrice;
   int? timestamp;
 
   HistoryModel({
@@ -25,6 +26,7 @@ class HistoryModel {
     this.orderStatus,
     this.orderOwnerName,
     this.orderOwnerPhone,
+    this.totalPrice,
   });
 
   // Named constructor for deserialization
@@ -45,6 +47,7 @@ class HistoryModel {
     orderStatus = json['orderStatus'] as String?;
     orderOwnerName = json['orderOwnerName'] as String?;
     orderOwnerPhone = json['orderOwnerPhone'] as String?;
+    totalPrice = json['totalPrice'] as double?;
   }
 
   // Method for serialization
@@ -60,6 +63,7 @@ class HistoryModel {
     data['orderStatus'] = orderStatus;
     data['orderOwnerName'] = orderOwnerName;
     data['orderOwnerPhone'] = orderOwnerPhone;
+    data['totalPrice'] = totalPrice;
     return data;
   }
 }

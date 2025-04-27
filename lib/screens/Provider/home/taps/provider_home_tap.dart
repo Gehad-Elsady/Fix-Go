@@ -6,6 +6,7 @@ import 'package:road_mate/Auth/model/usermodel.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/constants/photos/photos.dart';
 import 'package:road_mate/screens/Provider/admin_drawer.dart';
+import 'package:road_mate/screens/Provider/home/widget/my_order.dart';
 import 'package:road_mate/screens/Provider/home/widget/requests_part.dart';
 
 class ProviderHomeTap extends StatelessWidget {
@@ -79,69 +80,29 @@ class ProviderHomeTap extends StatelessWidget {
               },
             ),
             RequestsPart(),
+            Divider(
+              color: Colors.grey,
+              thickness: 1.5,
+            ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Container(
-                // height: 369,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 1.5,
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        "Pending Requests",
-                        style: GoogleFonts.lora(
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      Divider(
-                        color: Colors.grey,
-                        thickness: 1.5,
-                      ),
-                      Text(
-                        "Oil Change",
-                        style: GoogleFonts.lora(
-                          fontSize: 14,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "Maadi",
-                        style: GoogleFonts.lora(
-                          fontSize: 14,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text("49.99 EGP", style: GoogleFonts.lora()),
-                      SizedBox(height: 10),
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xffADE1FB),
-                          ),
-                          onPressed: () {},
-                          child: Text("Waiting",
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                              ))),
-                    ],
-                  ),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+              child: Text(
+                "My Orders",
+                style: GoogleFonts.lora(
+                  fontSize: 24,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
+            ),
+            Divider(
+              color: Colors.grey,
+              thickness: 1.5,
+            ),
+            MyOrders(),
+            SizedBox(
+              height: 50,
             )
           ],
         ),

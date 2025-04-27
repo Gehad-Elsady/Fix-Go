@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/notifications/notification_back.dart';
+import 'package:road_mate/screens/Provider/home/model/accepted_model.dart';
 import 'package:road_mate/screens/Provider/location/order_location.dart';
 import 'package:road_mate/screens/history/model/historymaodel.dart';
 
@@ -141,49 +144,31 @@ class RequestsPart extends StatelessWidget {
                                         await FirebaseFunctions.acceptedOrder(
                                             history.userId!,
                                             history.timestamp!);
+                                        AcceptedModel acceptedModel =
+                                            AcceptedModel(
+                                          historyModel: history,
+                                          orderTime: DateTime.now()
+                                              .millisecondsSinceEpoch,
+                                          orderType: history.orderType!,
+                                          totalPrice: history.totalPrice!,
+                                          serviceModel: history.serviceModel,
+                                          items: history.items,
+                                          userId: FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                          orderStatus: "Not completed",
+                                        );
+                                        FirebaseFunctions.addOrderToMyList(
+                                            acceptedModel);
                                         NotificationBack.sendAcceptNotification(
                                             history.userId!);
                                       },
                                       child: Text("accept-order".tr(),
                                           style: boldWhiteTextStyle),
                                     )
-                                  : ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.red),
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: Text("cancel-order".tr()),
-                                              actions: [
-                                                TextButton(
-                                                  child: Text("yes".tr()),
-                                                  onPressed: () async {
-                                                    await FirebaseFunctions
-                                                        .cancelOrder(
-                                                            history.userId!,
-                                                            history.timestamp!);
-                                                    NotificationBack
-                                                        .sendDeclinedNotification(
-                                                            history.userId!);
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                                TextButton(
-                                                  child: Text("no".tr()),
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                      child: Text("cancel".tr(),
-                                          style: boldWhiteTextStyle),
-                                    ),
+                                  : Text("This order is already accepted",
+                                      style: TextStyle(
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.bold)),
                             ),
                           ],
                         ),

@@ -19,10 +19,10 @@ class UpdateServices extends StatefulWidget {
 
 class _UpdateServicesState extends State<UpdateServices> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
-  Timestamp? _createdAt;
 
+  Timestamp? _createdAt;
+  String name = '';
   bool _isUploading = false;
 
   @override
@@ -33,7 +33,7 @@ class _UpdateServicesState extends State<UpdateServices> {
 
     // Initialize controllers and image
     if (data != null) {
-      _nameController.text = data.name ?? '';
+      name = data.name ?? '';
       _priceController.text = data.price?.toString() ?? '';
       _createdAt = data.createdAt;
     }
@@ -74,9 +74,7 @@ class _UpdateServicesState extends State<UpdateServices> {
               .collection('services')
               .doc(docId)
               .update({
-            'name': _nameController.text.trim(),
             'price': _priceController.text.trim(),
-            'image': imageUrl,
             'updatedAt': Timestamp.now(),
           });
 
@@ -148,17 +146,17 @@ class _UpdateServicesState extends State<UpdateServices> {
                         ),
                       ),
                       SizedBox(height: 16),
-                      TextFormField(
-                        controller: _nameController,
-                        decoration: InputDecoration(
-                          labelText: 'add-service-name'.tr(),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                        validator: (value) =>
-                            value!.isEmpty ? 'Please enter a name' : null,
-                      ),
+                      Text('add-service-name'.tr(),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          )),
+                      SizedBox(height: 8),
+                      Text(name,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          )),
                       SizedBox(height: 16),
                       TextFormField(
                         controller: _priceController,
@@ -173,13 +171,6 @@ class _UpdateServicesState extends State<UpdateServices> {
                             value!.isEmpty ? 'Please enter a price' : null,
                       ),
                       SizedBox(height: 20),
-                      Text(
-                        'image'.tr(),
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                     ],
                   ),
                 ),

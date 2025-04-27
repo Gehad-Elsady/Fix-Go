@@ -118,6 +118,7 @@ class _GpsState extends State<Gps> {
 
       // Creating history model with updated location data
       HistoryModel data = HistoryModel(
+        totalPrice: widget.totalPrice.toDouble(),
         orderType: widget.historymaodel.orderType,
         items: widget.historymaodel.items,
         userId: widget.historymaodel.userId,

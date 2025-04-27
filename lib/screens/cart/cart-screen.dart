@@ -187,6 +187,7 @@ class CartScreen extends StatelessWidget {
                             print(
                                 '--------------Name is ${profileModel.firstName}');
                             HistoryModel historymaodel = HistoryModel(
+                              totalPrice: totalPrice.toDouble(),
                               userId: FirebaseAuth.instance.currentUser!.uid,
                               items: snapshot.data!,
                               orderType: "Cart",

@@ -77,21 +77,21 @@ class ServicesPart extends StatelessWidget {
                                   '--------------Name is ${profileModel.firstName}');
 
                               // Create a HistoryModel instance
-                              final historymaodel = HistoryModel(
-                                serviceModel: service,
-                                orderType: "Quick Order",
-                              );
+                              // final historymaodel = HistoryModel(
+                              //   serviceModel: service,
+                              //   orderType: "Quick Order",
+                              // );
 
                               // Navigate to the GPS screen
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Gps(
-                                    historymaodel: historymaodel,
-                                    totalPrice: int.parse(service.price),
-                                  ),
-                                ),
-                              );
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => Gps(
+                              //       historymaodel: historymaodel,
+                              //       totalPrice: int.parse(service.price),
+                              //     ),
+                              //   ),
+                              // );
                             }
                           } catch (e) {
                             // Handle exceptions and display an error message

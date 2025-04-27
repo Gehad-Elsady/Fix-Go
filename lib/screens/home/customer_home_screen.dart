@@ -1,11 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/Auth/login-screen.dart';
 import 'package:road_mate/Auth/model/usermodel.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/constants/photos/photos.dart';
+import 'package:road_mate/location/location.dart';
 import 'package:road_mate/screens/Provider/add-services/model/service-model.dart';
+import 'package:road_mate/screens/history/model/historymaodel.dart';
+import 'package:road_mate/screens/profile/model/profilemodel.dart';
 import 'package:road_mate/screens/user%20home/main_hame.dart';
 import 'package:road_mate/widget/services-item.dart';
 
@@ -127,64 +131,128 @@ class CustomerHomeScreen extends StatelessWidget {
                   ),
                   itemCount: serviceModel.length,
                   itemBuilder: (context, index) {
-                    return Card(
-                      color: Color(0xffF6F6F6),
-                      child: SizedBox(
-                        width: 115,
-                        height: 156,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(
-                                        8)), // Optional: Rounded corners
-                                child: Image.asset(
-                                  "assets/images/services/${serviceModel[index].name}.png",
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  fit: BoxFit
-                                      .contain, // Ensures the image fills the available space
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Icon(Icons.error),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                serviceModel[index].name,
-                                style: GoogleFonts.lora(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    color: Color(0xff303539),
-                                    size: 15,
-                                  ),
-                                  Text(
-                                    "4.25",
-                                    style: GoogleFonts.inter(
-                                      fontSize: 12,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
+                    return InkWell(
+                      onTap: () async {
+                        try {
+                          // Fetch the user profile
+                          ProfileModel? profileModel =
+                              await FirebaseFunctions.getUserProfile(
+                                      FirebaseAuth.instance.currentUser!.uid)
+                                  .first;
+
+                          if (profileModel == null) {
+                            // Show an alert dialog if the profile is null
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('no-profile'.tr()),
+                                  content: Text(
+                                      'No profile data available please complete your profile first.'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('ok'.tr()),
                                     ),
-                                  )
-                                ],
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            // Log the user's name for debugging
+                            print(
+                                '--------------Name is ${profileModel.firstName}');
+
+                            // Create a HistoryModel instance
+                            final historymaodel = HistoryModel(
+                              serviceModel: serviceModel[index],
+                              orderType: "Quick Order",
+                            );
+
+                            // Navigate to the GPS screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Gps(
+                                  historymaodel: historymaodel,
+                                  totalPrice:
+                                      int.parse(serviceModel[index].price),
+                                ),
                               ),
+                            );
+                          }
+                        } catch (e) {
+                          // Handle exceptions and display an error message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error: ${e.toString()}'),
+                              backgroundColor: Colors.red,
                             ),
-                            SizedBox(height: 10),
-                          ],
+                          );
+                        }
+                      },
+                      child: Card(
+                        color: Color(0xffF6F6F6),
+                        child: SizedBox(
+                          width: 115,
+                          height: 156,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(
+                                          8)), // Optional: Rounded corners
+                                  child: Image.asset(
+                                    "assets/images/services/${serviceModel[index].name}.png",
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    fit: BoxFit
+                                        .contain, // Ensures the image fills the available space
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Icon(Icons.error),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  serviceModel[index].name,
+                                  style: GoogleFonts.lora(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.star,
+                                      color: Color(0xff303539),
+                                      size: 15,
+                                    ),
+                                    Text(
+                                      "4.25",
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                            ],
+                          ),
                         ),
                       ),
                     );

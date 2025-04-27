@@ -39,7 +39,7 @@ class ProviderInfo extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Welcome to Courses App',
+                      'Welcome to Fix and Go',
                       style: const TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,

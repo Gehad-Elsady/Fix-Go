@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:road_mate/backend/firebase_functions.dart';
 
 class AddServicePage extends StatefulWidget {
   static const String routeName = 'AddServicePage';
@@ -30,57 +31,64 @@ class _AddServicePageState extends State<AddServicePage> {
     'Car tow',
     'Batteries',
   ];
-  // File? _image;
-  // final ImagePicker _picker = ImagePicker();
+
   bool _isUploading = false;
-
-  // Future<void> _pickImage() async {
-  //   final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _image = File(pickedFile.path);
-  //     });
-  //   }
-  // }
-
-  // Future<String?> _uploadImage(File image) async {
-  //   try {
-  //     final storageRef = FirebaseStorage.instance
-  //         .ref()
-  //         .child('service_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
-  //     final uploadTask = await storageRef.putFile(image);
-  //     return await uploadTask.ref.getDownloadURL();
-  //   } catch (e) {
-  //     print("Error uploading image: $e");
-  //     return null;
-  //   }
-  // }
 
   Future<void> _saveService() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isUploading = true);
 
-      await FirebaseFirestore.instance.collection('services').add({
-        'name': _selectedServiceName,
-        'price': _priceController.text.trim(),
-        'createdAt': Timestamp.now(),
-        'userId': FirebaseAuth.instance.currentUser!.uid
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Service added successfully'),
-          backgroundColor: Colors.green,
-        ),
-      );
-      Navigator.pop(context); // Go back after saving
-      // } else {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text('Failed to upload image'),
-      //       backgroundColor: Colors.red,
-      //     ),
-      //   );
-      // }
+      final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('services')
+          .where('name', isEqualTo: _selectedServiceName)
+          .where('userId', isEqualTo: currentUserId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Show dialog if service already exists
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Service Exists'),
+            content: Text('You have already added this service.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        // Add new service
+        await FirebaseFirestore.instance.collection('services').add({
+          'name': _selectedServiceName,
+          'price': _priceController.text.trim(),
+          'createdAt': Timestamp.now(),
+          'userId': currentUserId,
+        });
+
+        // Show success dialog
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Success'),
+            content: Text('Service added successfully.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                  Navigator.pop(context); // Go back after saving
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+
       setState(() => _isUploading = false);
     }
   }
