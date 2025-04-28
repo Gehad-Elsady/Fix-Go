@@ -9,7 +9,6 @@ import 'package:road_mate/screens/profile/model/profilemodel.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/theme/app-colors.dart';
 import 'package:road_mate/validation/validation.dart';
-import 'package:road_mate/widget/drawer/mydrawer.dart';
 
 class UserProfile extends StatefulWidget {
   static const String routeName = "user-profile";

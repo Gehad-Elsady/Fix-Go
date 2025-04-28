@@ -6,6 +6,7 @@ import 'package:road_mate/location/model/locationmodel.dart';
 import 'package:road_mate/notifications/model/notification_model.dart';
 import 'package:road_mate/screens/Provider/engneers/model/eng_model.dart';
 import 'package:road_mate/screens/Provider/home/model/accepted_model.dart';
+import 'package:road_mate/screens/cars/models/car.dart';
 import 'package:road_mate/screens/cart/model/cart-model.dart';
 import 'package:road_mate/screens/contact/model/contact-model.dart';
 import 'package:road_mate/screens/history/model/historymaodel.dart';
@@ -151,15 +152,27 @@ class FirebaseFunctions {
   static Stream<List<ServiceModel>> getServicesStream() {
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
     return _firestore.collection('services').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
+      // Create a map to store unique services by name
+      final Map<String, ServiceModel> uniqueServices = {};
+
+      // Process each document and keep only the first occurrence of each service name
+      snapshot.docs.forEach((doc) {
         final data = doc.data() as Map<String, dynamic>;
-        return ServiceModel(
+        final service = ServiceModel(
           userId: data['userId'] ?? "no id",
           name: data['name'] ?? 'No Name',
           price: data['price'] ?? 'No Price',
           createdAt: data['createdAt'] ?? 'No Date',
         );
-      }).toList();
+
+        // Only add the service if we haven't seen this name before
+        if (!uniqueServices.containsKey(service.name)) {
+          uniqueServices[service.name] = service;
+        }
+      });
+
+      // Convert the map values back to a list
+      return uniqueServices.values.toList();
     });
   }
 
@@ -381,6 +394,7 @@ class FirebaseFunctions {
         orderStatus: "Pending",
         orderOwnerName: userProfile.firstName,
         orderOwnerPhone: userProfile.phoneNumber,
+        car: order.car,
       );
 
       // Add the new order to Firestore
@@ -428,6 +442,7 @@ class FirebaseFunctions {
           totalPrice: data['totalPrice'] != null
               ? double.tryParse(data['totalPrice'].toString())
               : 0.0,
+          car: data['car'] != null ? Car.fromJson(data['car']) : null,
         );
       }).toList();
     });
@@ -502,6 +517,16 @@ class FirebaseFunctions {
 
   static Future<void> addOrderToMyList(AcceptedModel order) async {
     try {
+      // Get current number of orders for this provider
+      final currentOrders = await FirebaseFirestore.instance
+          .collection('MyOrders')
+          .where('userId', isEqualTo: order.userId)
+          .get();
+
+      if (currentOrders.docs.length >= 3) {
+        throw Exception('Maximum number of orders (3) reached');
+      }
+
       await FirebaseFirestore.instance
           .collection('MyOrders')
           .withConverter<AcceptedModel>(
@@ -509,18 +534,20 @@ class FirebaseFunctions {
                 AcceptedModel.fromJson(snapshot.data()!),
             toFirestore: (order, _) => order.toJson(),
           )
-          .add(
-              order); // Use .add() instead of .doc().set() unless you need a custom ID
+          .add(order);
       print('Order added successfully!');
     } catch (e) {
       print('Error adding order: $e');
+      rethrow; // Re-throw the exception to handle it in the UI
     }
   }
 
   /// Returns a stream of AcceptedModel orders from the "MyOrders" collection
   static Stream<List<AcceptedModel>> getMyOrderStream() {
+    String user = FirebaseAuth.instance.currentUser!.uid;
     return FirebaseFirestore.instance
         .collection('MyOrders')
+        .where('userId', isEqualTo: user)
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) {

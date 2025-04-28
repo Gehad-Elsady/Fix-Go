@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/screens/Provider/add-services/model/service-model.dart';
+import 'package:road_mate/screens/bottom%20sheet/request_bootomsheet.dart';
 
 class ServicesSearchPage extends StatefulWidget {
   static const String routeName = '/services-search';
@@ -84,50 +85,67 @@ class _ServicesSearchPageState extends State<ServicesSearchPage> {
                         final servicesModel = ServiceModel.fromJson(
                             services.data() as Map<String, dynamic>);
 
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 5,
-                          color: Color(0xffADE1FB),
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          shadowColor: Colors.black26,
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.asset(
-                                      "assets/images/services/${servicesModel.name}.png",
-                                      height: 100,
-                                      width: 100,
-                                    )),
-                                SizedBox(width: 10),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      servicesModel.name,
-                                      style: GoogleFonts.lora(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
+                        return InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              isDismissible: true,
+                              backgroundColor: Colors.white,
+                              builder: (context) {
+                                return RequestBottomSheet(
+                                    serviceModel: servicesModel,
+                                    orderType: "Quick Order");
+                              },
+                            );
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 5,
+                            color: Color(0xffADE1FB),
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            shadowColor: Colors.black26,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.asset(
+                                        "assets/images/services/${servicesModel.name}.png",
+                                        height: 100,
+                                        width: 100,
+                                      )),
+                                  SizedBox(width: 10),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        servicesModel.name,
+                                        style: GoogleFonts.lora(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      '\$${servicesModel.price}',
-                                      style: GoogleFonts.lora(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.green[700],
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        '\$${servicesModel.price}',
+                                        style: GoogleFonts.lora(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.green[700],
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 16),
-                                  ],
-                                ),
-                              ],
+                                      const SizedBox(height: 16),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );

@@ -8,10 +8,9 @@ import 'package:road_mate/Auth/signup-screen.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/screens/Provider/home/provider_home.dart';
 import 'package:road_mate/screens/Provider/home/taps/provider_home_tap.dart';
-import 'package:road_mate/screens/home/customer_home_screen.dart';
-import 'package:road_mate/screens/home/home-screen.dart';
+import 'package:road_mate/screens/home/taps/customer_home_screen.dart';
 import 'package:road_mate/constants/photos/photos.dart';
-import 'package:road_mate/screens/user%20home/main_hame.dart';
+import 'package:road_mate/screens/home/main_hame.dart';
 
 class LoginPage extends StatefulWidget {
   static const String routeName = 'login page';

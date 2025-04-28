@@ -6,10 +6,10 @@ import 'package:lottie/lottie.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/constants/photos/photos.dart';
 import 'package:road_mate/location/location.dart';
+import 'package:road_mate/screens/bottom%20sheet/request_bootomsheet.dart';
 import 'package:road_mate/screens/cart/widget/cartitem.dart';
 import 'package:road_mate/screens/history/model/historymaodel.dart';
 import 'package:road_mate/screens/profile/model/profilemodel.dart';
-import 'package:road_mate/widget/drawer/mydrawer.dart';
 
 class CartScreen extends StatelessWidget {
   static const String routeName = 'cart';
@@ -61,7 +61,6 @@ class CartScreen extends StatelessWidget {
               ))
         ],
       ),
-      drawer: MyDrawer(),
       body: Container(
         child: StreamBuilder(
           stream: FirebaseFunctions.getCardStream(),
@@ -156,61 +155,74 @@ class CartScreen extends StatelessWidget {
                             color: Colors.blue),
                       ),
                       onPressed: () async {
-                        try {
-                          // Fetch the user profile
-                          ProfileModel? profileModel =
-                              await FirebaseFunctions.getUserProfile(
-                                      FirebaseAuth.instance.currentUser!.uid)
-                                  .first;
-
-                          if (profileModel == null) {
-                            // Show an alert dialog if the profile is null
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text('no-profile'.tr()),
-                                  content: Text('profile-error'.tr()),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('ok'.tr()),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          } else {
-                            // Log the user's name for debugging
-                            print(
-                                '--------------Name is ${profileModel.firstName}');
-                            HistoryModel historymaodel = HistoryModel(
-                              totalPrice: totalPrice.toDouble(),
-                              userId: FirebaseAuth.instance.currentUser!.uid,
-                              items: snapshot.data!,
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          isDismissible: true,
+                          backgroundColor: Colors.white,
+                          builder: (context) {
+                            return RequestBottomSheet(
+                              items: snapshot.data,
                               orderType: "Cart",
+                              totalPrice: totalPrice.toDouble(),
                             );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Gps(
-                                  historymaodel: historymaodel,
-                                  totalPrice: totalPrice,
-                                ),
-                              ),
-                            );
-                          }
-                        } catch (e) {
-                          // Handle exceptions and display an error message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Error: ${e.toString()}'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
+                          },
+                        );
+                        // try {
+                        //   // Fetch the user profile
+                        //   ProfileModel? profileModel =
+                        //       await FirebaseFunctions.getUserProfile(
+                        //               FirebaseAuth.instance.currentUser!.uid)
+                        //           .first;
+
+                        //   if (profileModel == null) {
+                        //     // Show an alert dialog if the profile is null
+                        //     showDialog(
+                        //       context: context,
+                        //       builder: (context) {
+                        //         return AlertDialog(
+                        //           title: Text('no-profile'.tr()),
+                        //           content: Text('profile-error'.tr()),
+                        //           actions: <Widget>[
+                        //             TextButton(
+                        //               onPressed: () {
+                        //                 Navigator.of(context).pop();
+                        //               },
+                        //               child: Text('ok'.tr()),
+                        //             ),
+                        //           ],
+                        //         );
+                        //       },
+                        //     );
+                        //   } else {
+                        //     // Log the user's name for debugging
+                        //     print(
+                        //         '--------------Name is ${profileModel.firstName}');
+                        //     HistoryModel historymaodel = HistoryModel(
+                        //       totalPrice: totalPrice.toDouble(),
+                        //       userId: FirebaseAuth.instance.currentUser!.uid,
+                        //       items: snapshot.data!,
+                        //       orderType: "Cart",
+                        //     );
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (context) => Gps(
+                        //           historymaodel: historymaodel,
+                        //           totalPrice: totalPrice,
+                        //         ),
+                        //       ),
+                        //     );
+                        //   }
+                        // } catch (e) {
+                        //   // Handle exceptions and display an error message
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     SnackBar(
+                        //       content: Text('Error: ${e.toString()}'),
+                        //       backgroundColor: Colors.red,
+                        //     ),
+                        //   );
+                        // }
                       }),
                 ),
               ],

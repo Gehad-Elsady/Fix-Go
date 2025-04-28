@@ -33,6 +33,32 @@ class _SignupProviderState extends State<SignupProvider> {
   final ImagePicker _picker = ImagePicker();
   bool _isUploading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        barrierDismissible: false, // User must tap button to close
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Important Notice'),
+            content: Text(
+                'Please read our terms and conditions carefully before proceeding with the signup process. By continuing, you agree to our service terms and pricing structure.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('I Agree'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    });
+  }
+
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {

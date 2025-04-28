@@ -8,11 +8,11 @@ import 'package:road_mate/screens/Provider/add-services/addservicescreen.dart';
 import 'package:road_mate/screens/Provider/home/widget/provider_info.dart';
 import 'package:road_mate/screens/Provider/services/manege_services.dart';
 import 'package:road_mate/screens/Provider/settings/provider_srttings.dart';
+import 'package:road_mate/screens/cars/cars_screen.dart';
 import 'package:road_mate/screens/cart/cart-screen.dart';
 import 'package:road_mate/screens/contact/contact-screen.dart';
 import 'package:road_mate/screens/engineers/engineera_screen.dart';
 import 'package:road_mate/screens/history/historyscreen.dart';
-import 'package:road_mate/screens/home/home-screen.dart';
 import 'package:road_mate/screens/services/all-services-screen.dart';
 import 'package:road_mate/screens/settings/settings_tab.dart';
 
@@ -42,7 +42,7 @@ class ProfileTap extends StatelessWidget {
     AllServicesScreen.routeName,
     CartScreen.routeName,
     EngineersScreen.routeName,
-    HomeScreen.routeName,
+    CarsScreen.routeName,
     HistoryScreen.routeName,
     ContactScreen.routeName,
     SettingsTab.routeName,
@@ -73,11 +73,7 @@ class ProfileTap extends StatelessWidget {
               size: 30,
             ),
             onPressed: () {
-              FirebaseFunctions.signOut();
-              Navigator.pushReplacementNamed(
-                context,
-                LoginPage.routeName,
-              );
+              Navigator.pushNamed(context, CartScreen.routeName);
             },
           ),
         ],
@@ -122,7 +118,7 @@ class ProfileTap extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
-                      if (cardsRoute == LoginPage.routeName) {
+                      if (cardsRoute[index] == LoginPage.routeName) {
                         FirebaseFunctions.signOut();
                         Navigator.pushReplacementNamed(
                           context,

@@ -21,24 +21,23 @@ import 'package:road_mate/screens/Provider/services/manege_services.dart';
 import 'package:road_mate/screens/Provider/engneers/manegeeng.dart';
 import 'package:road_mate/screens/Provider/engneers/update_eng.dart';
 import 'package:road_mate/screens/Provider/services/update_services.dart';
-import 'package:road_mate/screens/Search/search_screen.dart';
+import 'package:road_mate/screens/cars/cars_screen.dart';
+import 'package:road_mate/screens/home/taps/Search/search_screen.dart';
 import 'package:road_mate/screens/SplashScreen/OnBoarding/boarding-screen.dart';
 import 'package:road_mate/screens/SplashScreen/splash-screen.dart';
 import 'package:road_mate/screens/engineers/engineera_screen.dart';
 import 'package:road_mate/screens/history/historyscreen.dart';
-import 'package:road_mate/screens/home/customer_home_screen.dart';
+import 'package:road_mate/screens/home/taps/customer_home_screen.dart';
 import 'package:road_mate/screens/services/all-services-screen.dart';
 import 'package:road_mate/screens/cart/cart-screen.dart';
 import 'package:road_mate/screens/contact/contact-screen.dart';
 import 'package:road_mate/backend/firebase_options.dart';
-import 'package:road_mate/screens/home/home-screen.dart';
 import 'package:road_mate/screens/SplashScreen/provider/check-user.dart';
 import 'package:road_mate/screens/SplashScreen/provider/finish-onboarding.dart';
 import 'package:road_mate/screens/settings/settings_tab.dart';
 import 'package:road_mate/screens/Provider/add-services/addservicescreen.dart';
 import 'package:road_mate/screens/profile/user-profile-screen.dart';
-import 'package:road_mate/screens/user%20home/main_hame.dart';
-import 'package:road_mate/screens/user%20home/user_home.dart';
+import 'package:road_mate/screens/home/main_hame.dart';
 
 bool isConnectdet = false;
 void main() async {
@@ -108,7 +107,6 @@ class MyApp extends StatelessWidget {
       initialRoute: SplashScreen.routeName,
       routes: {
         SplashScreen.routeName: (context) => SplashScreen(),
-        HomeScreen.routeName: (context) => HomeScreen(),
         OnboardingScreen.routeName: (context) => OnboardingScreen(),
         LoginPage.routeName: (context) => LoginPage(),
         SignUpPage.routeName: (context) => SignUpPage(),
@@ -127,13 +125,13 @@ class MyApp extends StatelessWidget {
         UpdateEng.routeName: (context) => UpdateEng(),
         EngineersScreen.routeName: (context) => EngineersScreen(),
         ProviderSettings.routeName: (context) => ProviderSettings(),
-        UserHome.routeName: (context) => UserHome(),
         MainHome.routeName: (context) => MainHome(),
         AuthPage.routeName: (context) => AuthPage(),
         SignupProvider.routeName: (context) => SignupProvider(),
         CustomerHomeScreen.routeName: (context) => CustomerHomeScreen(),
         ProviderHome.routeName: (context) => ProviderHome(),
         ServicesSearchPage.routeName: (context) => ServicesSearchPage(),
+        CarsScreen.routeName: (context) => CarsScreen(),
       },
     );
   }

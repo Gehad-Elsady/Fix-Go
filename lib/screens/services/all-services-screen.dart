@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/screens/cart/model/cart-model.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
-import 'package:road_mate/widget/drawer/mydrawer.dart';
 import 'package:road_mate/widget/services-item.dart';
 
 class AllServicesScreen extends StatelessWidget {

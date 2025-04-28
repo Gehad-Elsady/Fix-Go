@@ -10,7 +10,7 @@ import 'package:road_mate/screens/history/model/historymaodel.dart';
 
 class Gps extends StatefulWidget {
   HistoryModel historymaodel;
-  int totalPrice;
+  double totalPrice;
 
   Gps({required this.historymaodel, required this.totalPrice});
 
@@ -126,6 +126,7 @@ class _GpsState extends State<Gps> {
         locationModel: LocationModel(
             latitude: locationData!.latitude!,
             longitude: locationData!.longitude!),
+        car: widget.historymaodel.car,
       );
 
       Navigator.push(

@@ -5,9 +5,8 @@ import 'package:road_mate/screens/Provider/home/taps/provider_home_tap.dart';
 import 'package:road_mate/screens/Provider/home/taps/provider_profile_tap.dart';
 import 'package:road_mate/screens/Provider/home/taps/test.dart';
 import 'package:road_mate/screens/history/historyscreen.dart';
-import 'package:road_mate/screens/home/customer_home_screen.dart';
+import 'package:road_mate/screens/home/taps/customer_home_screen.dart';
 import 'package:road_mate/screens/profile/user-profile-screen.dart';
-import 'package:road_mate/screens/user%20home/user_home.dart';
 
 class ProviderHome extends StatefulWidget {
   static const String routeName = 'provider-hame';

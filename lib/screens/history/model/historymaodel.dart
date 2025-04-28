@@ -1,5 +1,6 @@
 import 'package:road_mate/location/model/locationmodel.dart';
 import 'package:road_mate/screens/Provider/add-services/model/service-model.dart';
+import 'package:road_mate/screens/cars/models/car.dart';
 import 'package:road_mate/screens/cart/model/cart-model.dart';
 
 class HistoryModel {
@@ -14,6 +15,7 @@ class HistoryModel {
   LocationModel? locationModel;
   double? totalPrice;
   int? timestamp;
+  Car? car; // Make it nullable to avoid required in constructor
 
   HistoryModel({
     this.id,
@@ -27,27 +29,33 @@ class HistoryModel {
     this.orderOwnerName,
     this.orderOwnerPhone,
     this.totalPrice,
+    this.car,
   });
 
   // Named constructor for deserialization
-  HistoryModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'] as String?;
-    items = (json['items'] as List<dynamic>?)
-        ?.map((item) => CartModel.fromMap(item))
-        .toList();
-    userId = json['userId'] as String?;
-    orderType = json['OrderType'] as String?;
-    serviceModel = json['serviceModel'] != null
-        ? ServiceModel.fromJson(json['serviceModel'])
-        : null;
-    locationModel = json['locationModel'] != null
-        ? LocationModel.fromMap(json['locationModel'])
-        : null;
-    timestamp = json['timestamp'];
-    orderStatus = json['orderStatus'] as String?;
-    orderOwnerName = json['orderOwnerName'] as String?;
-    orderOwnerPhone = json['orderOwnerPhone'] as String?;
-    totalPrice = json['totalPrice'] as double?;
+  factory HistoryModel.fromJson(Map<String, dynamic> json) {
+    return HistoryModel(
+      id: json['id'] as String?,
+      items: (json['items'] as List<dynamic>?)
+          ?.map((item) => CartModel.fromMap(item))
+          .toList(),
+      userId: json['userId'] as String?,
+      orderType: json['OrderType'] as String?,
+      serviceModel: json['serviceModel'] != null
+          ? ServiceModel.fromJson(json['serviceModel'])
+          : null,
+      locationModel: json['locationModel'] != null
+          ? LocationModel.fromMap(json['locationModel'])
+          : null,
+      timestamp: json['timestamp'] != null ? (json['timestamp'] as int) : null,
+      orderStatus: json['orderStatus'] as String?,
+      orderOwnerName: json['orderOwnerName'] as String?,
+      orderOwnerPhone: json['orderOwnerPhone'] as String?,
+      totalPrice: json['totalPrice'] != null
+          ? (json['totalPrice'] as num).toDouble()
+          : null,
+      car: json['car'] != null ? Car.fromJson(json['car']) : null,
+    );
   }
 
   // Method for serialization
@@ -64,6 +72,7 @@ class HistoryModel {
     data['orderOwnerName'] = orderOwnerName;
     data['orderOwnerPhone'] = orderOwnerPhone;
     data['totalPrice'] = totalPrice;
+    data['car'] = car?.toJson();
     return data;
   }
 }

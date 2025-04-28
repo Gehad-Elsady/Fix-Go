@@ -1,12 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
-import 'package:road_mate/screens/Search/search_screen.dart';
+import 'package:road_mate/screens/home/taps/Search/search_screen.dart';
 import 'package:road_mate/screens/history/historyscreen.dart';
-import 'package:road_mate/screens/home/customer_home_screen.dart';
+import 'package:road_mate/screens/home/taps/customer_home_screen.dart';
 import 'package:road_mate/screens/profile/user-profile-screen.dart';
-import 'package:road_mate/screens/user%20home/prfile_tap.dart';
-import 'package:road_mate/screens/user%20home/user_home.dart';
+import 'package:road_mate/screens/home/taps/prfile_tap.dart';
 
 class MainHome extends StatefulWidget {
   static const String routeName = 'main-hame';

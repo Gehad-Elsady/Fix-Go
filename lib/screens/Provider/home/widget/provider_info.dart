@@ -23,10 +23,6 @@ class ProviderInfo extends StatelessWidget {
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
-
-        if (!snapshot.hasData || snapshot.data == null) {
-          return const Text('No user data found');
-        }
         if (!snapshot.hasData || snapshot.data == null) {
           return Row(
             children: [
@@ -58,6 +54,18 @@ class ProviderInfo extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(height: 10),
+              InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, UserProfile.routeName);
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.black)),
+                      child: Text("Edit Profile")))
             ],
           );
         }

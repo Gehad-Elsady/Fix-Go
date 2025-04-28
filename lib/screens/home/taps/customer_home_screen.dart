@@ -8,10 +8,9 @@ import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/constants/photos/photos.dart';
 import 'package:road_mate/location/location.dart';
 import 'package:road_mate/screens/Provider/add-services/model/service-model.dart';
+import 'package:road_mate/screens/bottom%20sheet/request_bootomsheet.dart';
 import 'package:road_mate/screens/history/model/historymaodel.dart';
 import 'package:road_mate/screens/profile/model/profilemodel.dart';
-import 'package:road_mate/screens/user%20home/main_hame.dart';
-import 'package:road_mate/widget/services-item.dart';
 
 class CustomerHomeScreen extends StatelessWidget {
   static const String routeName = 'customer-home-screen';
@@ -133,65 +132,77 @@ class CustomerHomeScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () async {
-                        try {
-                          // Fetch the user profile
-                          ProfileModel? profileModel =
-                              await FirebaseFunctions.getUserProfile(
-                                      FirebaseAuth.instance.currentUser!.uid)
-                                  .first;
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          isDismissible: true,
+                          backgroundColor: Colors.white,
+                          builder: (context) {
+                            return RequestBottomSheet(
+                                serviceModel: serviceModel[index],
+                                orderType: "Quick Order");
+                          },
+                        );
+                        // try {
+                        //   // Fetch the user profile
+                        //   ProfileModel? profileModel =
+                        //       await FirebaseFunctions.getUserProfile(
+                        //               FirebaseAuth.instance.currentUser!.uid)
+                        //           .first;
 
-                          if (profileModel == null) {
-                            // Show an alert dialog if the profile is null
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text('no-profile'.tr()),
-                                  content: Text(
-                                      'No profile data available please complete your profile first.'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('ok'.tr()),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          } else {
-                            // Log the user's name for debugging
-                            print(
-                                '--------------Name is ${profileModel.firstName}');
+                        //   if (profileModel == null) {
+                        //     // Show an alert dialog if the profile is null
+                        //     showDialog(
+                        //       context: context,
+                        //       builder: (context) {
+                        //         return AlertDialog(
+                        //           title: Text('no-profile'.tr()),
+                        //           content: Text(
+                        //               'No profile data available please complete your profile first.'),
+                        //           actions: <Widget>[
+                        //             TextButton(
+                        //               onPressed: () {
+                        //                 Navigator.of(context).pop();
+                        //               },
+                        //               child: Text('ok'.tr()),
+                        //             ),
+                        //           ],
+                        //         );
+                        //       },
+                        //     );
+                        //   } else {
+                        //     // Log the user's name for debugging
+                        //     print(
+                        //         '--------------Name is ${profileModel.firstName}');
 
-                            // Create a HistoryModel instance
-                            final historymaodel = HistoryModel(
-                              serviceModel: serviceModel[index],
-                              orderType: "Quick Order",
-                            );
+                        //     // Create a HistoryModel instance
+                        //     final historymaodel = HistoryModel(
+                        //       serviceModel: serviceModel[index],
+                        //       orderType: "Quick Order",
+                        //     );
 
-                            // Navigate to the GPS screen
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Gps(
-                                  historymaodel: historymaodel,
-                                  totalPrice:
-                                      int.parse(serviceModel[index].price),
-                                ),
-                              ),
-                            );
-                          }
-                        } catch (e) {
-                          // Handle exceptions and display an error message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Error: ${e.toString()}'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
+                        //     // Navigate to the GPS screen
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (context) => Gps(
+                        //           historymaodel: historymaodel,
+                        //           totalPrice:
+                        //               int.parse(serviceModel[index].price),
+                        //         ),
+                        //       ),
+                        //     );
+                        //   }
+                        // } catch (e) {
+                        //   // Handle exceptions and display an error message
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     SnackBar(
+                        //       content: Text('Error: ${e.toString()}'),
+                        //       backgroundColor: Colors.red,
+                        //     ),
+                        //   );
+                        // }
+                        // }
                       },
                       child: Card(
                         color: Color(0xffF6F6F6),

@@ -10,12 +10,11 @@ import 'package:road_mate/screens/Provider/home/taps/provider_home_tap.dart';
 import 'dart:async';
 
 import 'package:road_mate/screens/SplashScreen/OnBoarding/boarding-screen.dart';
-import 'package:road_mate/screens/home/customer_home_screen.dart';
-import 'package:road_mate/screens/home/home-screen.dart';
+import 'package:road_mate/screens/home/taps/customer_home_screen.dart';
 import 'package:road_mate/constants/photos/photos.dart';
 import 'package:road_mate/screens/SplashScreen/provider/check-user.dart';
 import 'package:road_mate/screens/SplashScreen/provider/finish-onboarding.dart';
-import 'package:road_mate/screens/user%20home/main_hame.dart';
+import 'package:road_mate/screens/home/main_hame.dart';
 // import 'package:road_mate/theme/app-colors.dart';
 // import 'package:recycling_app/home-screen.dart'; // Import HomeScreen
 

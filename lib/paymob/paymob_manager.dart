@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'const.dart';
 
 class PaymobManager {
-  Future<String> getPaymentKey(int amount, String currency) async {
+  Future<String> getPaymentKey(double amount, String currency) async {
     try {
       String authanticationToken = await _getAuthanticationToken();
 

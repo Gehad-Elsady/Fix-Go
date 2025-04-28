@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
-import 'package:road_mate/widget/drawer/mydrawer.dart';
 
 class EngineersScreen extends StatelessWidget {
   static const String routeName = 'all-engineers-screen';
@@ -12,7 +11,6 @@ class EngineersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(),
       appBar: AppBar(
         centerTitle: true,
         title: Text(

@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/screens/contact/model/contact-model.dart';
-import 'package:road_mate/widget/drawer/mydrawer.dart';
 
 class ContactScreen extends StatefulWidget {
   static const String routeName = 'contact-screen';
@@ -31,7 +30,6 @@ class _ContactScreenState extends State<ContactScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(),
       appBar: AppBar(
         title: Text(
           'contact'.tr(),

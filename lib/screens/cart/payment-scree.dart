@@ -13,7 +13,7 @@ class PaymentScreen extends StatelessWidget {
   PaymentScreen(
       {super.key, required this.totalPrice, required this.historymaodel});
   InAppWebViewController? _webViewController;
-  final int totalPrice;
+  final double totalPrice;
   HistoryModel? historymaodel;
   ServiceModel? serviceModel;
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/screens/settings/bottom_sheets/language_bottomsheet.dart'; // Assuming you have this widget
 import 'package:easy_localization/easy_localization.dart';
-import 'package:road_mate/widget/drawer/mydrawer.dart';
 
 class SettingsTab extends StatefulWidget {
   static const String routeName = "settings";
@@ -18,7 +17,6 @@ class _SettingsTabState extends State<SettingsTab> {
     // var provider = Provider.of<MyProvider>(context); // Ensure MyProvider is available
 
     return Scaffold(
-      drawer: const MyDrawer(),
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Color(0xFF0091ad),

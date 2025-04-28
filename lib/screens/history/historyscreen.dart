@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/screens/history/model/historymaodel.dart';
-import 'package:road_mate/widget/drawer/mydrawer.dart';
+import 'package:road_mate/screens/home/main_hame.dart';
 
 class HistoryScreen extends StatefulWidget {
   static const String routeName = 'history';
@@ -22,7 +22,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(),
       appBar: AppBar(
         title: Text(
           "history".tr(),
@@ -33,6 +32,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
         ),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, MainHome.routeName);
+          },
+        ),
       ),
       body: StreamBuilder<List<HistoryModel>>(
         stream: FirebaseFunctions.getHistoryStream(),
@@ -126,6 +131,28 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
+                            Text(
+                              "${"Car name"}: ${history.car!.make + "  " + history.car!.model}",
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "${"Car License"}: ${history.car!.licensePlate}",
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.asset(
+                                "assets/images/services/${history.serviceModel!.name}.png",
+                                width: double.infinity,
+                                height: 100,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(Icons.error),
+                              ),
+                            ),
                           ],
                         ),
 
@@ -145,6 +172,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   ),
                                   Text(
                                     "Price: ${item.serviceModel.price}",
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    "${"Car name"}: ${history.car?.make ?? "error"}" +
+                                        " " +
+                                        "${history.car?.model ?? "error"}",
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    "${"Car License"}: ${history.car?.licensePlate ?? "error"}",
                                     style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold),
