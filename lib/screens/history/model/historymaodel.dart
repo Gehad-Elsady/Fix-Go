@@ -2,6 +2,7 @@ import 'package:road_mate/location/model/locationmodel.dart';
 import 'package:road_mate/screens/Provider/add-services/model/service-model.dart';
 import 'package:road_mate/screens/cars/models/car.dart';
 import 'package:road_mate/screens/cart/model/cart-model.dart';
+import 'package:road_mate/screens/profile/model/profilemodel.dart';
 
 class HistoryModel {
   String? id;
@@ -16,6 +17,8 @@ class HistoryModel {
   double? totalPrice;
   int? timestamp;
   Car? car; // Make it nullable to avoid required in constructor
+  ProfileModel? profileModel;
+  LocationModel? providerLocationModel;
 
   HistoryModel({
     this.id,
@@ -30,6 +33,8 @@ class HistoryModel {
     this.orderOwnerPhone,
     this.totalPrice,
     this.car,
+    this.profileModel,
+    this.providerLocationModel,
   });
 
   // Named constructor for deserialization
@@ -55,6 +60,12 @@ class HistoryModel {
           ? (json['totalPrice'] as num).toDouble()
           : null,
       car: json['car'] != null ? Car.fromJson(json['car']) : null,
+      profileModel: json['profileModel'] != null
+          ? ProfileModel.fromJson(json['profileModel'])
+          : null,
+      providerLocationModel: json['providerLocationModel'] != null
+          ? LocationModel.fromMap(json['providerLocationModel'])
+          : null,
     );
   }
 
@@ -73,6 +84,8 @@ class HistoryModel {
     data['orderOwnerPhone'] = orderOwnerPhone;
     data['totalPrice'] = totalPrice;
     data['car'] = car?.toJson();
+    data['profileModel'] = profileModel?.toJson();
+    data['providerLocationModel'] = providerLocationModel?.toMap();
     return data;
   }
 }

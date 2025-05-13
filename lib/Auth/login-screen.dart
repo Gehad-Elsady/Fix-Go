@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:road_mate/Auth/auth_page.dart';
 import 'package:road_mate/Auth/model/usermodel.dart';
 import 'package:road_mate/Auth/signup-screen.dart';
+import 'package:road_mate/Auth/subscribtion_page.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/screens/Provider/home/provider_home.dart';
 import 'package:road_mate/screens/Provider/home/taps/provider_home_tap.dart';
@@ -226,6 +227,69 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           TextSpan(
                             text: "signup".tr(),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                              title: const Text("Supscription"),
+                              content: const Text(
+                                  "You have to pay 1000 LE per month to use the app and create your account"),
+                              actions: <Widget>[
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 15,
+                                    backgroundColor: const Color(0xff041D56),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16.0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    "Pay",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SubscriptionPage(
+                                            totalPrice: 1000,
+                                          ),
+                                        ));
+                                  },
+                                )
+                              ]);
+                        },
+                      );
+                    },
+                    child: Text.rich(
+                      textAlign: TextAlign.center,
+                      TextSpan(
+                        text: "Subscription for Provider ".tr(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(fontSize: 17, color: Colors.blue),
+                        children: [
+                          TextSpan(
+                            text: "Subscribe".tr(),
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,

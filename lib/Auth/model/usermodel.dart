@@ -6,6 +6,7 @@ class UserModel {
   String id;
   String role;
   String? imageUrl;
+  bool isSubscribed;
 
   UserModel(
       {required this.firstName,
@@ -14,6 +15,7 @@ class UserModel {
       required this.phoneNumber,
       required this.role,
       this.imageUrl,
+      required this.isSubscribed,
       this.id = ""});
 
   UserModel.fromJason(Map<String, dynamic> jason)
@@ -26,6 +28,7 @@ class UserModel {
           role: jason[
               "role"], // default role to 'user' if not provided in JSON data.
           imageUrl: jason["imageUrl"],
+          isSubscribed: jason["isSubscribed"] ?? false,
         );
 
   Map<String, dynamic> toJason() {
@@ -37,6 +40,7 @@ class UserModel {
       "phoneNumber": phoneNumber,
       "role": role,
       "imageUrl": imageUrl,
+      "isSubscribed": isSubscribed,
     };
   }
 }

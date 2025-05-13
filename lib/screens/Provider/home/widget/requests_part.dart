@@ -2,13 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
+import 'package:road_mate/location/model/locationmodel.dart';
 import 'package:road_mate/notifications/notification_back.dart';
 import 'package:road_mate/screens/Provider/add-services/addservicescreen.dart';
 import 'package:road_mate/screens/Provider/home/model/accepted_model.dart';
 import 'package:road_mate/screens/Provider/location/order_location.dart';
 import 'package:road_mate/screens/history/model/historymaodel.dart';
 import 'package:road_mate/screens/Provider/add-services/model/service-model.dart';
+import 'package:road_mate/screens/profile/model/profilemodel.dart';
 
 class RequestsPart extends StatelessWidget {
   const RequestsPart({
@@ -241,11 +244,66 @@ class RequestsPart extends StatelessWidget {
                                                 return;
                                               }
 
+                                              // Get user profile
+                                              ProfileModel? profileModel =
+                                                  await FirebaseFunctions
+                                                          .getUserProfile(
+                                                              FirebaseAuth
+                                                                  .instance
+                                                                  .currentUser!
+                                                                  .uid)
+                                                      .first;
+
+                                              // Get user location
+                                              Location location = Location();
+                                              bool _serviceEnabled =
+                                                  await location
+                                                      .serviceEnabled();
+                                              if (!_serviceEnabled) {
+                                                _serviceEnabled = await location
+                                                    .requestService();
+                                                if (!_serviceEnabled)
+                                                  throw Exception(
+                                                      'Location service not enabled');
+                                              }
+
+                                              PermissionStatus
+                                                  _permissionGranted =
+                                                  await location
+                                                      .hasPermission();
+                                              if (_permissionGranted ==
+                                                  PermissionStatus.denied) {
+                                                _permissionGranted =
+                                                    await location
+                                                        .requestPermission();
+                                                if (_permissionGranted !=
+                                                    PermissionStatus.granted) {
+                                                  throw Exception(
+                                                      'Location permission not granted');
+                                                }
+                                              }
+
+                                              final userLocation =
+                                                  await location.getLocation();
+                                              final locationModel =
+                                                  LocationModel(
+                                                latitude:
+                                                    userLocation.latitude ??
+                                                        0.0,
+                                                longitude:
+                                                    userLocation.longitude ??
+                                                        0.0,
+                                              );
+
+                                              // Accept the order
                                               await FirebaseFunctions
                                                   .acceptedOrder(
                                                       history.userId!,
-                                                      history.timestamp!);
+                                                      history.timestamp!,
+                                                      profileModel!,
+                                                      locationModel);
 
+                                              // Create the accepted order model
                                               AcceptedModel acceptedModel =
                                                   AcceptedModel(
                                                 historyModel: history,
@@ -259,11 +317,15 @@ class RequestsPart extends StatelessWidget {
                                                 userId: FirebaseAuth
                                                     .instance.currentUser!.uid,
                                                 orderStatus: "Not completed",
+                                                profileModel: profileModel!,
+                                                locationModel:
+                                                    locationModel, // Add location here
                                               );
 
                                               await FirebaseFunctions
                                                   .addOrderToMyList(
                                                       acceptedModel);
+
                                               NotificationBack
                                                   .sendAcceptNotification(
                                                       history.userId!);

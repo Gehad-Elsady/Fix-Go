@@ -1,23 +1,27 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/Auth/login-screen.dart';
-import 'package:road_mate/Auth/model/usermodel.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/constants/photos/photos.dart';
-import 'package:road_mate/location/location.dart';
-import 'package:road_mate/screens/Provider/add-services/model/service-model.dart';
-import 'package:road_mate/screens/bottom%20sheet/request_bootomsheet.dart';
-import 'package:road_mate/screens/history/model/historymaodel.dart';
-import 'package:road_mate/screens/profile/model/profilemodel.dart';
 
-class CustomerHomeScreen extends StatelessWidget {
+import 'package:road_mate/screens/home/widgets/my_orders.dart';
+import 'package:road_mate/screens/home/widgets/services_part.dart';
+import 'package:road_mate/screens/home/widgets/user_data.dart';
+
+class CustomerHomeScreen extends StatefulWidget {
   static const String routeName = 'customer-home-screen';
   const CustomerHomeScreen({super.key});
 
   @override
+  State<CustomerHomeScreen> createState() => _CustomerHomeScreenState();
+}
+
+class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
+  @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -30,7 +34,7 @@ class CustomerHomeScreen extends StatelessWidget {
             fontSize: 30,
             color: Colors.black,
             fontWeight: FontWeight.bold,
-          ), // Applying Domine font to the title
+          ),
         ),
         actions: [
           IconButton(
@@ -49,230 +53,43 @@ class CustomerHomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          FutureBuilder(
-            future: FirebaseFunctions.readUserData(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (!snapshot.hasData || snapshot.data == null) {
-                return Center(child: Text('No user data found'));
-              } else {
-                UserModel userModel = snapshot.data!;
-                return Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20),
-                      Text(
-                        "Hello ${userModel.firstName} ${userModel.lastName}",
-                        style: GoogleFonts.lora(
-                          fontSize: 24,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        "We have some recommendations for you",
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              }
-            },
-          ),
-          SizedBox(height: 50),
-          Text("Services",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.lora(
-                fontSize: 24,
-                color: Colors.black,
-                fontWeight: FontWeight.w700,
-              )),
-          SizedBox(height: 20),
-          Expanded(
-            child: StreamBuilder<List<ServiceModel>>(
-              stream: FirebaseFunctions.getServicesStream(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No services available'));
-                }
-
-                List<ServiceModel> serviceModel = snapshot.data!;
-
-                return GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                    childAspectRatio:
-                        115 / 156, // Adjusted for exact width & height
-                  ),
-                  itemCount: serviceModel.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () async {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          isDismissible: true,
-                          backgroundColor: Colors.white,
-                          builder: (context) {
-                            return RequestBottomSheet(
-                                serviceModel: serviceModel[index],
-                                orderType: "Quick Order");
-                          },
-                        );
-                        // try {
-                        //   // Fetch the user profile
-                        //   ProfileModel? profileModel =
-                        //       await FirebaseFunctions.getUserProfile(
-                        //               FirebaseAuth.instance.currentUser!.uid)
-                        //           .first;
-
-                        //   if (profileModel == null) {
-                        //     // Show an alert dialog if the profile is null
-                        //     showDialog(
-                        //       context: context,
-                        //       builder: (context) {
-                        //         return AlertDialog(
-                        //           title: Text('no-profile'.tr()),
-                        //           content: Text(
-                        //               'No profile data available please complete your profile first.'),
-                        //           actions: <Widget>[
-                        //             TextButton(
-                        //               onPressed: () {
-                        //                 Navigator.of(context).pop();
-                        //               },
-                        //               child: Text('ok'.tr()),
-                        //             ),
-                        //           ],
-                        //         );
-                        //       },
-                        //     );
-                        //   } else {
-                        //     // Log the user's name for debugging
-                        //     print(
-                        //         '--------------Name is ${profileModel.firstName}');
-
-                        //     // Create a HistoryModel instance
-                        //     final historymaodel = HistoryModel(
-                        //       serviceModel: serviceModel[index],
-                        //       orderType: "Quick Order",
-                        //     );
-
-                        //     // Navigate to the GPS screen
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //         builder: (context) => Gps(
-                        //           historymaodel: historymaodel,
-                        //           totalPrice:
-                        //               int.parse(serviceModel[index].price),
-                        //         ),
-                        //       ),
-                        //     );
-                        //   }
-                        // } catch (e) {
-                        //   // Handle exceptions and display an error message
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //     SnackBar(
-                        //       content: Text('Error: ${e.toString()}'),
-                        //       backgroundColor: Colors.red,
-                        //     ),
-                        //   );
-                        // }
-                        // }
-                      },
-                      child: Card(
-                        color: Color(0xffF6F6F6),
-                        child: SizedBox(
-                          width: 115,
-                          height: 156,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Expanded(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(
-                                          8)), // Optional: Rounded corners
-                                  child: Image.asset(
-                                    "assets/images/services/${serviceModel[index].name}.png",
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    fit: BoxFit
-                                        .contain, // Ensures the image fills the available space
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            Icon(Icons.error),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  serviceModel[index].name,
-                                  style: GoogleFonts.lora(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.star,
-                                      color: Color(0xff303539),
-                                      size: 15,
-                                    ),
-                                    Text(
-                                      "4.25",
-                                      style: GoogleFonts.inter(
-                                        fontSize: 12,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            UserData(),
+            SizedBox(height: 50),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: Text("My Orders",
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.lora(
+                    fontSize: 24,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  )),
             ),
-          )
-        ],
+            SizedBox(height: 20),
+            SizedBox(
+              height: screenHeight * 0.3, // adjust based on your design
+              child: UserOrders(),
+            ),
+            SizedBox(height: 30),
+            Text("Services",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.lora(
+                  fontSize: 24,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
+                )),
+            SizedBox(height: 20),
+            SizedBox(
+              height: screenHeight * 0.3, // adjust based on your design
+              child: ServicesPart(),
+            ),
+            SizedBox(height: 100),
+          ],
+        ),
       ),
     );
   }

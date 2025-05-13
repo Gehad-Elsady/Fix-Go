@@ -42,6 +42,7 @@ class FirebaseFunctions {
         lastName: lastName,
         id: credential.user!.uid,
         imageUrl: imageUrl,
+        isSubscribed: false,
       );
       addUser(userModel);
 
@@ -50,6 +51,17 @@ class FirebaseFunctions {
       onError(e.message);
     } catch (e) {
       print(e);
+    }
+  }
+
+  static subscription() async {
+    UserModel? userModel = await readUserData();
+
+    if (userModel != null) {
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userModel.id)
+          .update({'isSubscribed': true});
     }
   }
 
@@ -64,11 +76,21 @@ class FirebaseFunctions {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: emailAddress, password: password);
 
+      UserModel? userModel = await readUserData();
       // Check if the user's email is verified
-      if (credential.user?.emailVerified ?? false) {
+      if (credential.user?.emailVerified != false &&
+          userModel!.isSubscribed == true) {
         onSuccess();
-      } else {
+      } else if (credential.user?.emailVerified == false &&
+          userModel!.isSubscribed == false) {
+        onError(
+            'Email not verified. Please verify your email and you don\'t have a subscription.');
+      } else if (credential.user?.emailVerified == false &&
+          userModel!.isSubscribed == true) {
         onError('Email not verified. Please verify your email.');
+      } else if (credential.user?.emailVerified == true &&
+          userModel!.isSubscribed == false) {
+        onError('You don\'t have a subscription please subscribe.');
       }
     } on FirebaseAuthException catch (e) {
       onError(e.message);
@@ -421,29 +443,34 @@ class FirebaseFunctions {
       return snapshot.docs.map((doc) {
         final data = doc.data();
         return HistoryModel(
-          timestamp: data['timestamp'] ?? 0,
-          userId: data['userId'] ?? "no id",
-          serviceModel: data['serviceModel'] != null
-              ? ServiceModel.fromJson(data['serviceModel'])
-              : null,
-          locationModel: data['locationModel'] != null
-              ? LocationModel.fromMap(data['locationModel'])
-              : null,
-          items: data['items'] != null
-              ? (data['items'] as List<dynamic>)
-                  .map((item) => CartModel.fromMap(item))
-                  .toList()
-              : [],
-          orderType: data['OrderType'] ?? "No Order Type",
-          id: data['id'] ?? "No Id",
-          orderStatus: data['orderStatus'] ?? "No Status",
-          orderOwnerName: data['orderOwnerName'] ?? "No Name",
-          orderOwnerPhone: data['orderOwnerPhone'] ?? "No Phone",
-          totalPrice: data['totalPrice'] != null
-              ? double.tryParse(data['totalPrice'].toString())
-              : 0.0,
-          car: data['car'] != null ? Car.fromJson(data['car']) : null,
-        );
+            timestamp: data['timestamp'] ?? 0,
+            userId: data['userId'] ?? "no id",
+            serviceModel: data['serviceModel'] != null
+                ? ServiceModel.fromJson(data['serviceModel'])
+                : null,
+            locationModel: data['locationModel'] != null
+                ? LocationModel.fromMap(data['locationModel'])
+                : null,
+            items: data['items'] != null
+                ? (data['items'] as List<dynamic>)
+                    .map((item) => CartModel.fromMap(item))
+                    .toList()
+                : [],
+            orderType: data['OrderType'] ?? "No Order Type",
+            id: data['id'] ?? "No Id",
+            orderStatus: data['orderStatus'] ?? "No Status",
+            orderOwnerName: data['orderOwnerName'] ?? "No Name",
+            orderOwnerPhone: data['orderOwnerPhone'] ?? "No Phone",
+            totalPrice: data['totalPrice'] != null
+                ? double.tryParse(data['totalPrice'].toString())
+                : 0.0,
+            car: data['car'] != null ? Car.fromJson(data['car']) : null,
+            profileModel: data['ProfileModel'] != null
+                ? ProfileModel.fromJson(data['ProfileModel'])
+                : null,
+            providerLocationModel: data['providerLocationModel'] != null
+                ? LocationModel.fromMap(data['providerLocationModel'])
+                : null);
       }).toList();
     });
   }
@@ -565,6 +592,8 @@ class FirebaseFunctions {
           orderType: data['orderType'] ?? "No Order Type",
           orderTime: data['orderTime'] ?? "",
           historyModel: HistoryModel.fromJson(data['historyModel']),
+          profileModel: ProfileModel.fromJson(data['profileModel']),
+          locationModel: LocationModel.fromMap(data['locationModel']),
         );
       }).toList();
     });
@@ -603,7 +632,8 @@ class FirebaseFunctions {
     }
   }
 
-  static Future<void> acceptedOrder(String id, int timestamp) async {
+  static Future<void> acceptedOrder(String id, int timestamp,
+      ProfileModel profile, LocationModel location) async {
     // Query to find the document based on `id` and `createdAt`
     final querySnapshot = await FirebaseFirestore.instance
         .collection('History')
@@ -616,6 +646,8 @@ class FirebaseFunctions {
       final docId = querySnapshot.docs.first.id;
       await FirebaseFirestore.instance.collection('History').doc(docId).update({
         'orderStatus': 'Accepted',
+        'ProfileModel': profile.toJson(),
+        'providerLocationModel': location.toMap(),
       });
       print('Service updated successfully!');
     }

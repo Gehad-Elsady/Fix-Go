@@ -34,17 +34,59 @@ class _SignupProviderState extends State<SignupProvider> {
   bool _isUploading = false;
 
   @override
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showDialog(
         context: context,
-        barrierDismissible: false, // User must tap button to close
+        barrierDismissible: false, // User must tap the button to close
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Important Notice'),
-            content: Text(
-                'Please read our terms and conditions carefully before proceeding with the signup process. By continuing, you agree to our service terms and pricing structure.'),
+            content: SingleChildScrollView(
+              child: Text(
+                '''Welcome to FIX&GO!
+
+Dear Provider,
+
+Thank you for your interest in joining our app, your trusted partner for road assistance services. Before you complete your registration, please review the following important guidelines to ensure a smooth and professional experience:
+
+1. Provider Subscription:
+   - A subscription fee of 20 LE per month is required to access and operate through our platform.
+
+2. Response Time:
+   - Providers are expected to respond promptly to service requests to maintain customer satisfaction.
+
+3. Availability:
+   - Keep your availability status updated in the app to avoid missed requests.
+
+4. Transaction Fees:
+   - A 5% fee applies to each completed request.
+
+5. Pricing Transparency:
+   - Prices must be clear, fair, and include our platform fees. All prices must be agreed upon through the app.
+
+6. Licensing and Insurance:
+   - You must have the necessary licenses, permits, and insurance to provide legal road assistance services.
+
+7. Customer Interaction:
+   - Maintain professionalism, respect, and clear communication with customers at all times.
+
+8. App Usage:
+   - All service requests, communication, and payments must be conducted within the app.
+
+9. Limitations:
+   - You may only accept up to 3 active requests at a time to ensure system performance.
+   - If you're the nearest provider and no one else accepts a request, you may be auto-assigned in emergencies.
+
+By completing your registration, you agree to follow these guidelines and help us provide the best service possible.
+
+We’re excited to have you on board!
+
+— FIX&GO Team''',
+              ),
+            ),
             actions: <Widget>[
               TextButton(
                 child: Text('I Agree'),
@@ -289,19 +331,6 @@ class _SignupProviderState extends State<SignupProvider> {
                                   fontSize: 16,
                                 )),
                           )
-                          // ElevatedButton(
-                          // onPressed: _pickImage,
-                          // child: Text('Upload',
-                          //     style: TextStyle(
-                          //       color: Colors.white,
-                          //       fontSize: 16,
-                          //     )),
-                          //   style: ElevatedButton.styleFrom(
-                          //     backgroundColor: Color(0xff041D56),
-                          //     padding: EdgeInsets.symmetric(
-                          //         vertical: 16, horizontal: 20),
-                          //   ),
-                          // ),
                         ],
                       ),
                       const SizedBox(height: 30),
