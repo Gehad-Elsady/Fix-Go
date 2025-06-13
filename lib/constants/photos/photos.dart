@@ -16,11 +16,10 @@ class Photos {
   static const String emptyCart = "assets/lotties/emptycart.json";
 
   static const List<String> appBar = [
-    'assets/images/Car-Brands-and-the-Companies-they-Belong-to.png',
-    'assets/images/pexels-artem-makarov-289670876-13151224.jpg',
-    'assets/images/pexels-maltelu-2244746.jpg',
-    'assets/images/pexels-olly-3807277.jpg',
-    'assets/images/pexels-skitterphoto-9796.jpg',
-    'assets/images/pexels-srattha-nualsate-2695613-12996982.jpg'
+    'assets/images/WhatsApp Image 2025-06-11 at 04.25.01_689c2080.jpg',
+    'assets/images/WhatsApp Image 2025-06-11 at 04.25.02_9b6242e2.jpg',
+    'assets/images/WhatsApp Image 2025-06-11 at 04.25.02_73447f1c.jpg',
+    'assets/images/WhatsApp Image 2025-06-11 at 04.28.53_2b132675.jpg',
+    'assets/images/WhatsApp Image 2025-06-11 at 04.28.53_a04b8c8a.jpg',
   ];
 }

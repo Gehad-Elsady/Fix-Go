@@ -78,19 +78,27 @@ class FirebaseFunctions {
 
       UserModel? userModel = await readUserData();
       // Check if the user's email is verified
-      if (credential.user?.emailVerified != false &&
-          userModel!.isSubscribed == true) {
-        onSuccess();
-      } else if (credential.user?.emailVerified == false &&
-          userModel!.isSubscribed == false) {
-        onError(
-            'Email not verified. Please verify your email and you don\'t have a subscription.');
-      } else if (credential.user?.emailVerified == false &&
-          userModel!.isSubscribed == true) {
-        onError('Email not verified. Please verify your email.');
-      } else if (credential.user?.emailVerified == true &&
-          userModel!.isSubscribed == false) {
-        onError('You don\'t have a subscription please subscribe.');
+      if (userModel!.role == "Provider") {
+        if (credential.user?.emailVerified != false &&
+            userModel!.isSubscribed == true) {
+          onSuccess();
+        } else if (credential.user?.emailVerified == false &&
+            userModel!.isSubscribed == false) {
+          onError(
+              'Email not verified. Please verify your email and you don\'t have a subscription.');
+        } else if (credential.user?.emailVerified == false &&
+            userModel!.isSubscribed == true) {
+          onError('Email not verified. Please verify your email.');
+        } else if (credential.user?.emailVerified == true &&
+            userModel!.isSubscribed == false) {
+          onError('You don\'t have a subscription please subscribe.');
+        }
+      } else if (userModel!.role == "User") {
+        if (credential.user?.emailVerified != false) {
+          onSuccess();
+        } else if (credential.user?.emailVerified == false) {
+          onError('Email not verified. Please verify your email.');
+        }
       }
     } on FirebaseAuthException catch (e) {
       onError(e.message);

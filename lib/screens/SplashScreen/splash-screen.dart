@@ -86,6 +86,12 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     } else {
       print("Error: User data is null.");
+      Navigator.pushReplacementNamed(
+        context,
+        provider.isOnBoardingCompleted
+            ? LoginPage.routeName
+            : OnboardingScreen.routeName,
+      );
     }
   }
 

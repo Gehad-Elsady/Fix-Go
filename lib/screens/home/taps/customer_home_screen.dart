@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/Auth/login-screen.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
 import 'package:road_mate/constants/photos/photos.dart';
+import 'package:road_mate/screens/home/widgets/appbar.dart';
 
 import 'package:road_mate/screens/home/widgets/my_orders.dart';
 import 'package:road_mate/screens/home/widgets/services_part.dart';
@@ -58,7 +59,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             UserData(),
-            SizedBox(height: 50),
+            SizedBox(height: 25),
+            MyAppBar(),
+            SizedBox(height: 25,),
+            
             Padding(
               padding: const EdgeInsets.only(left: 10.0),
               child: Text("My Orders",
