@@ -11,8 +11,7 @@
   "email-error": "Please enter a valid email",
   "name-error":"Please enter your name",
   "name":"Enter Your Name",
-  "age-error":"Please enter your age",
-  "age-error-s":"Sorry, age must be at least 20",
+  "age-error":"Please enter your Phone Number",
   "age":"Enter Your Age",
   "submit":"Submit",
   "have-an-account":"Already have an account?  ",
@@ -128,5 +127,11 @@
 "massage":"message",
 "send":"send",
 "order-status":"Order Status",
-"provider-home":"Provider Home"
+"provider-home":"Provider Home",
+"my-cars":"My Cars",
+"welcome-to-fix-and-go":"Welcome to Fix & Go",
+"user-name":"User name",
+"edit-profile":"Edit Profile",
+"search-services":"Search Services",
+"no-matching-services-found":"No matching courses found."
 }

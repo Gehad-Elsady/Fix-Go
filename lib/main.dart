@@ -83,7 +83,8 @@ void main() async {
     ],
     path: 'assets/translation',
     saveLocale: true,
-    startLocale: Locale("en"),
+    startLocale: Locale('ar'),
+    fallbackLocale: Locale('ar'),
     child: MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FinishOnboarding()),

@@ -22,7 +22,7 @@ class ProfileTap extends StatelessWidget {
     "services".tr(),
     "cart".tr(),
     "engineers".tr(),
-    "My Cars",
+    "my-cars".tr(),
     "history".tr(),
     "contact".tr(),
     'settings'.tr(),
@@ -66,14 +66,20 @@ class ProfileTap extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(
-            icon: ImageIcon(
-              AssetImage("assets/images/calendar.png"),
-              color: Colors.black,
+       IconButton(
+            icon: Icon(
+              Icons.logout,
+              color: const Color.fromARGB(255, 137, 96, 96),
               size: 30,
             ),
             onPressed: () {
-              Navigator.pushNamed(context, CartScreen.routeName);
+              // Handle notification button press
+              // Navigator.pushNamed(context, MainHome.routeName);
+              FirebaseFunctions.signOut();
+              Navigator.pushReplacementNamed(
+                context,
+                LoginPage.routeName,
+              );
             },
           ),
         ],

@@ -15,35 +15,47 @@ class CarsScreen extends StatefulWidget {
 class _CarsScreenState extends State<CarsScreen> {
   final CarService _carService = CarService();
 
-  void _showAddCarDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => const AddCarDialog(),
-    ).then((newCar) async {
-      if (newCar != null) {
-        try {
-          await _carService.addCar(newCar);
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Car added successfully'),
-                backgroundColor: Colors.blue,
-              ),
-            );
-          }
-        } catch (e) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Error adding car: $e'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
+void _showAddCarDialog() {
+  showDialog(
+    context: context,
+    builder: (context) => const AddCarDialog(),
+  ).then((newCar) async {
+    if (newCar != null) {
+      try {
+        await _carService.addCar(newCar);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Car added successfully'),
+              backgroundColor: Colors.blue,
+            ),
+          );
+        }
+      } catch (e) {
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+
+        if (mounted) {
+          // ✅ استخدم AlertDialog بدلًا من SnackBar إذا تجاوز الحد
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Unable to Add Car'),
+              content: Text(errorMessage),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
         }
       }
-    });
-  }
+    }
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -164,6 +176,7 @@ class _CarsScreenState extends State<CarsScreen> {
                                   );
                                 }
                               } catch (e) {
+                                print(e);
                                 if (mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
@@ -178,7 +191,7 @@ class _CarsScreenState extends State<CarsScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      _buildInfoRow('Year', car.year),
+                      _buildInfoRow('Year', car.year.toString()),
                       _buildInfoRow('License Plate', car.licensePlate),
                       _buildInfoRow('Color', car.color),
                       _buildInfoRow('VIN', car.vin),
@@ -436,7 +449,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
                           id: FirebaseAuth.instance.currentUser!.uid,
                           make: _makeController.text,
                           model: _modelController.text,
-                          year: _yearController.text,
+                          year: int.parse(_yearController.text),
                           licensePlate: _licensePlateController.text,
                           color: _colorController.text,
                           vin: _vinController.text,

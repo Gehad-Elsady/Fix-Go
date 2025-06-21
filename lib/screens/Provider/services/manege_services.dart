@@ -151,7 +151,7 @@ class ManegeServices extends StatelessWidget {
                                                       .deleteService(
                                                           FirebaseAuth.instance
                                                               .currentUser!.uid,
-                                                          service.createdAt);
+                                                          service.name);
                                                   // Close the dialog
                                                   Navigator.of(context).pop();
                                                   // Optionally show a message or perform an action after deletion
@@ -179,29 +179,7 @@ class ManegeServices extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        UpdateServices.routeName,
-                                        arguments: service,
-                                      );
-                                    },
-                                    child: Text(
-                                      "edit".tr(),
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                  ),
+                                  
                                 ],
                               ),
                             ),

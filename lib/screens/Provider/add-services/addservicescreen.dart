@@ -19,79 +19,93 @@ class _AddServicePageState extends State<AddServicePage> {
   final _formKey = GlobalKey<FormState>();
   // final TextEditingController _nameController = TextEditingController();
   // final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
+  // final TextEditingController _priceController = TextEditingController();
 
   String? _selectedServiceName;
+final List<String> _serviceNames = [
+  'Over heating',
+  'Steering repair',
+  'Tyre change',
+  'Oil change',
+  'Car tow',
+  'Batteries',
+];
 
-  final List<String> _serviceNames = [
-    'Over heating',
-    'Steering repair',
-    'Tyre change',
-    'Oil change',
-    'Car tow',
-    'Batteries',
-  ];
+// ✅ ربط كل خدمة بسعرها
+final Map<String, String> _servicePrices = {
+  'Over heating': '100',
+  'Steering repair': '150',
+  'Tyre change': '50',
+  'Oil change': '80',
+  'Car tow': '120',
+  'Batteries': '200',
+};
 
-  bool _isUploading = false;
+bool _isUploading = false;
 
-  Future<void> _saveService() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => _isUploading = true);
+Future<void> _saveService() async {
+  if (_formKey.currentState!.validate()) {
+    setState(() => _isUploading = true);
 
-      final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('services')
-          .where('name', isEqualTo: _selectedServiceName)
-          .where('userId', isEqualTo: currentUserId)
-          .get();
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('services')
+        .where('name', isEqualTo: _selectedServiceName)
+        .where('userId', isEqualTo: currentUserId)
+        .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        // Show dialog if service already exists
-        await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Service Exists'),
-            content: Text('You have already added this service.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
-      } else {
-        // Add new service
-        await FirebaseFirestore.instance.collection('services').add({
-          'name': _selectedServiceName,
-          'price': _priceController.text.trim(),
-          'createdAt': Timestamp.now(),
-          'userId': currentUserId,
-        });
-
-        // Show success dialog
-        await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Success'),
-            content: Text('Service added successfully.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close dialog
-                  Navigator.pop(context); // Go back after saving
-                },
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
+    if (querySnapshot.docs.isNotEmpty) {
+      // ❌ الخدمة مضافة سابقًا
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Service Exists'),
+          content: const Text('You have already added this service.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // ✅ إضافة الخدمة الجديدة مع السعر من الماب
+      final String? selectedPrice = _servicePrices[_selectedServiceName];
+      if (selectedPrice == null) {
+        throw Exception('No price found for selected service');
       }
 
-      setState(() => _isUploading = false);
+      await FirebaseFirestore.instance.collection('services').add({
+        'name': _selectedServiceName,
+        'price': selectedPrice,
+        'createdAt': Timestamp.now(),
+        'userId': currentUserId,
+      });
+
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Success'),
+          content: const Text('Service added successfully.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+                Navigator.pop(context); // Go back
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
+
+    setState(() => _isUploading = false);
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -156,18 +170,18 @@ class _AddServicePageState extends State<AddServicePage> {
                       //       : null,
                       // ),
                       SizedBox(height: 16),
-                      TextFormField(
-                        controller: _priceController,
-                        decoration: InputDecoration(
-                          labelText: 'add-service-price'.tr(),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                        keyboardType: TextInputType.number,
-                        validator: (value) =>
-                            value!.isEmpty ? 'Please enter a price' : null,
-                      ),
+                      // TextFormField(
+                      //   controller: _priceController,
+                      //   decoration: InputDecoration(
+                      //     labelText: 'add-service-price'.tr(),
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8.0),
+                      //     ),
+                      //   ),
+                      //   keyboardType: TextInputType.number,
+                      //   validator: (value) =>
+                      //       value!.isEmpty ? 'Please enter a price' : null,
+                      // ),
                       SizedBox(height: 20),
                       // Text(
                       //   'image'.tr(),

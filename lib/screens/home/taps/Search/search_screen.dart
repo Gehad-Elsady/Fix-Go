@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/screens/Provider/add-services/model/service-model.dart';
@@ -22,7 +23,7 @@ class _ServicesSearchPageState extends State<ServicesSearchPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("Search Services",
+        title: Text("search-services".tr(),
             style: GoogleFonts.lora(
               fontSize: 30,
               color: Colors.black,
@@ -45,7 +46,7 @@ class _ServicesSearchPageState extends State<ServicesSearchPage> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.search),
-                  hintText: "Search for services...",
+                  hintText: "search-services".tr(),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -73,8 +74,8 @@ class _ServicesSearchPageState extends State<ServicesSearchPage> {
                     }).toList();
 
                     if (results.isEmpty) {
-                      return const Center(
-                          child: Text("No matching courses found."));
+                      return  Center(
+                          child: Text("no-matching-services-found".tr()));
                     }
 
                     return ListView.builder(

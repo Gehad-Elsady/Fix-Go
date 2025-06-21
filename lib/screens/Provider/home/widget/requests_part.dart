@@ -199,16 +199,8 @@ class RequestsPart extends StatelessWidget {
                                       );
                                     }).toList(),
                                   ),
-                                if (DateTime.now()
-                                        .difference(timestamp)
-                                        .inMinutes <
-                                    5)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                        "You can cancel this order within 5 minutes",
-                                        style: TextStyle(color: Colors.orange)),
-                                  ),
+                                
+                                
                                 SizedBox(height: 10),
                                 Center(
                                   child: history.orderStatus == 'Pending'

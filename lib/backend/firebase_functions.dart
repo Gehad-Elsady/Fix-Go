@@ -137,6 +137,21 @@ class FirebaseFunctions {
         await collection.doc(FirebaseAuth.instance.currentUser!.uid).get();
     return docUser.data();
   }
+ static Future<UserModel?> readUserDataByEmail(String email) async {
+  final collection = getUserCollection();
+
+  final querySnapshot = await collection
+      .where("email", isEqualTo: email)
+      .limit(1) // نحصر النتائج في أول عنصر
+      .get();
+
+  if (querySnapshot.docs.isEmpty) {
+    return null; // لا يوجد مستخدم بهذا الإيميل
+  }
+
+  return querySnapshot.docs.first.data();
+}
+
 
   static CollectionReference<ProfileModel> getUserProfileCollection() {
     return FirebaseFirestore.instance
@@ -181,6 +196,32 @@ class FirebaseFunctions {
 
   static Stream<List<ServiceModel>> getServicesStream() {
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    return _firestore.collection('services').where("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots().map((snapshot) {
+      // Create a map to store unique services by name
+      final Map<String, ServiceModel> uniqueServices = {};
+
+      // Process each document and keep only the first occurrence of each service name
+      snapshot.docs.forEach((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        final service = ServiceModel(
+          userId: data['userId'] ?? "no id",
+          name: data['name'] ?? 'No Name',
+          price: data['price'] ?? 'No Price',
+          createdAt: data['createdAt'] ?? 'No Date',
+        );
+
+        // Only add the service if we haven't seen this name before
+        if (!uniqueServices.containsKey(service.name)) {
+          uniqueServices[service.name] = service;
+        }
+      });
+
+      // Convert the map values back to a list
+      return uniqueServices.values.toList();
+    });
+  }
+ static Stream<List<ServiceModel>> getUserServicesStream() {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
     return _firestore.collection('services').snapshots().map((snapshot) {
       // Create a map to store unique services by name
       final Map<String, ServiceModel> uniqueServices = {};
@@ -205,7 +246,6 @@ class FirebaseFunctions {
       return uniqueServices.values.toList();
     });
   }
-
   static Future<void> addService(ServiceModel service) async {
     try {
       await FirebaseFirestore.instance
@@ -225,13 +265,13 @@ class FirebaseFunctions {
     }
   }
 
-  static Future<void> deleteService(String id, Timestamp createdAt) async {
+  static Future<void> deleteService(String id, String name) async {
     try {
       // Query to find the service with matching `id` and `createdAt`
       final querySnapshot = await FirebaseFirestore.instance
           .collection('services')
-          .where('id', isEqualTo: id)
-          .where('createdAt', isEqualTo: createdAt)
+          .where('userId', isEqualTo: id)
+          .where('name', isEqualTo: name)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
@@ -549,6 +589,32 @@ class FirebaseFunctions {
       }).toList();
     });
   }
+   static Future<void> completeHistoryOrder(int timestamp, String id) async {
+    
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('History')
+          .where('timestamp', isEqualTo: timestamp)
+          .where('userId',
+              isEqualTo: id) // Ensure the item belongs to the current user
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        print('No items found to delete.');
+        return;
+      }
+
+      // Delete each document found
+      for (var doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+
+      print('Service deleted successfully!');
+    } catch (e) {
+      print('Error deleting service: $e');
+    }
+  }
+
 
   static Future<void> addOrderToMyList(AcceptedModel order) async {
     try {
@@ -606,6 +672,7 @@ class FirebaseFunctions {
       }).toList();
     });
   }
+  
 
   static Future<void> cancelMyOrder(int timestamp) async {
     final String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
@@ -674,6 +741,23 @@ class FirebaseFunctions {
       final docId = querySnapshot.docs.first.id;
       await FirebaseFirestore.instance.collection('History').doc(docId).update({
         'orderStatus': 'Pending',
+      });
+      print('Service updated successfully!');
+    }
+  }
+    static Future<void> completeOrder(String id, int timestamp) async {
+    // Query to find the document based on `id` and `createdAt`
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('History')
+        .where('userId', isEqualTo: id)
+        .where('timestamp', isEqualTo: timestamp)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // If the document exists, update it
+      final docId = querySnapshot.docs.first.id;
+      await FirebaseFirestore.instance.collection('History').doc(docId).update({
+        'orderStatus': 'Completed',
       });
       print('Service updated successfully!');
     }

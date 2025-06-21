@@ -129,6 +129,39 @@ class MyOrders extends StatelessWidget {
                                 ),
                                 onPressed: () {
                                   // Handle complete order action
+                                   showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("Complete Order"),
+                                        actions: [
+                                          TextButton(
+                                            child: Text("yes".tr()),
+                                            onPressed: () async {
+                                              
+                                                      // complete order in my orders
+                                             await FirebaseFunctions.cancelMyOrder(
+                                                  order.orderTime);
+                                                  await FirebaseFunctions
+                                                  .completeHistoryOrder(
+                                                      order.historyModel.timestamp!,
+                                                      order.historyModel.userId!);
+                                              NotificationBack
+                                                  .sendDeclinedNotification(
+                                                      order.historyModel
+                                                          .userId!);
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text("no".tr()),
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 },
                                 child: const Text(
                                   "Complete",

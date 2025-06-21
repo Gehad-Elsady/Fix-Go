@@ -31,7 +31,7 @@ class AllServicesScreen extends StatelessWidget {
         height: double.infinity,
         width: double.infinity,
         child: StreamBuilder(
-          stream: FirebaseFunctions.getServicesStream(),
+          stream: FirebaseFunctions.getUserServicesStream(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());

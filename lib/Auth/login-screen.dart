@@ -264,16 +264,52 @@ class _LoginPageState extends State<LoginPage> {
                                       fontSize: 16,
                                     ),
                                   ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SubscriptionPage(
-                                            totalPrice: 1000,
-                                          ),
-                                        ));
-                                  },
+                                 onPressed: () async {
+  final email = emailController.text.trim();
+
+  if (email.isEmpty) {
+    _showErrorDialog('Please enter your email to continue.');
+    return;
+  }
+
+  try {
+    // قراءة بيانات المستخدم
+    UserModel? user = await FirebaseFunctions.readUserDataByEmail(emailController.text);
+
+    // تحقق من وجود المستخدم
+    if (user == null) {
+      _showErrorDialog('User data not found.');
+      return;
+    }
+
+    // تحقق من نوع الدور
+    if (user.role == "User") {
+      _showErrorDialog('You are not authorized to subscribe.');
+    } else if (user.role == "Provider") {
+      if(user.isSubscribed){
+        _showErrorDialog('You are already subscribed.');
+      }else{
+          Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SubscriptionPage(
+            totalPrice: 1000,
+            // user: user ← يمكنك تمرير بيانات المستخدم إذا أردت
+          ),
+        ),
+      );
+      }
+    
+    } else {
+      _showErrorDialog('Unknown user role: ${user.role}');
+    }
+
+  } catch (e) {
+    _showErrorDialog('Failed to load user data: $e');
+  }
+}
+
+
                                 )
                               ]);
                         },
@@ -307,4 +343,20 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+  void _showErrorDialog(String message) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Error'),
+      content: Text(message),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('OK'),
+        ),
+      ],
+    ),
+  );
+}
+
 }

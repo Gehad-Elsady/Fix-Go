@@ -1,45 +1,46 @@
 class Car {
-  final String id;
+  final String? id;
   final String make;
   final String model;
-  final String year;
+  final int year;
   final String licensePlate;
   final String color;
   final String vin;
+  final String? userId;
 
   Car({
-    required this.id,
+    this.id,
     required this.make,
     required this.model,
     required this.year,
     required this.licensePlate,
     required this.color,
     required this.vin,
+    this.userId,
   });
 
-  // Convert Car to JSON
+  factory Car.fromJson(Map<String, dynamic> json) {
+    return Car(
+      id: json['id'],
+      make: json['make'],
+      model: json['model'],
+      year: json['year'],
+      licensePlate: json['licensePlate'],
+      color: json['color'],
+      vin: json['vin'],
+      userId: json['userId'],
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
-      'userId': id,
       'make': make,
       'model': model,
       'year': year,
       'licensePlate': licensePlate,
       'color': color,
       'vin': vin,
+      'userId': userId,
     };
-  }
-
-  // Create Car from JSON
-  factory Car.fromJson(Map<String, dynamic> json) {
-    return Car(
-      id: json['userId'] as String,
-      make: json['make'] as String,
-      model: json['model'] as String,
-      year: json['year'] as String,
-      licensePlate: json['licensePlate'] as String,
-      color: json['color'] as String,
-      vin: json['vin'] as String,
-    );
   }
 }

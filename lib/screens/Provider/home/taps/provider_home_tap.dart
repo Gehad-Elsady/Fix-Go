@@ -33,7 +33,7 @@ class ProviderHomeTap extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.access_time_rounded,
+              Icons.logout,
               color: const Color.fromARGB(255, 137, 96, 96),
               size: 30,
             ),

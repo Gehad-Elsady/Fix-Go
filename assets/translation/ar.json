@@ -11,8 +11,7 @@
     "email-error": "يرجى إدخال بريد إلكتروني صحيح",
     "name-error": "يرجى إدخال اسمك",
     "name": "أدخل اسمك",
-    "age-error": "يرجى إدخال عمرك",
-    "age-error-s": "عذرًا، يجب أن يكون العمر على الأقل 20 عامًا",
+    "age-error": "يرجى إدخال رقم هاتفك",
     "age": "أدخل عمرك",
     "submit": "تسجيل",
     "have-an-account": "هل لديك حساب؟ ",
@@ -126,6 +125,12 @@
 "massage":"رسالة",
 "send":"ارسل",
 "order-status":"حالة الطلب",
-"provider-home":"الصفحة الرئيسية للمهندس"
+"provider-home":"الصفحة الرئيسية للمهندس",
+"my-cars":"سياراتي",
+"welcome-to-fix-and-go":"مرحبا في Fix & Go",
+"user-name":"اسم المستخدم",
+"edit-profile":"تعديل الملف الشخصي",
+"search-services":"بحث عن الخدمات",
+"no-matching-services-found":"لم يتم العثور على خدمات مطابقة"
   }
   

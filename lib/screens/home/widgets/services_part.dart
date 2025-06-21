@@ -12,7 +12,7 @@ class ServicesPart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<ServiceModel>>(
-      stream: FirebaseFunctions.getServicesStream(),
+      stream: FirebaseFunctions.getUserServicesStream(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
