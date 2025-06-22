@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:road_mate/screens/Provider/home/taps/provider_home_tap.dart';
 import 'package:road_mate/screens/Provider/home/taps/provider_profile_tap.dart';
-import 'package:road_mate/screens/Provider/home/taps/test.dart';
 import 'package:road_mate/screens/history/historyscreen.dart';
 import 'package:road_mate/screens/home/taps/customer_home_screen.dart';
 import 'package:road_mate/screens/profile/user-profile-screen.dart';
@@ -23,7 +22,6 @@ class _MainHameState extends State<ProviderHome>
   final List<Color> colors = [
     Color(0xffADE1FB),
     Color(0xffADE1FB),
-    Color(0xffADE1FB),
   ];
   final Color unselectedColor = Colors.grey; // Define unselected color
 
@@ -31,7 +29,7 @@ class _MainHameState extends State<ProviderHome>
   void initState() {
     super.initState();
     currentPage = 0;
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     tabController.animation!.addListener(
       () {
         final value = tabController.animation!.value.round();
@@ -68,9 +66,7 @@ class _MainHameState extends State<ProviderHome>
                   ? colors[0]
                   : currentPage == 1
                       ? colors[1]
-                      : currentPage == 2
-                          ? colors[2]
-                          : unselectedColor,
+                      : unselectedColor,
               width: 4,
             ),
             insets: EdgeInsets.fromLTRB(16, 0, 16, 8),
@@ -78,7 +74,6 @@ class _MainHameState extends State<ProviderHome>
           tabs: [
             _buildTabIcon(Icons.home, 0),
             _buildTabIcon(Icons.person, 1),
-            _buildTabIcon(Icons.search, 2),
           ],
         ),
         fit: StackFit.expand,
@@ -119,7 +114,6 @@ class _MainHameState extends State<ProviderHome>
           children: [
             ProviderHomeTap(), // Screen 1
             ProviderProfileTap(), // Screen 2
-            Test(), // Screen 3
           ],
         ),
       ),

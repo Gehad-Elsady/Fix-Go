@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:road_mate/backend/firebase_functions.dart';
@@ -8,6 +9,7 @@ import 'package:road_mate/screens/Provider/add-services/model/service-model.dart
 import 'package:road_mate/screens/cart/cart-screen.dart';
 import 'package:road_mate/screens/history/historyscreen.dart';
 import 'package:road_mate/screens/history/model/historymaodel.dart';
+import 'package:road_mate/screens/home/taps/customer_home_screen.dart';
 
 class PaymentScreen extends StatelessWidget {
   PaymentScreen(
@@ -48,12 +50,12 @@ class PaymentScreen extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: Text("Payment Done"),
+                    title: Text("payment-done".tr()),
                     actions: [
                       TextButton(
-                        child: Text("OK"),
+                        child: Text("ok".tr()),
                         onPressed: () {
-                          Navigator.pushNamed(context, HistoryScreen.routeName);
+                          Navigator.pushNamed(context, CustomerHomeScreen.routeName);
                         },
                       ),
                     ],
@@ -66,10 +68,10 @@ class PaymentScreen extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: Text("Payment Failed"),
+                    title: Text("payment-failed".tr()),
                     actions: [
                       TextButton(
-                        child: Text("OK"),
+                        child: Text("ok".tr()),
                         onPressed: () {
                           Navigator.pushNamed(context, CartScreen.routeName);
                         },
@@ -84,10 +86,10 @@ class PaymentScreen extends StatelessWidget {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                        title: Text("Payment Canceled"),
+                        title: Text("payment-canceled".tr()),
                         actions: [
                           TextButton(
-                              child: Text("OK"),
+                              child: Text("ok".tr()),
                               onPressed: () {
                                 Navigator.pushNamed(
                                     context, CartScreen.routeName);

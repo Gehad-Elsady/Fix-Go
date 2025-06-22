@@ -103,7 +103,7 @@ class ProfileTap extends StatelessWidget {
             const Divider(color: Colors.grey, thickness: 1.5),
             const SizedBox(height: 20),
             Text(
-              "Account details", // Add to your .json translations
+              "account-details".tr(), // Add to your .json translations
               style: GoogleFonts.lora(
                 fontSize: 24,
                 color: Colors.black,

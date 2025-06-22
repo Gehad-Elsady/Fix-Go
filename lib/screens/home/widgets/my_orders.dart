@@ -128,13 +128,13 @@ class _UserOrdersState extends State<UserOrders> {
                                           style: const TextStyle(fontSize: 16),
                                         ),
                                         Text(
-                                          "${"Car name"}: ${history.car!.make} ${history.car!.model}",
+                                          "${"car-name".tr()}: ${history.car!.make} ${history.car!.model}",
                                           style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          "${"Car License"}: ${history.car!.licensePlate}",
+                                          "${"license-plate".tr()}: ${history.car!.licensePlate}",
                                           style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),
@@ -175,19 +175,19 @@ class _UserOrdersState extends State<UserOrders> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                "Service Name: ${item.serviceModel.name}",
+                                                "${"service-name".tr()}: ${item.serviceModel.name}",
                                                 style: const TextStyle(
                                                     fontSize: 16),
                                               ),
                                               Text(
-                                                "${"Car name"}: ${history.car?.make ?? "error"} ${history.car?.model ?? "error"}",
+                                                "${"car-name".tr()}: ${history.car?.make ?? "error"} ${history.car?.model ?? "error"}",
                                                 style: const TextStyle(
                                                     fontSize: 16,
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
                                               Text(
-                                                "${"Car License"}: ${history.car?.licensePlate ?? "error"}",
+                                                "${"license-plate".tr()}: ${history.car?.licensePlate ?? "error"}",
                                                 style: const TextStyle(
                                                     fontSize: 16,
                                                     fontWeight:
@@ -221,7 +221,7 @@ class _UserOrdersState extends State<UserOrders> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Total Price: ",
+                                  "${"total-price".tr()}: ",
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),

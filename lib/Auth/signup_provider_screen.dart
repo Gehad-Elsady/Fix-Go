@@ -43,53 +43,15 @@ class _SignupProviderState extends State<SignupProvider> {
         barrierDismissible: false, // User must tap the button to close
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Important Notice'),
+            title: Text('important-notice'.tr()),
             content: SingleChildScrollView(
               child: Text(
-                '''Welcome to FIX&GO!
-
-Dear Provider,
-
-Thank you for your interest in joining our app, your trusted partner for road assistance services. Before you complete your registration, please review the following important guidelines to ensure a smooth and professional experience:
-
-1. Provider Subscription:
-   - A subscription fee of 20 LE per month is required to access and operate through our platform.
-
-2. Response Time:
-   - Providers are expected to respond promptly to service requests to maintain customer satisfaction.
-
-3. Availability:
-   - Keep your availability status updated in the app to avoid missed requests.
-
-4. Transaction Fees:
-   - A 5% fee applies to each completed request.
-
-5. Pricing Transparency:
-   - Prices must be clear, fair, and include our platform fees. All prices must be agreed upon through the app.
-
-6. Licensing and Insurance:
-   - You must have the necessary licenses, permits, and insurance to provide legal road assistance services.
-
-7. Customer Interaction:
-   - Maintain professionalism, respect, and clear communication with customers at all times.
-
-8. App Usage:
-   - All service requests, communication, and payments must be conducted within the app.
-
-9. Limitations:
-   - You may only accept up to 3 active requests at a time to ensure system performance.
-   - If you're the nearest provider and no one else accepts a request, you may be auto-assigned in emergencies.
-
-By completing your registration, you agree to follow these guidelines and help us provide the best service possible.
-
-We’re excited to have you on board!
-
-— FIX&GO Team''',
+                'provider-guidelines'.tr(),
               ),
             ),
             actions: <Widget>[
               TextButton(
-                child: Text('I Agree'),
+                child: Text('i-agree'.tr()),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -151,7 +113,7 @@ We’re excited to have you on board!
               children: [
                 const SizedBox(height: 80),
                 Text(
-                  "Sign up as a provider",
+                  "sign-up-as-provider".tr(),
                   style: GoogleFonts.lora(
                     fontSize: 34,
                     fontWeight: FontWeight.w800,
@@ -202,7 +164,7 @@ We’re excited to have you on board!
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                hintText: "Enter last name",
+                                hintText: "last-name".tr(),
                                 hintStyle: Theme.of(context)
                                     .textTheme
                                     .bodyMedium
@@ -256,7 +218,7 @@ We’re excited to have you on board!
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          hintText: "Enter phone number",
+                          hintText: "phone-number".tr(),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -294,7 +256,7 @@ We’re excited to have you on board!
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          hintText: "Re-enter your password",
+                          hintText: "re-enter-password".tr(),
                         ),
                       ),
                       SizedBox(height: 20),
@@ -305,7 +267,7 @@ We’re excited to have you on board!
                             width: 200,
                             child: Text(
                               _image == null
-                                  ? "Upload your working license"
+                                  ? "upload-license".tr()
                                   : _image!.path,
                               style: TextStyle(
                                 color: Colors.blue,
@@ -325,7 +287,7 @@ We’re excited to have you on board!
                               ),
                             ),
                             onPressed: _pickImage,
-                            child: Text('Upload',
+                            child: Text('upload'.tr(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
@@ -343,70 +305,109 @@ We’re excited to have you on board!
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        onPressed: () async {
-                          if (formKey.currentState!.validate() &&
-                              _image != null) {
-                            setState(() => _isUploading = true);
-                            final imageUrl = await _uploadImage(_image!);
-                            FirebaseFunctions.SignUp(
-                              role: "Provider",
-                              emailAddress: emailController.text,
-                              password: passwordController.text,
-                              phoneNumber:
-                                  int.parse(phoneNumberController.text),
-                              firstName: nameController.text,
-                              lastName: lastNameController.text,
-                              imageUrl: imageUrl!,
-                              onSuccess: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Lottie.asset(Photos.create),
-                                        const SizedBox(height: 16),
-                                        const Text(
-                                          "Please Verify Your Email Address to Login",
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                                Timer(
-                                  const Duration(seconds: 3),
-                                  () => Navigator.pushNamed(
-                                      context, LoginPage.routeName),
-                                );
-                              },
-                              onError: (e) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(e.toString()),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text('OK'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                            nameController.clear();
-                            emailController.clear();
-                            passwordController.clear();
-                            confirmPasswordController.clear();
-                            phoneNumberController.clear();
-                            lastNameController.clear();
-                          }
-                        },
-                        child: const Text("Create my account"),
+                      onPressed: () async {
+  // تحقق من صحة النموذج
+  if (!formKey.currentState!.validate()) return;
+
+  // تحقق من رفع الصورة
+  if (_image == null) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("image-required".tr()),
+        content: Text("please-upload-image".tr()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("ok".tr()),
+          ),
+        ],
+      ),
+    );
+    return;
+  }
+
+  // بدء رفع البيانات
+  setState(() => _isUploading = true);
+
+  try {
+    final imageUrl = await _uploadImage(_image!);
+
+    FirebaseFunctions.SignUp(
+      role: "Provider",
+      emailAddress: emailController.text.trim(),
+      password: passwordController.text,
+      phoneNumber: int.parse(phoneNumberController.text),
+      firstName: nameController.text.trim(),
+      lastName: lastNameController.text.trim(),
+      imageUrl: imageUrl!,
+      onSuccess: () {
+        setState(() => _isUploading = false);
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Lottie.asset(Photos.create),
+                const SizedBox(height: 16),
+                Text(
+                  "verify-email-title".tr(),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        );
+        Timer(
+          const Duration(seconds: 3),
+          () => Navigator.pushNamed(context, LoginPage.routeName),
+        );
+      },
+      onError: (e) {
+        setState(() => _isUploading = false);
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("error".tr()),
+            content: Text(e.toString()),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('ok'.tr()),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    // تفريغ الحقول بعد الإرسال
+    nameController.clear();
+    emailController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+    phoneNumberController.clear();
+    lastNameController.clear();
+  } catch (e) {
+    setState(() => _isUploading = false);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("upload-failed".tr()),
+        content: Text("upload-failed-content".tr()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('ok'.tr()),
+          ),
+        ],
+      ),
+    );
+  }
+},
+
+                        child: Text("create-account".tr()),
                       ),
                       SizedBox(height: 20),
                       InkWell(

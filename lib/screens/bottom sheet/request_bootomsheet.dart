@@ -51,8 +51,8 @@ class RequestBottomSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "Select a Car",
+           Text(
+            "select-car".tr(),
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
@@ -64,10 +64,10 @@ class RequestBottomSheet extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                  return Center(child: Text('error'.tr() + ': ${snapshot.error}'));
                 }
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No cars found.'));
+                  return  Center(child: Text('no-cars-found'.tr()));
                 }
 
                 final cars = snapshot.data!;
@@ -104,19 +104,19 @@ class RequestBottomSheet extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Year: ${car.year}',
+                              'year'.tr() + ': ${car.year}',
                               style: const TextStyle(fontSize: 14),
                             ),
                             Text(
-                              'Color: ${car.color}',
+                              'color'.tr() + ': ${car.color}',
                               style: const TextStyle(fontSize: 14),
                             ),
                             Text(
-                              'License: ${car.licensePlate}',
+                              'license'.tr() + ': ${car.licensePlate}',
                               style: const TextStyle(fontSize: 14),
                             ),
                             Text(
-                              'VIN: ${car.vin}',
+                              'vin'.tr() + ': ${car.vin}',
                               style: const TextStyle(fontSize: 14),
                             ),
                           ],
@@ -139,7 +139,7 @@ class RequestBottomSheet extends StatelessWidget {
                                     return AlertDialog(
                                       title: Text('no-profile'.tr()),
                                       content: Text(
-                                          'No profile data available please complete your profile first.'),
+                                          'profile-error'.tr()),
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () {

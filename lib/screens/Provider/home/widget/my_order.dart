@@ -52,7 +52,7 @@ class MyOrders extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Pending Requests",
+                          "pending-requests".tr(),
                           style: GoogleFonts.poppins(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
@@ -106,7 +106,7 @@ class MyOrders extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                order.serviceModel!.name,
+                                "complete-order".tr(),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -119,7 +119,7 @@ class MyOrders extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
-                              child: ElevatedButton(
+                              child:  ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.greenAccent,
                                   foregroundColor: Colors.black,
@@ -133,7 +133,7 @@ class MyOrders extends StatelessWidget {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        title: Text("Complete Order"),
+                                        title: Text("complete-order".tr()),
                                         actions: [
                                           TextButton(
                                             child: Text("yes".tr()),
@@ -163,8 +163,8 @@ class MyOrders extends StatelessWidget {
                                     },
                                   );
                                 },
-                                child: const Text(
-                                  "Complete",
+                                child:  Text(
+                                  "complete".tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w700,
@@ -218,8 +218,8 @@ class MyOrders extends StatelessWidget {
                                     },
                                   );
                                 },
-                                child: const Text(
-                                  "Cancel",
+                                child: Text(
+                                  "cancel".tr(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w700,

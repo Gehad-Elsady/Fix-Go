@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:road_mate/screens/Provider/location/order_location.dart';
 import 'package:road_mate/screens/bottom%20sheet/widgets/location_user_provider.dart';
@@ -31,9 +32,9 @@ class OrderDetailsBottomSheet extends StatelessWidget {
               latitude: historyModel.providerLocationModel!.latitude,
             ),
             const SizedBox(height: 30),
-            const Center(
+            Center(
               child: Text(
-                "Provider Info",
+                "provider-info".tr(),
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -46,7 +47,7 @@ class OrderDetailsBottomSheet extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Total Price:",
+                  Text("total-price".tr(),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -72,13 +73,13 @@ class OrderDetailsBottomSheet extends StatelessWidget {
                   Column(
                     children: [
                       InfoRow(
-                        label: "Name",
+                        label: "name".tr(),
                         value:
                             "${historyModel.profileModel!.firstName} ${historyModel.profileModel!.lastName}",
                       ),
                       const SizedBox(height: 15),
                       InfoRow(
-                        label: "Phone Number",
+                        label: "phone-number".tr(),
                         value: historyModel.profileModel!.phoneNumber,
                       ),
                     ],

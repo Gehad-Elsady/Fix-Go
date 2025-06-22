@@ -28,7 +28,7 @@ class AuthPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Welcome to FIX&GO",
+                      "welcome-to-fixgo".tr(),
                       style: GoogleFonts.lora(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
@@ -37,7 +37,7 @@ class AuthPage extends StatelessWidget {
                     ),
                     SizedBox(height: 10), // Space between texts
                     Text(
-                      "We care about your safety",
+                      "we-care-about-your-safety".tr(),
                       style: GoogleFonts.lora(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
@@ -61,7 +61,7 @@ class AuthPage extends StatelessWidget {
                 Navigator.pushNamed(context, SignUpPage.routeName);
               },
               child: Text(
-                "I am a customer",
+                "i-am-a-customer".tr(),
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   color: Colors.white,
@@ -87,7 +87,7 @@ class AuthPage extends StatelessWidget {
                 Navigator.pushNamed(context, SignupProvider.routeName);
               },
               child: Text(
-                "I am a Provider",
+                "i-am-a-provider".tr(),
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   color: Colors.white,

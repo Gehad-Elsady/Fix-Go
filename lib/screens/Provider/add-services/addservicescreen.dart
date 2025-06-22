@@ -60,12 +60,12 @@ Future<void> _saveService() async {
       await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Service Exists'),
-          content: const Text('You have already added this service.'),
+          title: Text('service-exists'.tr()),
+          content: Text('service-already-added'.tr()),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
+              child: Text('ok'.tr()),
             ),
           ],
         ),
@@ -87,15 +87,15 @@ Future<void> _saveService() async {
       await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Success'),
-          content: const Text('Service added successfully.'),
+          title: Text('success'.tr()),
+          content: Text('service-added-successfully'.tr()),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close dialog
                 Navigator.pop(context); // Go back
               },
-              child: const Text('OK'),
+              child: Text('ok'.tr()),
             ),
           ],
         ),
@@ -150,7 +150,7 @@ Future<void> _saveService() async {
                       ),
                       SizedBox(height: 16),
                       _buildDropdownField(
-                          'Service Name',
+                          'select-service'.tr(),
                           _serviceNames,
                           _selectedServiceName,
                           (value) =>

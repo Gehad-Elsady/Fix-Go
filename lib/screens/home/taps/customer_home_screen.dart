@@ -39,12 +39,14 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         ),
         actions: [
           IconButton(
-            icon: ImageIcon(
-              AssetImage("assets/images/calendar.png"),
-              color: Colors.black,
+            icon: Icon(
+              Icons.logout,
+              color: const Color.fromARGB(255, 137, 96, 96),
               size: 30,
             ),
             onPressed: () {
+              // Handle notification button press
+              // Navigator.pushNamed(context, MainHome.routeName);
               FirebaseFunctions.signOut();
               Navigator.pushReplacementNamed(
                 context,
@@ -65,7 +67,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
             
             Padding(
               padding: const EdgeInsets.only(left: 10.0),
-              child: Text("My Orders",
+              child: Text("my-orders".tr(),
                   textAlign: TextAlign.left,
                   style: GoogleFonts.lora(
                     fontSize: 24,
@@ -79,7 +81,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
               child: UserOrders(),
             ),
             SizedBox(height: 30),
-            Text("Services",
+            Text("services".tr(),
                 textAlign: TextAlign.center,
                 style: GoogleFonts.lora(
                   fontSize: 24,

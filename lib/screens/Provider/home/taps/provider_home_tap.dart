@@ -88,7 +88,7 @@ class ProviderHomeTap extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
               child: Text(
-                "My Orders",
+                "my-orders".tr(),
                 style: GoogleFonts.lora(
                   fontSize: 24,
                   color: Colors.black,

@@ -1,3 +1,4 @@
+// Your imports remain the same
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,9 +15,7 @@ import 'package:road_mate/screens/Provider/add-services/model/service-model.dart
 import 'package:road_mate/screens/profile/model/profilemodel.dart';
 
 class RequestsPart extends StatelessWidget {
-  const RequestsPart({
-    super.key,
-  });
+  const RequestsPart({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +51,6 @@ class RequestsPart extends StatelessWidget {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Navigate to add services screen
                       Navigator.pushNamed(context, AddServicePage.routeName);
                     },
                     child: Text("add-services".tr()),
@@ -62,11 +60,9 @@ class RequestsPart extends StatelessWidget {
             );
           }
 
-          // Get user's service names
           final userServiceNames =
               servicesSnapshot.data!.map((s) => s.name).toList();
 
-          // If user has services, show matching requests
           return StreamBuilder<List<HistoryModel>>(
             stream: FirebaseFunctions.getAdminRequestStream(),
             builder: (context, snapshot) {
@@ -81,13 +77,10 @@ class RequestsPart extends StatelessWidget {
                 return Center(child: Text("request-empty".tr()));
               }
 
-              // Filter requests to only show those matching user's services
               final historyList = snapshot.data!.where((history) {
-                // Check if the request's service matches any of the user's services
                 if (history.serviceModel != null) {
                   return userServiceNames.contains(history.serviceModel!.name);
                 }
-                // Check if any item in the request matches user's services
                 if (history.items != null && history.items!.isNotEmpty) {
                   return history.items!.any((item) =>
                       userServiceNames.contains(item.serviceModel.name));
@@ -112,7 +105,7 @@ class RequestsPart extends StatelessWidget {
                         ? DateTime.fromMillisecondsSinceEpoch(
                             history.timestamp!)
                         : DateTime.now();
-                    String formattedTime = DateFormat('yyyy-MM-dd HH:mm a')
+                    String formattedTime = DateFormat.yMd().add_jm()
                         .format(timestamp.toLocal());
 
                     const whiteTextStyle =
@@ -124,7 +117,7 @@ class RequestsPart extends StatelessWidget {
 
                     return SingleChildScrollView(
                       child: Container(
-                        width: 198, // Card width for horizontal layout
+                        width: 198,
                         margin:
                             EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                         child: Card(
@@ -199,8 +192,6 @@ class RequestsPart extends StatelessWidget {
                                       );
                                     }).toList(),
                                   ),
-                                
-                                
                                 SizedBox(height: 10),
                                 Center(
                                   child: history.orderStatus == 'Pending'
@@ -210,7 +201,6 @@ class RequestsPart extends StatelessWidget {
                                                   Color(0xFF0091ad)),
                                           onPressed: () async {
                                             try {
-                                              // Check current orders count first
                                               final currentOrders =
                                                   await FirebaseFirestore
                                                       .instance
@@ -229,14 +219,14 @@ class RequestsPart extends StatelessWidget {
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                        'Maximum number of orders (3) reached. Please complete some orders before accepting new ones.'),
+                                                        'maximum-number-of-orders-reached'
+                                                            .tr()),
                                                     backgroundColor: Colors.red,
                                                   ),
                                                 );
                                                 return;
                                               }
 
-                                              // Get user profile
                                               ProfileModel? profileModel =
                                                   await FirebaseFunctions
                                                           .getUserProfile(
@@ -246,7 +236,6 @@ class RequestsPart extends StatelessWidget {
                                                                   .uid)
                                                       .first;
 
-                                              // Get user location
                                               Location location = Location();
                                               bool _serviceEnabled =
                                                   await location
@@ -280,14 +269,12 @@ class RequestsPart extends StatelessWidget {
                                               final locationModel =
                                                   LocationModel(
                                                 latitude:
-                                                    userLocation.latitude ??
-                                                        0.0,
+                                                    userLocation.latitude ?? 0.0,
                                                 longitude:
                                                     userLocation.longitude ??
                                                         0.0,
                                               );
 
-                                              // Accept the order
                                               await FirebaseFunctions
                                                   .acceptedOrder(
                                                       history.userId!,
@@ -295,23 +282,22 @@ class RequestsPart extends StatelessWidget {
                                                       profileModel!,
                                                       locationModel);
 
-                                              // Create the accepted order model
                                               AcceptedModel acceptedModel =
                                                   AcceptedModel(
                                                 historyModel: history,
                                                 orderTime: DateTime.now()
                                                     .millisecondsSinceEpoch,
                                                 orderType: history.orderType!,
-                                                totalPrice: history.totalPrice!,
+                                                totalPrice:
+                                                    history.totalPrice!,
                                                 serviceModel:
                                                     history.serviceModel,
                                                 items: history.items,
                                                 userId: FirebaseAuth
                                                     .instance.currentUser!.uid,
                                                 orderStatus: "Not completed",
-                                                profileModel: profileModel!,
-                                                locationModel:
-                                                    locationModel, // Add location here
+                                                profileModel: profileModel,
+                                                locationModel: locationModel,
                                               );
 
                                               await FirebaseFunctions
@@ -335,7 +321,8 @@ class RequestsPart extends StatelessWidget {
                                           child: Text("accept-order".tr(),
                                               style: boldWhiteTextStyle),
                                         )
-                                      : Text("This order is already accepted",
+                                      : Text(
+                                          "this-order-is-already-accepted".tr(),
                                           style: TextStyle(
                                               color: Colors.green,
                                               fontWeight: FontWeight.bold)),

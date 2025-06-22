@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:lottie/lottie.dart';
@@ -34,7 +35,7 @@ class SubscriptionPage extends StatelessWidget {
     // print("password++++++++++++++ ${password}");
     return Scaffold(
       appBar: AppBar(
-        title: Text('Payment Screen'),
+        title: Text('payment-screen'.tr()),
       ),
       body: InAppWebView(
         initialOptions: InAppWebViewGroupOptions(
@@ -105,10 +106,10 @@ class SubscriptionPage extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: Text("Payment Done"),
+                    title: Text("payment-done".tr()),
                     actions: [
                       TextButton(
-                        child: Text("OK"),
+                        child: Text("ok".tr()),
                         onPressed: () {
                           Navigator.pushNamed(context, LoginPage.routeName);
                         },
@@ -123,10 +124,10 @@ class SubscriptionPage extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: Text("Payment Failed"),
+                    title: Text("payment-failed".tr()),
                     actions: [
                       TextButton(
-                        child: Text("OK"),
+                        child: Text("ok".tr()),
                         onPressed: () {
                           Navigator.pushNamed(context, CartScreen.routeName);
                         },
@@ -141,10 +142,10 @@ class SubscriptionPage extends StatelessWidget {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                        title: Text("Payment Canceled"),
+                        title: Text("payment-canceled".tr()),
                         actions: [
                           TextButton(
-                              child: Text("OK"),
+                              child: Text("ok".tr()),
                               onPressed: () {
                                 Navigator.pushNamed(
                                     context, CartScreen.routeName);

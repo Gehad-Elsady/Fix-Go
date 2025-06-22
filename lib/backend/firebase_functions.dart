@@ -557,39 +557,43 @@ class FirebaseFunctions {
   }
 
   //----------------------------------Admin Functions-----------------------------------------
-  static Stream<List<HistoryModel>> getAdminRequestStream() {
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+ static Stream<List<HistoryModel>> getAdminRequestStream() {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-    return _firestore.collection('History').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final data = doc.data();
-        return HistoryModel(
-          timestamp: data['timestamp'] ?? 0,
-          userId: data['userId'] ?? "no id",
-          serviceModel: data['serviceModel'] != null
-              ? ServiceModel.fromJson(data['serviceModel'])
-              : null,
-          locationModel: data['locationModel'] != null
-              ? LocationModel.fromMap(data['locationModel'])
-              : null,
-          items: data['items'] != null
-              ? (data['items'] as List<dynamic>)
-                  .map((item) => CartModel.fromMap(item))
-                  .toList()
-              : [],
-          orderType: data['OrderType'] ?? "No Order Type",
-          id: data['id'] ?? "No Id",
-          orderStatus: data['orderStatus'] ?? "No Status",
-          orderOwnerName: data['orderOwnerName'] ?? "No Name",
-          orderOwnerPhone: data['orderOwnerPhone'] ?? "No Phone",
-          totalPrice: data['totalPrice'] != null
-              ? double.tryParse(data['totalPrice'].toString())
-              : 0.0,
-        );
-      }).toList();
-    });
-  }
-   static Future<void> completeHistoryOrder(int timestamp, String id) async {
+  return _firestore
+      .collection('History')
+      .orderBy('timestamp', descending: true) // ✅ فرز حسب الأحدث أولاً
+      .snapshots()
+      .map((snapshot) {
+    return snapshot.docs.map((doc) {
+      final data = doc.data();
+      return HistoryModel(
+        timestamp: data['timestamp'] ?? 0,
+        userId: data['userId'] ?? "no id",
+        serviceModel: data['serviceModel'] != null
+            ? ServiceModel.fromJson(data['serviceModel'])
+            : null,
+        locationModel: data['locationModel'] != null
+            ? LocationModel.fromMap(data['locationModel'])
+            : null,
+        items: data['items'] != null
+            ? (data['items'] as List<dynamic>)
+                .map((item) => CartModel.fromMap(item))
+                .toList()
+            : [],
+        orderType: data['OrderType'] ?? "No Order Type",
+        id: data['id'] ?? "No Id",
+        orderStatus: data['orderStatus'] ?? "No Status",
+        orderOwnerName: data['orderOwnerName'] ?? "No Name",
+        orderOwnerPhone: data['orderOwnerPhone'] ?? "No Phone",
+        totalPrice: data['totalPrice'] != null
+            ? double.tryParse(data['totalPrice'].toString())
+            : 0.0,
+      );
+    }).toList();
+  });
+}
+  static Future<void> completeHistoryOrder(int timestamp, String id) async {
     
     try {
       final querySnapshot = await FirebaseFirestore.instance

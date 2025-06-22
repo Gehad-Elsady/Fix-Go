@@ -14,8 +14,8 @@ class ProviderProfileTap extends StatelessWidget {
   ProviderProfileTap({super.key});
 
   List<String> cardsName = [
-    "Services",
-    "Add Services",
+    "services".tr(),
+    "add-services".tr(),
     'settings'.tr(),
   ];
   List<String> cardsImage = [
@@ -46,13 +46,15 @@ class ProviderProfileTap extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.access_time_rounded,
-              color: Colors.black,
+         IconButton(
+            icon: Icon(
+              Icons.logout,
+              color: const Color.fromARGB(255, 137, 96, 96),
               size: 30,
             ),
             onPressed: () {
+              // Handle notification button press
+              // Navigator.pushNamed(context, MainHome.routeName);
               FirebaseFunctions.signOut();
               Navigator.pushReplacementNamed(
                 context,
@@ -81,7 +83,7 @@ class ProviderProfileTap extends StatelessWidget {
             const Divider(color: Colors.grey, thickness: 1.5),
             const SizedBox(height: 20),
             Text(
-              "Account details", // Add to your .json translations
+              "account-details".tr(), // Add to your .json translations
               style: GoogleFonts.lora(
                 fontSize: 24,
                 color: Colors.black,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,8 +27,8 @@ void _showAddCarDialog() {
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Car added successfully'),
+            SnackBar(
+              content: Text('car-added'.tr()),
               backgroundColor: Colors.blue,
             ),
           );
@@ -40,12 +41,12 @@ void _showAddCarDialog() {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Unable to Add Car'),
+              title: Text('unable-to-add'.tr()),
               content: Text(errorMessage),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('OK'),
+                  child: Text('ok'.tr()),
                 ),
               ],
             ),
@@ -63,7 +64,7 @@ void _showAddCarDialog() {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'My Cars',
+          'my-cars'.tr(),
           style: GoogleFonts.domine(
             fontSize: 30,
             color: Colors.blue,
@@ -110,7 +111,7 @@ void _showAddCarDialog() {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No cars added yet',
+                    'no-cars-added'.tr(),
                     style: GoogleFonts.domine(
                       fontSize: 20,
                       color: Colors.blue,
@@ -118,7 +119,7 @@ void _showAddCarDialog() {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Tap the + button to add a car',
+                    'tap-to-add'.tr(),
                     style: GoogleFonts.domine(
                       fontSize: 16,
                       color: Colors.grey,
@@ -169,8 +170,8 @@ void _showAddCarDialog() {
                                 await _carService.deleteCar(car.id!);
                                 if (mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Car deleted successfully'),
+                                    SnackBar(
+                                      content: Text('car-deleted'.tr()),
                                       backgroundColor: Colors.blue,
                                     ),
                                   );
@@ -180,7 +181,7 @@ void _showAddCarDialog() {
                                 if (mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text('Error deleting car: $e'),
+                                      content: Text('error-deleting'.tr()),
                                       backgroundColor: Colors.red,
                                     ),
                                   );
@@ -191,10 +192,10 @@ void _showAddCarDialog() {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      _buildInfoRow('Year', car.year.toString()),
-                      _buildInfoRow('License Plate', car.licensePlate),
-                      _buildInfoRow('Color', car.color),
-                      _buildInfoRow('VIN', car.vin),
+                      _buildInfoRow('year'.tr(), car.year.toString()),
+                      _buildInfoRow('license-plate'.tr(), car.licensePlate),
+                      _buildInfoRow('color'.tr(), car.color),
+                      _buildInfoRow('vin-number'.tr(), car.vin),
                     ],
                   ),
                 ),
@@ -206,7 +207,7 @@ void _showAddCarDialog() {
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddCarDialog,
         backgroundColor: Colors.blue,
-        child: const Icon(Icons.add, color: Colors.white),
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }
@@ -277,7 +278,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Add New Car',
+                'add-new-car'.tr(),
                 style: GoogleFonts.domine(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -289,8 +290,8 @@ class _AddCarDialogState extends State<AddCarDialog> {
               TextFormField(
                 controller: _makeController,
                 decoration: InputDecoration(
-                  labelText: 'Make',
-                  hintText: 'e.g., Toyota, Honda',
+                  labelText: 'make'.tr(),
+                  hintText: 'eg-model'.tr(),
                   prefixIcon:
                       const Icon(Icons.directions_car, color: Colors.blue),
                   border: OutlineInputBorder(
@@ -304,7 +305,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the car make';
+                    return 'enter-make'.tr();
                   }
                   return null;
                 },
@@ -313,8 +314,8 @@ class _AddCarDialogState extends State<AddCarDialog> {
               TextFormField(
                 controller: _modelController,
                 decoration: InputDecoration(
-                  labelText: 'Model',
-                  hintText: 'e.g., Camry, Civic',
+                  labelText: 'model'.tr(),
+                  hintText: 'eg-make'.tr(),
                   prefixIcon:
                       const Icon(Icons.model_training, color: Colors.blue),
                   border: OutlineInputBorder(
@@ -328,7 +329,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the car model';
+                    return 'enter-model'.tr();
                   }
                   return null;
                 },
@@ -337,7 +338,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
               TextFormField(
                 controller: _yearController,
                 decoration: InputDecoration(
-                  labelText: 'Year',
+                  labelText: 'year'.tr(),
                   hintText: 'e.g., 2020',
                   prefixIcon:
                       const Icon(Icons.calendar_today, color: Colors.blue),
@@ -353,7 +354,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the car year';
+                    return 'enter-year'.tr();
                   }
                   return null;
                 },
@@ -362,7 +363,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
               TextFormField(
                 controller: _licensePlateController,
                 decoration: InputDecoration(
-                  labelText: 'License Plate',
+                  labelText: 'license-plate'.tr(),
                   hintText: 'e.g., ABC123',
                   prefixIcon:
                       const Icon(Icons.confirmation_number, color: Colors.blue),
@@ -377,7 +378,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the license plate';
+                    return 'enter-license'.tr();
                   }
                   return null;
                 },
@@ -386,7 +387,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
               TextFormField(
                 controller: _colorController,
                 decoration: InputDecoration(
-                  labelText: 'Color',
+                  labelText: 'color'.tr(),
                   hintText: 'e.g., Red, Blue',
                   prefixIcon: const Icon(Icons.color_lens, color: Colors.blue),
                   border: OutlineInputBorder(
@@ -400,7 +401,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the car color';
+                    return 'enter-color'.tr();
                   }
                   return null;
                 },
@@ -409,7 +410,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
               TextFormField(
                 controller: _vinController,
                 decoration: InputDecoration(
-                  labelText: 'VIN Number',
+                  labelText: 'vin-number'.tr(),
                   hintText: 'Vehicle Identification Number',
                   prefixIcon: const Icon(Icons.fingerprint, color: Colors.blue),
                   border: OutlineInputBorder(
@@ -423,7 +424,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the VIN number';
+                    return 'enter-vin'.tr();
                   }
                   return null;
                 },
@@ -435,7 +436,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
                   TextButton(
                     onPressed: () => Navigator.pop(context),
                     child: Text(
-                      'Cancel',
+                      'cancel'.tr(),
                       style: GoogleFonts.domine(
                         color: Colors.blue,
                       ),
@@ -464,7 +465,7 @@ class _AddCarDialogState extends State<AddCarDialog> {
                       ),
                     ),
                     child: Text(
-                      'Save',
+                      'save'.tr(),
                       style: GoogleFonts.domine(
                         color: Colors.white,
                       ),

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,8 +38,9 @@ class _AddEngState extends State<AddEng> {
 
   Future<String?> _uploadImage(File image) async {
     try {
-      final storageRef = FirebaseStorage.instance.ref().child(
-          'engineer_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('engineer_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
       final uploadTask = await storageRef.putFile(image);
       return await uploadTask.ref.getDownloadURL();
     } catch (e) {
@@ -52,34 +52,42 @@ class _AddEngState extends State<AddEng> {
   Future<void> _saveService() async {
     if (_formKey.currentState!.validate() && _image != null) {
       setState(() => _isUploading = true);
-      final imageUrl = await _uploadImage(_image!);
 
-      if (imageUrl != null) {
-        await FirebaseFirestore.instance.collection('engineers').add({
-          'name': _nameController.text.trim(),
-          'bio': _descriptionController.text.trim(),
-          'price': _priceController.text.trim(),
-          'image': imageUrl,
-          'createdAt': Timestamp.now(),
-          'id': FirebaseAuth.instance.currentUser!.uid,
-          'phone': _phoneController.text.trim,
-          'address': _addressController.text.trim
-        });
+      final imageUrl = await _uploadImage(_image!);
+      if (imageUrl == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Service added successfully'),
-            backgroundColor: Colors.green,
-          ),
+          SnackBar(content: Text('Failed to upload image'), backgroundColor: Colors.red),
         );
-        Navigator.pop(context); // Go back after saving
-      } else {
+        setState(() => _isUploading = false);
+        return;
+      }
+
+      final data = {
+        'name': _nameController.text.trim(),
+        'bio': _descriptionController.text.trim(),
+        'price': _priceController.text.trim(),
+        'image': imageUrl,
+        'createdAt': Timestamp.now(),
+        'id': FirebaseAuth.instance.currentUser!.uid,
+        'phone': _phoneController.text.trim(),
+        'address': _addressController.text.trim(),
+      };
+
+      print('📦 Firestore data: $data'); // Debug print
+
+      try {
+        await FirebaseFirestore.instance.collection('engineers').add(data);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to upload image'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Service added successfully'), backgroundColor: Colors.green),
+        );
+        Navigator.pop(context);
+      } catch (e) {
+        print("Firestore error: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save data'), backgroundColor: Colors.red),
         );
       }
+
       setState(() => _isUploading = false);
     }
   }
@@ -116,21 +124,14 @@ class _AddEngState extends State<AddEng> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        'engineer-details'.tr(),
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Text('engineer-details'.tr(),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       SizedBox(height: 16),
                       TextFormField(
                         controller: _nameController,
                         decoration: InputDecoration(
                           labelText: 'add-engineer-name'.tr(),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
                         ),
                         validator: (value) =>
                             value!.isEmpty ? 'Please enter a name' : null,
@@ -140,23 +141,18 @@ class _AddEngState extends State<AddEng> {
                         controller: _descriptionController,
                         decoration: InputDecoration(
                           labelText: 'engineer-bio'.tr(),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
                         ),
                         maxLines: 3,
-                        validator: (value) => value!.isEmpty
-                            ? 'Please enter a description'
-                            : null,
+                        validator: (value) =>
+                            value!.isEmpty ? 'Please enter a description' : null,
                       ),
                       SizedBox(height: 16),
                       TextFormField(
                         controller: _priceController,
                         decoration: InputDecoration(
                           labelText: 'engineer-price'.tr(),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
                         ),
                         keyboardType: TextInputType.number,
                         validator: (value) =>
@@ -167,43 +163,31 @@ class _AddEngState extends State<AddEng> {
                         controller: _phoneController,
                         decoration: InputDecoration(
                           labelText: 'engineer-phone'.tr(),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
                         ),
                         keyboardType: TextInputType.number,
-                        validator: (value) => value!.isEmpty
-                            ? 'Please enter a  photo number'
-                            : null,
+                        validator: (value) =>
+                            value!.isEmpty ? 'Please enter a phone number' : null,
                       ),
                       SizedBox(height: 16),
                       TextFormField(
                         controller: _addressController,
                         decoration: InputDecoration(
                           labelText: 'engineer-address'.tr(),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
                         ),
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.text,
                         validator: (value) =>
-                            value!.isEmpty ? 'Please enter a address' : null,
+                            value!.isEmpty ? 'Please enter an address' : null,
                       ),
                       SizedBox(height: 20),
-                      Text(
-                        'image'.tr(),
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Text('image'.tr(),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       SizedBox(height: 16),
                       _image == null
-                          ? Text(
-                              'image-error'.tr(),
+                          ? Text('image-error'.tr(),
                               style: TextStyle(color: Colors.grey),
-                              textAlign: TextAlign.center,
-                            )
+                              textAlign: TextAlign.center)
                           : ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
                               child: Image.file(_image!, height: 150),
@@ -227,11 +211,14 @@ class _AddEngState extends State<AddEng> {
                 ? Center(child: CircularProgressIndicator())
                 : ElevatedButton(
                     onPressed: _saveService,
-                    child: Text('add-engineer'.tr(),
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold)),
+                    child: Text(
+                      'add-engineer'.tr(),
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       padding: EdgeInsets.symmetric(vertical: 16),

@@ -243,9 +243,9 @@ class _LoginPageState extends State<LoginPage> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
-                              title: const Text("Supscription"),
-                              content: const Text(
-                                  "You have to pay 1000 LE per month to use the app and create your account"),
+                              title:  Text("subscription".tr()),
+                              content:  Text(
+                                  "subscription-description".tr()),
                               actions: <Widget>[
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -257,8 +257,8 @@ class _LoginPageState extends State<LoginPage> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  child: const Text(
-                                    "Pay",
+                                  child:  Text(
+                                    "pay".tr(),
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -268,7 +268,7 @@ class _LoginPageState extends State<LoginPage> {
   final email = emailController.text.trim();
 
   if (email.isEmpty) {
-    _showErrorDialog('Please enter your email to continue.');
+    _showErrorDialog('enter-email-to-continue'.tr());
     return;
   }
 
@@ -278,16 +278,16 @@ class _LoginPageState extends State<LoginPage> {
 
     // تحقق من وجود المستخدم
     if (user == null) {
-      _showErrorDialog('User data not found.');
+      _showErrorDialog('user-not-found'.tr());
       return;
     }
 
     // تحقق من نوع الدور
     if (user.role == "User") {
-      _showErrorDialog('You are not authorized to subscribe.');
+      _showErrorDialog('invalid-role'.tr());
     } else if (user.role == "Provider") {
       if(user.isSubscribed){
-        _showErrorDialog('You are already subscribed.');
+        _showErrorDialog('already-subscribed'.tr());
       }else{
           Navigator.push(
         context,
@@ -301,11 +301,11 @@ class _LoginPageState extends State<LoginPage> {
       }
     
     } else {
-      _showErrorDialog('Unknown user role: ${user.role}');
+      _showErrorDialog('unknown-user-role'.tr());
     }
 
   } catch (e) {
-    _showErrorDialog('Failed to load user data: $e');
+    _showErrorDialog('error-loading-user-data'.tr());
   }
 }
 
@@ -318,14 +318,14 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text.rich(
                       textAlign: TextAlign.center,
                       TextSpan(
-                        text: "Subscription for Provider ".tr(),
+                        text: "subscription-for-provider".tr(),
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
                             ?.copyWith(fontSize: 17, color: Colors.blue),
                         children: [
                           TextSpan(
-                            text: "Subscribe".tr(),
+                            text: "subscribe".tr(),
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -347,12 +347,12 @@ class _LoginPageState extends State<LoginPage> {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text('Error'),
+      title: Text('error'.tr()),
       content: Text(message),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('OK'),
+          child: Text('ok'.tr()),
         ),
       ],
     ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:road_mate/Auth/model/usermodel.dart';
@@ -38,7 +39,7 @@ class UserData extends StatelessWidget {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  "We have some recommendations for you",
+                  "${'we-have-some-recommendations-for-you'.tr()}",
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     color: Colors.grey,

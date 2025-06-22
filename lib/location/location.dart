@@ -49,7 +49,7 @@ class _GpsState extends State<Gps> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("GPS"),
+        title:  Text("gps".tr()),
         centerTitle: true,
       ),
       body: GoogleMap(

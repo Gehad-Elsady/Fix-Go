@@ -36,6 +36,34 @@ class _SignUpPageState extends State<SignUpPage> {
     lastNameController.dispose();
     super.dispose();
   }
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        barrierDismissible: false, // User must tap the button to close
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('important-notice'.tr()),
+            content: SingleChildScrollView(
+              child: Text(
+                'customer-guidelines'.tr(),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('i-agree'.tr()),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +82,7 @@ class _SignUpPageState extends State<SignUpPage> {
               children: [
                 const SizedBox(height: 80),
                 Text(
-                  "Sign up as a customer",
+                  "sign-up-as-customer".tr(),
                   style: GoogleFonts.lora(
                     fontSize: 34,
                     fontWeight: FontWeight.w800,
@@ -105,7 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                hintText: "Enter last name",
+                                hintText: "enter-last-name".tr(),
                                 hintStyle: Theme.of(context)
                                     .textTheme
                                     .bodyMedium
@@ -159,7 +187,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          hintText: "Enter phone number",
+                          hintText: "enter-phone-number".tr(),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -197,7 +225,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          hintText: "Re-enter your password",
+                          hintText: "re-enter-password".tr(),
                         ),
                       ),
                       const SizedBox(height: 30),
@@ -229,8 +257,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                       children: [
                                         Lottie.asset(Photos.create),
                                         const SizedBox(height: 16),
-                                        const Text(
-                                          "Please Verify Your Email Address to Login",
+                                        Text(
+                                          "verify-email-title".tr(),
                                           textAlign: TextAlign.center,
                                         ),
                                       ],
@@ -247,14 +275,14 @@ class _SignUpPageState extends State<SignUpPage> {
                                 showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
-                                    title: Text("Error"),
+                                    title: Text("error".tr()),
                                     content: Text(e.toString()),
                                     actions: [
                                       TextButton(
                                         onPressed: () {
                                           Navigator.pop(context);
                                         },
-                                        child: Text('OK'),
+                                        child: Text('ok'.tr()),
                                       ),
                                     ],
                                   ),
@@ -269,7 +297,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             lastNameController.clear();
                           }
                         },
-                        child: const Text("Create my account"),
+                        child: Text("create-account".tr()),
                       ),
                       SizedBox(height: 20),
                       InkWell(
